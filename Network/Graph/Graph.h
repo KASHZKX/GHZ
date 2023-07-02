@@ -18,8 +18,8 @@ class Graph
     double swap_prob, entangle_alpha;
 
     vector<Node> nodes;
-    map<pair<const Node, const Node>, vector<Channel>> channels;
-    vector<vector<int>> neighbor;
+    map<pair<const Node, const Node>, vector<Channel> > channels;
+    vector<vector<int> > neighbor;
     //vector<vector<int>> social;                question:we don't need this right?
 
     Channel *assign_channel(Node &node1, Node &node2); // in algorithm we use this function to find a channel, then collect a sequence of channels. Finally, construct them to be a Path.
