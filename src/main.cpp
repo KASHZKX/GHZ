@@ -66,7 +66,7 @@ int main(){
     change_parameter["new_request_cnt"] = {1, 5, 10, 15, 20};
     change_parameter["num_of_node"] = {50, 100, 125, 150, 200};
 
-    vector<string> X_names = {"num_of_node", "min_fidelity", "new_request_cnt", "social_density"};//, "area_alpha", "resource_ratio", "entangle_alpha", "swap_prob"};
+    vector<string> X_names = {"num_of_node", "new_request_cnt"};//, "area_alpha", "resource_ratio", "entangle_alpha", "swap_prob"};
     vector<string> Y_names = {"waiting_time", "throughputs", "finished_throughputs", \
                             "succ-finished_ratio", "fail-finished_ratio", "active_timeslot", "path_length", "fidelity", \
                             "encode_cnt", "unencode_cnt", "encode_ratio", "use_memory", "total_memory", "use_memory_ratio",\
