@@ -90,7 +90,7 @@ int main(){
             input_parameter[X_name] = change_value;
             
             int num_of_node = input_parameter["num_of_node"];
-            double social_density = input_parameter["social_density"];
+            // double social_density = input_parameter["social_density"];
             double area_alpha = input_parameter["area_alpha"];
             double resource_ratio = input_parameter["resource_ratio"];
             int min_memory_cnt = input_parameter["memory_cnt_avg"] * resource_ratio - 2;
