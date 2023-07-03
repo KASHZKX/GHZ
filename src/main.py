@@ -62,7 +62,7 @@ def genSocialNetwork(userNum, density):
 	return SN
 
 
-if  len(sys.argv) <= 10:
+if  len(sys.argv) <= 9:
     print("missing argv")
     sys.exit()
 
@@ -75,8 +75,7 @@ min_memory_cnt = int(sys.argv[5])
 max_memory_cnt = int(sys.argv[6])
 min_fidelity = float(sys.argv[7])
 max_fidelity = float(sys.argv[8])
-socail_density = float(sys.argv[9])
-area_alpha = float(sys.argv[10])
+area_alpha = float(sys.argv[9])
 
 
 print("--------------generating graph--------------", file=sys.stderr)
@@ -85,7 +84,7 @@ print("filename = ", filename, file=sys.stderr)
 print("number_of_node = ", num_of_node, file=sys.stderr)
 print("min_channel_cnt = ", min_channel_cnt, ", max_channel_cnt = ", max_channel_cnt, file=sys.stderr)
 print("min_memory_cnt = ", min_memory_cnt, ", max_memory_cnt = ", max_memory_cnt, file=sys.stderr)
-print("socail density = ", socail_density, file=sys.stderr)
+# print("socail density = ", socail_density, file=sys.stderr)
 
 
 while True:
@@ -128,14 +127,14 @@ for e in G.edges():
 print(cnt, file=f)
 for e in G.edges():
     if e[0] != e[1]:#file
-        print(str(e[0]) + ' ' + str(e[1]) + " " + str(ceil(random.random()*(max_channel_cnt-min_channel_cnt)) + min_channel_cnt), str(random.random()*(max_fidelity-min_fidelity) + min_fidelity), file=f)
+        print(str(e[0]) + ' ' + str(e[1]) + " " + str(ceil(random.random()*(max_channel_cnt-min_channel_cnt)) + min_channel_cnt), 1, file=f)
 
 
-SN = genSocialNetwork(num_of_node, socail_density)
-for i in range(num_of_node):
-    for j in range(num_of_node):
-        print(SN[i][j], end=" ", file=f)
-    print("", file=f)
+# SN = genSocialNetwork(num_of_node, socail_density)
+# for i in range(num_of_node):
+#     for j in range(num_of_node):
+#         print(SN[i][j], end=" ", file=f)
+#     print("", file=f)
 
 
 #random social
