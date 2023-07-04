@@ -28,6 +28,7 @@ class Channel{
 public:
     
     Channel(Node* node1, Node* node2, double entangle_prob);
+    Channel(Channel & oldchannel);
     Channel(Node *node1_ptr, Node *node2_ptr, double entangle_prob, double fidelity);
     ~Channel();
 

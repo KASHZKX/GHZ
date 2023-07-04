@@ -42,8 +42,8 @@ int main(){
     default_setting["num_of_node"] = 10;
     default_setting["social_density"] = 0.5;
     default_setting["area_alpha"] = 0.1;
-    default_setting["memory_cnt_avg"] = 2;
-    default_setting["channel_cnt_avg"] = 2;
+    default_setting["memory_cnt_avg"] = 4;
+    default_setting["channel_cnt_avg"] = 3;
     default_setting["resource_ratio"] = 1;
     default_setting["min_fidelity"] = 0.7;
     default_setting["max_fidelity"] = 0.95;
@@ -66,7 +66,7 @@ int main(){
     change_parameter["new_request_cnt"] = {1, 5, 10, 15, 20};
     change_parameter["num_of_node"] = {5, 10, 15, 20, 25};
 
-    vector<string> X_names = {"num_of_node", "new_request_cnt"};//, "area_alpha", "resource_ratio", "entangle_alpha", "swap_prob"};
+    vector<string> X_names = { "new_request_cnt"};//"num_of_node", "area_alpha", "resource_ratio", "entangle_alpha", "swap_prob"};
     vector<string> Y_names = {"waiting_time", "throughputs", "finished_throughputs", \
                             "succ-finished_ratio", "fail-finished_ratio", "active_timeslot", "path_length", "fidelity", \
                             "encode_cnt", "unencode_cnt", "encode_ratio", "use_memory", "total_memory", "use_memory_ratio",\
@@ -155,6 +155,7 @@ int main(){
                         auto &algo = algorithms[i];
                         ofs<<"-----------run "<< algo->get_name() << " ---------"<<endl;
                         algo->run();
+
                         ofs<<"total_throughputs : "<<algo->get_res("throughputs")<<endl;
                         ofs<<"-----------run "<<algo->get_name() << " ---------end"<<endl;
                     }

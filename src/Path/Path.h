@@ -23,6 +23,7 @@ class Path{
     double prob;
 public:
 	Path(vector<Node*> nodes, vector<Channel*> channels);
+    Path(Path & oldpath);
     //Path(vector<Node*> nodes);                        zzzz
     ~Path(void);
     int get_len();
