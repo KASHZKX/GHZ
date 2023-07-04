@@ -23,9 +23,9 @@ Path::Path(vector<Node*> nodes, vector<Channel*> channels)
         if(DEBUG)cerr << "new Path" << endl;
 }
 
-Path::Path(Path & oldpath){
-    if(DEBUG)cerr << "new Path[COPY]" << endl;
-};
+// Path::Path(Path & oldpath){
+//     if(DEBUG)cerr << "new Path[COPY]" << endl;
+// };
 
 // Path::Path(vector<Node*> nodes)
 //     :nodes(nodes), entangle_succ(true), swap_succ(false){

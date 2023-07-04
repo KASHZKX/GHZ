@@ -11,9 +11,9 @@ Channel::Channel(Node *node1_ptr, Node *node2_ptr, double entangle_prob)
 	if(DEBUG)cerr<<"New channel(with fidelity = 1)!"<<node1_ptr->get_id() << " " << node2_ptr->get_id() << ", entangle_prob = " << entangle_prob << endl;
 }
 
-Channel::Channel(Channel & oldchannel){
-		if(DEBUG)cerr<<"New channel[COPY]!"<<node1_ptr->get_id() << " " << node2_ptr->get_id() << ", entangle_prob = " << entangle_prob << endl;
-};
+// Channel::Channel(Channel & oldchannel){
+// 		if(DEBUG)cerr<<"New channel[COPY]!"<<node1_ptr->get_id() << " " << node2_ptr->get_id() << ", entangle_prob = " << entangle_prob << endl;
+// };
 
 //constructor for fidelity
 Channel::Channel(Node *node1_ptr, Node *node2_ptr, double entangle_prob, double fidelity)
