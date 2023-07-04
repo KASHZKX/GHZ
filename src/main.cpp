@@ -155,7 +155,6 @@ int main(){
                         auto &algo = algorithms[i];
                         ofs<<"-----------run "<< algo->get_name() << " ---------"<<endl;
                         algo->run();
-                        Path::print();
                         ofs<<"total_throughputs : "<<algo->get_res("throughputs")<<endl;
                         ofs<<"-----------run "<<algo->get_name() << " ---------end"<<endl;
                     }
