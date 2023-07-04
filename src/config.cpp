@@ -1,3 +1,3 @@
 #include "config.h"
 
-bool DEBUG = false;
+bool DEBUG = true;

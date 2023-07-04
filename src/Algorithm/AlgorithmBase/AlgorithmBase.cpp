@@ -140,10 +140,8 @@ void AlgorithmBase::assign_resource(vector<int> path, int reqno){
         exit(1);
     }
     while(width-- > 0){
-        Path * test;
-        test = graph.build_path(path);
-        requests[reqno] += test;
-        test->print();
+       
+        requests[reqno] +=  graph.build_path(path);
     }
     if(DEBUG) cerr<< "---------AlgorithmBase::assign_resource----------end" << endl;
 }
