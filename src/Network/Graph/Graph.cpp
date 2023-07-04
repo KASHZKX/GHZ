@@ -233,5 +233,9 @@ Path* Graph::build_path(vector<int> nodes_id){
         Node &node2 = nodes[nodes_id[i+1]];
         path_channels.emplace_back(assign_channel(node1, node2));
     }
+    
+    for(auto id: nodes_id){
+        cout << id << endl;
+    }
     return new Path(path_nodes, path_channels);
 }
