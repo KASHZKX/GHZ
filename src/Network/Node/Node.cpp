@@ -7,7 +7,7 @@ Node::Node(int id, int memory_cnt, int time_limit, double pos_x, double pos_y, d
         cerr << "new Node " << id << endl;
 }
 
-Node::Node(const Node & old_node){
+Node::Node(Node & old_node){
     if (DEBUG)
         cerr << "new Node [COPY] " << id << endl;
 }

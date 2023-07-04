@@ -17,7 +17,7 @@ class Node{
     void release();                              //clean assign status
 public:
     Node(int id, int memory_cnt, int time_limit, double pos_x, double pos_y, double swap_prob);
-    Node(const Node & old_node);
+    Node(Node & old_node);
     ~Node();
     Node():swap_prob(0){}
     int get_id();
