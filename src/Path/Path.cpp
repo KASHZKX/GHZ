@@ -152,7 +152,7 @@ void Path::refresh(){
     swap_status = PATH_UNSWAP;
 }
 void Path::print(){
-    if(!DEBUG)  return;
+    // if(!DEBUG)  return;
     cerr<<"this is a Path"<<endl;
     cerr<<"\tentangle_succ = "<<get_entangle_succ()<<endl;
     cerr<<"\tswap_succ = "<<swap_status<<endl;
