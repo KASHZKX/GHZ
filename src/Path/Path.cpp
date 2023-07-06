@@ -158,13 +158,17 @@ void Path::refresh(){
 void Path::print(){
     if(!DEBUG)  return;
     cerr<<"this is a Path"<<endl;
-    cerr<<"\tentangle_succ = "<<get_entangle_succ()<<endl;
-    cerr<<"\tswap_succ = "<<swap_status<<endl;
-    cerr<<"\t the node in path is:";
     for(auto n:nodes){
         cerr<<n->get_id()<<" ";
     }
     cerr << endl;
+    cerr<<"\tentangle_succ = "<<get_entangle_succ()<<endl;
+    cerr<<"\tswap_succ = "<<swap_status<<endl;
+    cerr<<"\t the node in path is:";
+    // for(auto n:nodes){
+    //     cerr<<n->get_id()<<" ";
+    // }
+    // cerr << endl;
     cerr << "\t the channel in path is:";
     for(auto c : channels){
         cerr << c <<" ";
