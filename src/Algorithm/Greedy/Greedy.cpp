@@ -6,7 +6,7 @@ Greedy::Greedy(string filename, int request_time_limit, int node_time_limit, dou
 }
 
 void Greedy::path_assignment(){
-    base_test_active();
+    // base_test_active();
     bool flag = true;
     while(flag){
         flag = false;

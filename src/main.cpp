@@ -50,10 +50,10 @@ int main(){
 
     default_setting["swap_prob"] = 1;
     default_setting["entangle_alpha"] = 0;
-    default_setting["node_time_limit"] = 7;
+    default_setting["node_time_limit"] = 1;
     default_setting["new_request_cnt"] = 10;
-    default_setting["request_time_limit"] = 7;
-    default_setting["total_time_slot"] = 100;
+    default_setting["request_time_limit"] = 1;
+    default_setting["total_time_slot"] = 1;
     default_setting["service_time"] = 100;
 
     map<string, vector<double>> change_parameter;
@@ -85,7 +85,7 @@ int main(){
     for(string X_name : X_names) {
         map<string, double> input_parameter = default_setting;
 
-        for(double change_value : change_parameter[X_name]) {
+        for(double change_value : change_parameter[X_name]) {         
             vector<map<string, map<string, double>>> result(round);
             input_parameter[X_name] = change_value;
             
