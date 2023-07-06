@@ -33,8 +33,8 @@ void AlgorithmBase::base_next_time_slot(){
         res["path_length"] += requests[reqno].get_send_path_length();
         res["fidelity"] += requests[reqno].get_fidelity();
         finished_reqno.push_back(reqno);
-        if(requests[reqno].is_success()){
-            res["throughputs"]++;
+        if(requests[reqno].get_throughput() != 0){
+            res["throughputs"]+= requests[reqno].get_throughput();
         }
     }
 

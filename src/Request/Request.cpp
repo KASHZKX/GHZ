@@ -55,6 +55,10 @@ vector<Path *> Request::get_paths(){
     return paths;
 }
 
+int Request::get_throughput(){
+    return throughput;
+}
+
 void Request::clear_paths(){
     for(int i=0;i < (int)paths.size();i++){
         if(paths[i] != nullptr){
@@ -81,8 +85,10 @@ void Request::entangle(){
 void Request::swap(){
     for(auto &path:paths){
         if(path == nullptr)continue;
-        if(path->get_entangle_succ()) path->swap();
-        // if(path->get_swap_succ()) throughput++;
+        if(path->get_entangle_succ()) {
+            path->swap();
+            throughput++;
+        }
     }
 }
 

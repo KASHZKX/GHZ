@@ -18,6 +18,7 @@ class Request{
 protected:
     int source, destination;
     int time_limit;
+    int throughput = 0;
     int status;
     int send_path_length;
     double fidelity;
