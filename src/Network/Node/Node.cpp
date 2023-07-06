@@ -14,8 +14,8 @@ Node::Node(int id, int memory_cnt, int time_limit, double pos_x, double pos_y, d
 
 Node::~Node()
 {
-    if (DEBUG)
-        cerr << "delete Node " << id << endl;
+    // if (DEBUG)
+    //     cerr << "delete Node " << id << endl;
 }
 
 int Node::get_id()
