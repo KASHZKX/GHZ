@@ -72,7 +72,6 @@ void AlgorithmBase::check_resource(){
         Node *node_ptr = graph.Node_id2ptr(i);
         use_memory_sum += node_ptr->get_memory_cnt() - node_ptr->get_remain();
         memory_sum += node_ptr->get_memory_cnt();
-        cerr << "memory sum: " << memory_sum << endl;
     }
     res["use_memory"] = max(res["use_memory"], use_memory_sum);
     res["total_memory"] = memory_sum;
@@ -84,7 +83,6 @@ void AlgorithmBase::check_resource(){
     }
     res["use_channel"] = max(res["use_channel"], use_channel_sum);
     res["total_channel"] = channel_sum;
-    cerr << "channel sum: " << channel_sum << endl;
 }
 
 void AlgorithmBase::run(){

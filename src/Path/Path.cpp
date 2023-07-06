@@ -51,7 +51,7 @@ vector<Channel*> Path::get_channels(){
 
 void Path::entangle(){                                  //question:why checking is_entangled do not put in this?
     if(DEBUG)cerr << "entangle path :" << endl;
-    this->print();
+    // this->print();
     if(channels.size() == 0 || nodes.size() <= 1){
         cerr << "error:\tWTF" << endl;
         exit(1);
