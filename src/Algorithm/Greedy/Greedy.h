@@ -1,11 +1,11 @@
 #ifndef __GREEDY
 #define __GREEDY
-#include    <iostream>
-#include    <algorithm>
-#include    <queue>
-#include    "../AlgorithmBase/AlgorithmBase.h"
-#include    "../../Network/Graph/Graph.h"
-#include    "../../config.h"
+#include <iostream>
+#include <algorithm>
+#include <queue>
+#include "../AlgorithmBase/AlgorithmBase.h"
+#include "../../Network/Graph/Graph.h"
+#include "../../config.h"
 using namespace std;
 
 class Greedy:public AlgorithmBase{

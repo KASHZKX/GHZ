@@ -4,3 +4,4 @@ a.input
 make.cpp
 makefileold.txt
 mktest.txt
+separation_oracle.cpp

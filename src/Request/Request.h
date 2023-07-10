@@ -18,6 +18,7 @@ class Request{
 protected:
     int source, destination;
     int time_limit;
+    int send_limit = 1;
     int throughput = 0;
     int status;
     int send_path_length;
@@ -33,6 +34,7 @@ public:
     int get_destination();
     int get_throughput();
     int get_send_path_length();
+    int get_send_limit();
     double get_fidelity();
     vector<Path *> get_paths();
     

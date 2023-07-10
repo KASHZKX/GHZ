@@ -1,13 +1,13 @@
 #ifndef __ALGORITHMBASE_H
 #define __ALGORITHMBASE_H
 
-#include    <iostream>
-#include    <vector>
-#include    <queue>
-#include    <algorithm>
-#include    <string>
-#include    <map>
-#include    <sys/time.h>
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <algorithm>
+#include <string>
+#include <map>
+#include <sys/time.h>
 #include "../../Network/Graph/Graph.h"
 #include "../../Request/Request.h"
 #include "../../config.h"

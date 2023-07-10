@@ -30,11 +30,13 @@ public:
     ~Graph(void);
 
     int get_size();                                        // return |V|
+    int get_num_of_edge();
     vector<int> get_neighbors_id(int node1_id);            // int get_neighbor_size(int node_id); int get_neighbor_id(int node1_id, int nth);
     double get_channel_weight(int node1_id, int node2_id); // return the average weight of channel between node1 and node2
     int get_channel_size(int node1_id, int node2_id);
     int get_used_channel_size(int node1_id, int node2_id);
     int get_channel_entangle_succ_cnt(int node1_id, int node2_id);
+    int get_entangle_alpha();
     bool is_trusted(int node1_id, int node2_id);
     Node *Node_id2ptr(int id);
 
@@ -44,6 +46,7 @@ public:
     void set_weight(int node1_id, int node2_id, double value);
     int remain_resource_cnt(int node1_id, int node2_id, bool is1_repeater = true, bool is2_repeater = true); // the resource width between node1 and node2
     Path *build_path(vector<int> nodes_id);
+    
 };
 
 #endif

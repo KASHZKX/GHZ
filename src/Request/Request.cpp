@@ -27,6 +27,9 @@ int Request::get_time_limit(){
     return time_limit;
 }
 
+int Request::get_send_limit(){
+    return send_limit;
+};
 // int Request::get_waiting_time(){
 //     return waiting_time;
 // }
@@ -56,7 +59,7 @@ vector<Path *> Request::get_paths(){
 }
 
 int Request::get_throughput(){
-    return throughput;
+    return this->throughput;
 }
 
 void Request::clear_paths(){

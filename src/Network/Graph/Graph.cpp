@@ -14,6 +14,10 @@ int Graph::get_size(){
     return (int)nodes.size();
 }
 
+int Graph::get_num_of_edge(){
+    return num_of_edge;
+}
+
 Channel* Graph::assign_channel(Node &node1, Node &node2){
     
     //I'm sorry for this code. = =|||
@@ -83,6 +87,10 @@ int Graph::get_used_channel_size(int node1_id, int node2_id){
     }
     return cnt;
 }
+
+int Graph::get_entangle_alpha(){
+    return entangle_alpha;
+};
 
 int Graph::get_channel_entangle_succ_cnt(int node1_id, int node2_id){
     if(nodes[node1_id] > nodes[node2_id]){
