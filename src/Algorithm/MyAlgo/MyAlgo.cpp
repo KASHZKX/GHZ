@@ -44,6 +44,7 @@ void MyAlgo::initialize(){
     for(int i = 0; i < requests.size(); i++){
         tau.emplace_back(delta / requests[i].get_send_limit());
     }
+    cout << "Y" << endl;
     for(int i = 0; i < graph.get_size(); i++){
         vector<int> temp = graph.get_neighbors_id(i);                             
         for(auto it: temp){
