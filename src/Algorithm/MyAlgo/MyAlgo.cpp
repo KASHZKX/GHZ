@@ -140,6 +140,7 @@ vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){  // running t
     double c;
     double r;
     while(cur_node != dst){
+        cout << "cur_node: " << cur_node << endl;
         if(cur_node < SPT[cur_node]){
             c += X[{cur_node,SPT[cur_node]}];
             r += Y[req_no][{cur_node,SPT[cur_node]}];
