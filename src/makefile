@@ -9,8 +9,8 @@ all: a.out
 encode_path.out: encode_path_ratio.cpp Network/Node/Node.o Network/Channel/Channel.o Path/Path.o Network/Graph/Graph.o Algorithm/AlgorithmBase/AlgorithmBase.o Request/Request.o config.o Algorithm/MyAlgo/MyAlgo.o Request/WholeRequest.o
 	g++ -std=c++17 -fopenmp -g -Wall -Wextra -O3 encode_path_ratio.cpp Network/Node/Node.o Network/Channel/Channel.o Path/Path.o Network/Graph/Graph.o Algorithm/AlgorithmBase/AlgorithmBase.o Request/Request.o config.o Algorithm/MyAlgo/MyAlgo.o Request/WholeRequest.o -o encode_path.out
 
-a.out: main.cpp $(dependency) Algorithm/Greedy/Greedy.o Request/WholeRequest.o 
-	g++ -std=c++17 -fopenmp -g -Wall -Wextra -O3 main.cpp $(dependency) Algorithm/Greedy/Greedy.o  
+a.out: main.cpp $(dependency) Algorithm/Greedy/Greedy.o Request/WholeRequest.o Algorithm/MyAlgo/MyAlgo.o 
+	g++ -std=c++17 -fopenmp -g -Wall -Wextra -O3 main.cpp $(dependency) Algorithm/Greedy/Greedy.o Algorithm/MyAlgo/MyAlgo.o  
 #fight_with_local_opt.out: fight_with_local_opt.cpp $(dependency) Request/WholeRequest.o 
 #	g++ -std=c++17 -fopenmp -g -Wall -Wextra -O3 fight_with_local_opt.cpp $(dependency) Algorithm/MyAlgo/MyAlgo.o  Algorithm/MyAlgo2/MyAlgo2.o Algorithm/MyGreedyAlgo/MyGreedyAlgo.o Request/WholeRequest.o -o fight_with_local_opt.out
 
@@ -46,6 +46,10 @@ Algorithm/Greedy/Greedy.o: Algorithm/Greedy/Greedy.h Algorithm/Greedy/Greedy.cpp
 	g++ -std=c++17 -c -g -Wall -Wextra -O3 Algorithm/Greedy/Greedy.h Algorithm/Greedy/Greedy.cpp config.h
 	mv Greedy.o Algorithm/Greedy/Greedy.o
 
+Algorithm/MyAlgo/MyAlgo.o: Algorithm/MyAlgo/MyAlgo.h Algorithm/MyAlgo/MyAlgo.cpp config.h
+	g++ -std=c++17 -c -g -Wall -Wextra -O3 --static Algorithm/MyAlgo/MyAlgo.h Algorithm/MyAlgo/MyAlgo.cpp config.h
+	mv MyAlgo.o Algorithm/MyAlgo/MyAlgo.o
+
 config.o:	config.h config.cpp
 	g++ -std=c++17 -c -g -O3 config.h config.cpp
 check_node: Node/Node.o Node/Node_test.cpp
@@ -62,7 +66,7 @@ clean:
 	rm -f Path/Path.o Path/Path.h.gch
 	rm -f Network/Graph/Graph.o Network/Graph/Graph.h.gch
 	rm -f Request/Request.o Request/Request.h.gch
-
+	rm -f Algorithm/MyAlgo/MyAlgo.o Algorithm/MyAlgo/MyAlgo.h.gch
 	rm -f config.o config.h.gch
 	find . -type f -name '*.o' -delete
 	find . -type f -name '*.h.gch' -delete
