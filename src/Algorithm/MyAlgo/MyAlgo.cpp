@@ -135,6 +135,7 @@ vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){  // running t
     int dst =  requests[req_no].get_destination();
     SPT = Dijkstra(src, dst);                               //the first SPT
     cout<<"Dijkstra end\n";
+    
     int cur_node=src;                                       //counting the first path's U(x,y)
     double c;
     double r;
@@ -156,7 +157,7 @@ vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){  // running t
     vector<int> new_path;
     double a;
     double b = 1;
-
+    cout<<"midpoint1\n";
     while(b != 0){                                              //creating many new SPT
         map<pair<int, int>, bool> used;
         pair<int,int> new_edge;
@@ -196,7 +197,7 @@ vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){  // running t
                 }
             }
         }        // 找到最小的 edge 
-
+        cout<<"midpoint2\n";
         if(minimum == numeric_limits<double>::infinity()){
             break;
         }else{
@@ -215,7 +216,7 @@ vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){  // running t
         else{
             SPT[new_edge.first] = new_edge.second;
         }
-        ////
+        cout<<"midpoint3\n";
         cur_node = src;                                   //question:did you change the path? or just give me the old path?  
         while(cur_node != -1) {
             new_path.push_back(cur_node);
@@ -223,7 +224,7 @@ vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){  // running t
         }       
 
         //give me a path vector
-        double new_len;
+        double new_len = 0;
         c = 0;
         r = 0;
         for(int i = 0; i < new_path.size() - 1; i++){
