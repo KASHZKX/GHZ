@@ -128,8 +128,8 @@ vector<int> MyAlgo::Dijkstra(int src, int dst){
 
 vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){  // running time 
     cout<<"sparation\n";
-    vector<int> SPT;
-    vector<int> best_path;
+    vector<int> SPT(graph.get_size() + 5);
+    vector<int> best_path(graph.get_size() + 5);
     double best_len; 
     int src = requests[req_no].get_source();
     int dst =  requests[req_no].get_destination();
