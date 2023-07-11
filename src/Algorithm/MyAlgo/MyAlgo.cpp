@@ -44,35 +44,33 @@ void MyAlgo::initialize(){
     for(int i = 0; i < requests.size(); i++){
         tau.emplace_back(delta / requests[i].get_send_limit());
     }
-    cout << "Y" << endl;
+    Y.resize(requests.size() + 5);
     for(int i = 0; i < graph.get_size(); i++){
         vector<int> temp = graph.get_neighbors_id(i);                             
         for(auto it: temp){
             if(i < it){
                 X[{i, it}] = alpha[i] + alpha[it] + beta[{i, it}];
-            
-            
-                for(int j = 0;j < requests.size(); j++){
-                    int src = requests[j].get_source();
-                    int des = requests[j].get_destination();
-                    double ent_p=exp(graph.Node_id2ptr(i)->distance(*graph.Node_id2ptr(it))*(-graph.get_entangle_alpha()));
-                    if(i!=src && i!=des && it!=src && it!=des){
-                        Y[j][{i, it}] = -(log(ent_p)/log(exp(1))) - (log(sqrt(graph.Node_id2ptr(i)->get_swap_prob())/log(exp(1)))) - (log(sqrt(graph.Node_id2ptr(it)->get_swap_prob())/log(exp(1))));
-                    }
-                    else if((i==src && it!=des) || (i==des && it!=src)){
-                        Y[j][{i, it}] = -(log(ent_p)/log(exp(1))) - (log(sqrt(graph.Node_id2ptr(it)->get_swap_prob())/log(exp(1))));
-                    }
-                    else if((i==src && it!=des) || (i==des && it!=src)){
-                        Y[j][{i, it}] = -(log(ent_p)/log(exp(1))) - (log(sqrt(graph.Node_id2ptr(i)->get_swap_prob())/log(exp(1))));
-                    }
-                    else{
-                        Y[j][{i, it}] = -(log(ent_p)/log(exp(1)));
-                    }
-                }
-             }
+            }
             else{
                 X[{it, i}] = alpha[it] + alpha[i] + beta[{it, i}];
-                // Y[{it, i}] = exp(graph.Node_id2ptr(i)->distance(*graph.Node_id2ptr(it))*(-graph.get_entangle_alpha()));
+            }
+            cout << "X" << endl;
+            for(int j = 0;j < requests.size(); j++){
+                int src = requests[j].get_source();
+                int des = requests[j].get_destination();
+                double ent_p = exp(graph.Node_id2ptr(i)->distance(*graph.Node_id2ptr(it))*(-graph.get_entangle_alpha()));
+                if(i != src && i != des && it != src && it != des){
+                    Y[j][{i, it}] = -(log(ent_p)/log(exp(1))) - (log(sqrt(graph.Node_id2ptr(i)->get_swap_prob())/log(exp(1)))) - (log(sqrt(graph.Node_id2ptr(it)->get_swap_prob())/log(exp(1))));
+                }
+                else if((i == src && it != des) || (i == des && it != src)){
+                    Y[j][{i, it}] = -(log(ent_p)/log(exp(1))) - (log(sqrt(graph.Node_id2ptr(it)->get_swap_prob())/log(exp(1))));
+                }
+                else if((i == src && it != des) || (i == des && it != src)){
+                    Y[j][{i, it}] = -(log(ent_p)/log(exp(1))) - (log(sqrt(graph.Node_id2ptr(i)->get_swap_prob())/log(exp(1))));
+                }
+                else{
+                    Y[j][{i, it}] = -(log(ent_p)/log(exp(1)));
+                }
             }
         }
     }
