@@ -117,7 +117,7 @@ int AlgorithmBase::find_width(vector<int> path){
     }
     int path_size = (int)path.size();
     int width = graph.remain_resource_cnt(path[0], path[1], false);
-    for(int i=2;i<path_size-1;i++){
+    for(int i = 2; i < path_size - 1; i++){
         width = min(width, graph.remain_resource_cnt(path[i-1], path[i]));
     }
     width = min(width, graph.remain_resource_cnt(path[path_size-2], path[path_size-1], true, false));

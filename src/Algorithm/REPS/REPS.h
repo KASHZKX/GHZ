@@ -1,7 +1,7 @@
-#include    "../AlgorithmBase/AlgorithmBase.h"
-#include    "../../Network/Graph/Graph.h"
-#include    "../../config.h"
-#include    "gurobi_c++.h"
+#include "../AlgorithmBase/AlgorithmBase.h"
+#include "../../Network/Graph/Graph.h"
+#include "../../config.h"
+#include "gurobi_c++.h"
 using namespace std;
 
 

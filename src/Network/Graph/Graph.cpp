@@ -145,7 +145,7 @@ void Graph::generate(string filename){
     double fidelity;
     double dis_sum = 0;
     graph_input >> num_of_edge;
-    for(int i=0;i<num_of_edge;i++){
+    for(int i = 0;i < num_of_edge; i++){
         graph_input >> node_id1 >> node_id2 >> channel_cnt >> fidelity;
         neighbor[node_id1].emplace_back(node_id2);
         neighbor[node_id2].emplace_back(node_id1);
@@ -162,7 +162,7 @@ void Graph::generate(string filename){
 	    }
         dis_sum += node1.distance(node2);
         double entangle_prob = exp(-entangle_alpha * (node1.distance(node2))); // e^( -alpha * dis(node1, node2) )
-        if(DEBUG) cerr<<"entangle_prob:\t"<<entangle_prob<<endl;
+        if(DEBUG) cerr<<"entangle_prob:\t" << entangle_prob << endl;
         for(int i = 0; i < channel_cnt; i++){
             channels[make_pair(node1, node2)].emplace_back(&node1, &node2, entangle_prob, fidelity);
         }

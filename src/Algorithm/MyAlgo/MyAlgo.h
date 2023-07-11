@@ -18,9 +18,11 @@ class MyAlgo:public AlgorithmBase {
 
 private:
     map<pair<int,int>, double> X;
-    map<pair<int,int>, double> Y;
+    vector<map<pair<int,int>, double>> Y;
     vector<double> alpha;
+    map<vector<int>, double> x_i_p;
     map<pair<int,int>, double> beta;
+    double epsilon;
     double delta;
     double M;
     vector<double> tau;                
@@ -28,11 +30,12 @@ public:
     map<int, int> num_of_path_count;
     map<int, int> path_length_encode;
     map<int, int> path_length_cnt;
-    void reweight_graph();
-    void separation_oracle(int req_no);
+    vector<int> separation_oracle(int req_no, double &U);
     vector<int> Dijkstra(int src, int dst);
-    void initialize(int epsilon);
+    void find_bottleneck(vector<int>, int req_no);
+    void initialize();
     void run();
+    double changing_obj();
     MyAlgo(string filename, int request_time_limit, int node_time_limit, double swap_prob, double entangle_alpha);
     ~MyAlgo();
 };
