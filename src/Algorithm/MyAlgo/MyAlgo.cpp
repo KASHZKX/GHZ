@@ -127,6 +127,7 @@ vector<int> MyAlgo::Dijkstra(int src, int dst){
     //     0
 
 vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){  // running time 
+    cout<<"sparation\n";
     vector<int> SPT;
     vector<int> best_path;
     double best_len; 
@@ -248,6 +249,7 @@ vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){  // running t
 }
 
 void MyAlgo::find_bottleneck(vector<int> path, int req_no){
+    cout<<"find_bottle\n";
     double min_s_u = numeric_limits<double>::infinity();
     double min_s_uv = numeric_limits<double>::infinity();
     double s_i = requests[req_no].get_send_limit();
