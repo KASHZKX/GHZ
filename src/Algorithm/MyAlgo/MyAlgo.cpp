@@ -6,7 +6,7 @@ MyAlgo::MyAlgo(string filename, int request_time_limit, int node_time_limit, dou
 }
 
 MyAlgo::~MyAlgo(){
-    if(DEBUG) cerr << "delete MMyyAl" << endl;
+    if(DEBUG) cerr << "delete MyAlgo" << endl;
 }
 
 void MyAlgo::path_assignment(){
@@ -84,6 +84,7 @@ void MyAlgo::initialize(){
 }
 
 vector<int> MyAlgo::Dijkstra(int src, int dst){ 
+    cout<<"D"
     const double INF = numeric_limits<double>::infinity();
     int n = graph.get_size();
     vector<double> distance(n, INF);
