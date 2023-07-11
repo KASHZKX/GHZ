@@ -134,7 +134,7 @@ vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){  // running t
     int src = requests[req_no].get_source();
     int dst =  requests[req_no].get_destination();
     SPT = Dijkstra(src, dst);                               //the first SPT
-
+    cout<<"Dijkstra end\n";
     int cur_node=src;                                       //counting the first path's U(x,y)
     double c;
     double r;
