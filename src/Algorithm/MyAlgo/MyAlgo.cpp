@@ -5,6 +5,10 @@ MyAlgo::MyAlgo(string filename, int request_time_limit, int node_time_limit, dou
     if(DEBUG) cerr<<"new MyAlgo"<<endl;
 }
 
+MyAlgo::~MyAlgo(){
+    if(DEBUG) cerr << "delete MMyyAl" << endl;
+}
+
 void MyAlgo::path_assignment(){
     
 };
