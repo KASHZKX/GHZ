@@ -310,10 +310,12 @@ double MyAlgo::changing_obj(){
 }
 
 void MyAlgo::path_assignment(){
-     cout<<"run\n";
+    cout<<"run\n";
+    initialize();
     double obj = M * delta;
     //vector<vector<vector<int>>> req_paths(requests.size());
     //vector<double> req_Us;
+    
     vector<int> best_path;
     vector<int> cur_path;
     double U;
