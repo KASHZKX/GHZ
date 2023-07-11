@@ -30,7 +30,7 @@ void MyAlgo::initialize(){
     delta = (1 + epsilon) * pow(((1 + epsilon) * M), (-1 / epsilon));
 
     for(int i = 0; i < graph.get_size(); i++){
-        alpha[i] = delta / graph.Node_id2ptr(i)->get_memory_cnt();                //alpha_set
+        alpha.emplace_back(delta / graph.Node_id2ptr(i)->get_memory_cnt());                //alpha_set
         vector<int> temp = graph.get_neighbors_id(i);                             //beta_set
         for(auto it: temp){
             if(i < it){
@@ -42,7 +42,7 @@ void MyAlgo::initialize(){
         }
     }
     for(int i = 0; i < requests.size(); i++){
-        tau[i] = delta / requests[i].get_send_limit();
+        tau.emplace_back(delta / requests[i].get_send_limit());
     }
     for(int i = 0; i < graph.get_size(); i++){
         vector<int> temp = graph.get_neighbors_id(i);                             
@@ -50,8 +50,8 @@ void MyAlgo::initialize(){
             if(i < it){
                 X[{i, it}] = alpha[i] + alpha[it] + beta[{i, it}];
             
-
-                for(int j=0;j<requests.size();j++){
+            
+                for(int j = 0;j < requests.size(); j++){
                     int src = requests[j].get_source();
                     int des = requests[j].get_destination();
                     double ent_p=exp(graph.Node_id2ptr(i)->distance(*graph.Node_id2ptr(it))*(-graph.get_entangle_alpha()));
