@@ -54,7 +54,6 @@ void MyAlgo::initialize(){
             else{
                 X[{it, i}] = alpha[it] + alpha[i] + beta[{it, i}];
             }
-            cout << "X" << endl;
             for(int j = 0;j < requests.size(); j++){
                 int src = requests[j].get_source();
                 int des = requests[j].get_destination();
