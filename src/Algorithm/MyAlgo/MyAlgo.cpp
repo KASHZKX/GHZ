@@ -9,10 +9,6 @@ MyAlgo::~MyAlgo(){
     if(DEBUG) cerr << "delete MyAlgo" << endl;
 }
 
-void MyAlgo::path_assignment(){
-    
-};
-
 void MyAlgo::entangle(){
     AlgorithmBase::base_entangle();
 }
@@ -304,7 +300,7 @@ double MyAlgo::changing_obj(){
     return temp_obj;
 }
 
-void MyAlgo::run(){
+void MyAlgo::path_assignment(){
      cout<<"run\n";
     double obj = M * delta;
     //vector<vector<vector<int>>> req_paths(requests.size());

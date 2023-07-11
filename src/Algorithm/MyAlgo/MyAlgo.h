@@ -39,7 +39,6 @@ public:
     void next_time_slot();
     void find_bottleneck(vector<int>, int req_no);
     void initialize();
-    void run();
     double changing_obj();
     MyAlgo(string filename, int request_time_limit, int node_time_limit, double swap_prob, double entangle_alpha);
     ~MyAlgo();
