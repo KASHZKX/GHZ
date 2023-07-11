@@ -32,6 +32,11 @@ public:
     map<int, int> path_length_cnt;
     vector<int> separation_oracle(int req_no, double &U);
     vector<int> Dijkstra(int src, int dst);
+    void path_assignment();
+    void entangle();
+    void swap();
+    void send();
+    void next_time_slot();
     void find_bottleneck(vector<int>, int req_no);
     void initialize();
     void run();

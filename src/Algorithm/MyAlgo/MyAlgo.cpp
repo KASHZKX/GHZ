@@ -5,6 +5,25 @@ MyAlgo::MyAlgo(string filename, int request_time_limit, int node_time_limit, dou
     if(DEBUG) cerr<<"new MyAlgo"<<endl;
 }
 
+void MyAlgo::path_assignment(){
+    
+};
+
+void MyAlgo::entangle(){
+    AlgorithmBase::entangle();
+}
+
+void MyAlgo::swap(){
+     AlgorithmBase::swap();
+}
+
+void MyAlgo::send(){
+     AlgorithmBase::base_send();
+}
+
+void MyAlgo::next_time_slot(){
+     AlgorithmBase::base_next_time_slot();
+}
 
 void MyAlgo::initialize(){
     M = graph.get_size() + graph.get_num_of_edge() + requests.size(); //V+E+I
