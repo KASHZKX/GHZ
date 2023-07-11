@@ -10,11 +10,11 @@ void MyAlgo::path_assignment(){
 };
 
 void MyAlgo::entangle(){
-    AlgorithmBase::entangle();
+    AlgorithmBase::base_entangle();
 }
 
 void MyAlgo::swap(){
-     AlgorithmBase::swap();
+     AlgorithmBase::base_swap();
 }
 
 void MyAlgo::send(){
