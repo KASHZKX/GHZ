@@ -84,7 +84,7 @@ void MyAlgo::initialize(){
 }
 
 vector<int> MyAlgo::Dijkstra(int src, int dst){ 
-    cout<<"D"
+    cout<<"Dijkstra\n";
     const double INF = numeric_limits<double>::infinity();
     int n = graph.get_size();
     vector<double> distance(n, INF);
@@ -305,7 +305,7 @@ double MyAlgo::changing_obj(){
 }
 
 void MyAlgo::run(){
-     
+     cout<<"run\n";
     double obj = M * delta;
     //vector<vector<vector<int>>> req_paths(requests.size());
     //vector<double> req_Us;
