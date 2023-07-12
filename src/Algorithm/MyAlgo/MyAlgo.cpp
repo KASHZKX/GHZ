@@ -77,7 +77,7 @@ void MyAlgo::initialize(){
                 double ent_p = exp(graph.Node_id2ptr(i)->distance(*graph.Node_id2ptr(it))*(-graph.get_entangle_alpha()));
                 cout << "ent_p: " << ent_p << endl;
                 cout << "dist: " << graph.Node_id2ptr(i)->distance(*graph.Node_id2ptr(it)) << endl;
-                cout << "alpha:" << -graph.get_entangle_alpha() << endl;
+                cout << "alpha:" << graph.get_entangle_alpha() << endl;
                 if(i<it){
                     if(i != src && i != des && it != src && it != des){
                         Y[j][{i, it}] = -(log(ent_p)/log(exp(1))) - (log(sqrt(graph.Node_id2ptr(i)->get_swap_prob())/log(exp(1)))) - (log(sqrt(graph.Node_id2ptr(it)->get_swap_prob())/log(exp(1))));
