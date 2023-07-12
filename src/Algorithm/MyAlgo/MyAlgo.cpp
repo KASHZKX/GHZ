@@ -28,9 +28,9 @@ void MyAlgo::next_time_slot(){
 void MyAlgo::initialize(){
     M = graph.get_size() + graph.get_num_of_edge() + requests.size(); //V+E+I
     delta = (1 + epsilon) * pow(((1 + epsilon) * M), (-1 / epsilon));
-
+    cout<<"V E I="<< graph.get_size() <<" "<< graph.get_num_of_edge() <<" "<< requests.size()<<endl;
     for(int i = 0; i < graph.get_size(); i++){
-        alpha.emplace_back(delta / graph.Node_id2ptr(i)->get_memory_cnt());                //alpha_set
+        alpha.emplace_back(delta / graph.Node_id2ptr(i)->get_memory_cnt());       //alpha_set
         vector<int> temp = graph.get_neighbors_id(i);                             //beta_set
         for(auto it: temp){
             if(i < it){
