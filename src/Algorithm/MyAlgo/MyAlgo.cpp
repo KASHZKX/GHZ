@@ -28,11 +28,11 @@ void MyAlgo::next_time_slot(){
 void MyAlgo::initialize(){
     M = graph.get_size() + graph.get_num_of_edge() + requests.size(); //V+E+I
     delta = (1 + epsilon) * pow(((1 + epsilon) * M), (-1 / epsilon));
-    //cout<<"V E I="<< graph.get_size() <<" "<< graph.get_num_of_edge() <<" "<< requests.size()<<endl;
+    cout<<"V E I="<< graph.get_size() <<" "<< graph.get_num_of_edge() <<" "<< requests.size()<<endl;
     cout<<"delta:"<<delta<<endl;
     for(int i = 0; i < graph.get_size(); i++){
         alpha.emplace_back(delta / graph.Node_id2ptr(i)->get_memory_cnt());       //alpha_set
-        cout<<"alpha id:"<<i<<" is"<<alpha[i]<<endl;
+        //cout<<"alpha id:"<<i<<" is"<<alpha[i]<<endl;
         vector<int> temp = graph.get_neighbors_id(i);                             //beta_set
         for(auto it: temp){
             if(i < it){
@@ -43,6 +43,19 @@ void MyAlgo::initialize(){
             }
         }
     }
+    ///test beta
+    for(int i = 0; i < graph.get_size(); i++){
+        vector<int> temp = graph.get_neighbors_id(i);                            
+        for(auto it: temp){
+            if(i < it){
+                cout<<"beta for["<<i<<","<<it<<"]:"<<beta[{i,it}]<<endl;
+            }
+            else{
+                cout<<"beta for["<<it<<","<<i<<"]:"<<beta[{it,i}]<<endl;
+            }
+        }
+    }
+
     for(int i = 0; i < requests.size(); i++){
         tau.emplace_back(delta / requests[i].get_send_limit());
     }
