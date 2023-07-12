@@ -271,6 +271,7 @@ vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){  // running t
                 c += X[{new_path[i+1], new_path[i]}];  
                 r += Y[req_no][{new_path[i+1], new_path[i]}];           
             }
+            cout<<"PATH:["<<new_path[i]<<" "<<new_path[i+1]<<"] with tot "<< c <<" / " << r <<endl;
         }
         new_len = c / r;
         cout << "best_len: " << best_len << " new_len: " << new_len << endl; 
@@ -376,7 +377,7 @@ void MyAlgo::path_assignment(){
         cout<<"\n------New round-------\n";
         for(unsigned int i = 0; i < requests.size(); i++){
             cur_path =  separation_oracle(i, U);
-            cout << "smallest_U: " << smallest_U << " U: " << U << endl; 
+            cout << "smallest_U: " << smallest_U << " U: " << U << "\n\n"; 
             if(U < smallest_U){
                 smallest_U  = U;
                 best_path = cur_path;
