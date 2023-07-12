@@ -62,7 +62,7 @@ void MyAlgo::initialize(){
         tau.emplace_back(delta / requests[i].get_send_limit());
     }
     Y.resize(requests.size() + 5);
-    for(unsigned int i = 0; i < graph.get_size(); i++){
+    for(int i = 0; i < graph.get_size(); i++){
         vector<int> temp = graph.get_neighbors_id(i);                             
         for(auto it: temp){
             if(i < it){
@@ -317,6 +317,7 @@ void MyAlgo::find_bottleneck(vector<int> path, int req_no){
             min_s_uv = s_uv[i];
     }
     
+    cout << "min_s_u: " << min_s_u << " min_s_uv: " << min_s_uv << "s_i: " << s_i <<endl;
     double s = min(min_s_u, min(min_s_uv, s_i));
  
     x_i_p[path] += s;
@@ -335,18 +336,14 @@ void MyAlgo::find_bottleneck(vector<int> path, int req_no){
 
 double MyAlgo::changing_obj(){
     double temp_obj = 0.0;
-    cout << "add alpha" << endl;
     for(int i = 0; i < alpha.size(); i++){
         temp_obj += alpha[i] * graph.Node_id2ptr(i)->get_memory_cnt();
     }
     
-    cout << "add beta" << endl;
     for(auto it : beta){
-        cout << "edge" << it.first.first << " " << it.first.second << endl;
         temp_obj += it.second * graph.get_channel_size(it.first.first, it.first.second);
     }
 
-    cout << "add tau" << endl;
     for(int i = 0;i < requests.size(); i++){
         temp_obj += tau[i] * requests[i].get_send_limit();
     }
