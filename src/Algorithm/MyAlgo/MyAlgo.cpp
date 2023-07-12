@@ -189,7 +189,8 @@ vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){  // running t
     } 
     best_path.push_back(dst);
     best_len = c / r;
-
+    req_Us=best_len;
+    
     vector<int> new_path;
     double a;
     double b = 1;
@@ -288,7 +289,7 @@ vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){  // running t
         cout <<p << " ";
     }
     cout << endl;
-    cout<<"req_US: "<<req_Us<<endl;
+   
     return best_path;
                                                                        
 }
