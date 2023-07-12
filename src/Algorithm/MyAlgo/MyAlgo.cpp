@@ -67,9 +67,11 @@ void MyAlgo::initialize(){
         for(auto it: temp){
             if(i < it){
                 X[{i, it}] = alpha[i] + alpha[it] + beta[{i, it}];
+                X[{it, i}] = alpha[i] + alpha[it] + beta[{i, it}];
             }
             else{
                 X[{it, i}] = alpha[it] + alpha[i] + beta[{it, i}];
+                X[{i, it}] = alpha[it] + alpha[i] + beta[{it, i}];
             }
             for(unsigned  j = 0;j < requests.size(); j++){
                 int src = requests[j].get_source();
@@ -78,40 +80,45 @@ void MyAlgo::initialize(){
                 if(i<it){
                     if(i != src && i != des && it != src && it != des){
                         Y[j][{i, it}] = -(log(ent_p)/log(exp(1))) - (log(sqrt(graph.Node_id2ptr(i)->get_swap_prob())/log(exp(1)))) - (log(sqrt(graph.Node_id2ptr(it)->get_swap_prob())/log(exp(1))));
+                        Y[j][{it, i}] = -(log(ent_p)/log(exp(1))) - (log(sqrt(graph.Node_id2ptr(i)->get_swap_prob())/log(exp(1)))) - (log(sqrt(graph.Node_id2ptr(it)->get_swap_prob())/log(exp(1))));
                     }
                     else if((i == src && it != des) || (i == des && it != src)){
                         Y[j][{i, it}] = -(log(ent_p)/log(exp(1))) - (log(sqrt(graph.Node_id2ptr(it)->get_swap_prob())/log(exp(1))));
+                        Y[j][{it, i}] = -(log(ent_p)/log(exp(1))) - (log(sqrt(graph.Node_id2ptr(it)->get_swap_prob())/log(exp(1))));
                     }
                     else if((i == src && it != des) || (i == des && it != src)){
                         Y[j][{i, it}] = -(log(ent_p)/log(exp(1))) - (log(sqrt(graph.Node_id2ptr(i)->get_swap_prob())/log(exp(1))));
+                        Y[j][{it, i}] = -(log(ent_p)/log(exp(1))) - (log(sqrt(graph.Node_id2ptr(i)->get_swap_prob())/log(exp(1))));
                     }
                     else{
                         Y[j][{i, it}] = -(log(ent_p)/log(exp(1)));
+                        Y[j][{it, i}] = -(log(ent_p)/log(exp(1)));
                     }
                 }
                 else{
                     if(i != src && i != des && it != src && it != des){
+                        Y[j][{i, it}] = -(log(ent_p)/log(exp(1))) - (log(sqrt(graph.Node_id2ptr(i)->get_swap_prob())/log(exp(1)))) - (log(sqrt(graph.Node_id2ptr(it)->get_swap_prob())/log(exp(1))));
                         Y[j][{it, i}] = -(log(ent_p)/log(exp(1))) - (log(sqrt(graph.Node_id2ptr(i)->get_swap_prob())/log(exp(1)))) - (log(sqrt(graph.Node_id2ptr(it)->get_swap_prob())/log(exp(1))));
                     }
                     else if((i == src && it != des) || (i == des && it != src)){
+                        Y[j][{i, it}] = -(log(ent_p)/log(exp(1))) - (log(sqrt(graph.Node_id2ptr(it)->get_swap_prob())/log(exp(1))));
                         Y[j][{it, i}] = -(log(ent_p)/log(exp(1))) - (log(sqrt(graph.Node_id2ptr(it)->get_swap_prob())/log(exp(1))));
                     }
                     else if((i == src && it != des) || (i == des && it != src)){
+                        Y[j][{i, it}] = -(log(ent_p)/log(exp(1))) - (log(sqrt(graph.Node_id2ptr(i)->get_swap_prob())/log(exp(1))));
                         Y[j][{it, i}] = -(log(ent_p)/log(exp(1))) - (log(sqrt(graph.Node_id2ptr(i)->get_swap_prob())/log(exp(1))));
                     }
                     else{
+                        Y[j][{i, it}] = -(log(ent_p)/log(exp(1)));
                         Y[j][{it, i}] = -(log(ent_p)/log(exp(1)));
                     }                  
                 }
 
             }
                 ////test X、Y
-                if(i<it){
-                    cout<<"edge["<<i<<","<<it<<"]: X:"<<X[{i,it}]<<"   Y:"<<Y[0][{i,it}]<<endl;
-                }
-                else{
-                    cout<<"edge["<<it<<","<<i<<"]: X:"<<X[{it,i}]<<"   Y:"<<Y[0][{it,i}]<<endl;
-                }         
+                cout<<"edge["<<i<<","<<it<<"]: X:"<<X[{i,it}]<<"   Y:"<<Y[0][{i,it}]<<endl;
+                
+    
         }
     }
     
@@ -190,7 +197,7 @@ vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){  // running t
     best_path.push_back(dst);
     best_len = c / r;
     req_Us=best_len;
-    
+
     vector<int> new_path;
     double a;
     double b = 1;
@@ -220,8 +227,9 @@ vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){  // running t
                         temp2 -= Y[req_no][{cur_node, SPT[cur_node]}];
                         cur_node = SPT[cur_node];
                     }       
-
+                    
                     if(temp2 < 0 && temp1 > 0){               // we need the smallest edge to change the SPT
+                        cout<<"candidate : "<<- temp1 / temp2 <<endl;
                         if(minimum > - temp1 / temp2){
                             // revise edge
                             new_edge = {i, neighbor};
