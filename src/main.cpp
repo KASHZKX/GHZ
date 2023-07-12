@@ -106,7 +106,7 @@ int main(){
             int service_time = input_parameter["service_time"];
             int request_time_limit = input_parameter["request_time_limit"];
             int total_time_slot = input_parameter["total_time_slot"];
-
+            cout << "entangle_alpha: " << entangle_alpha << endl; 
             // python generate graph
 
             #pragma omp parallel for
