@@ -164,15 +164,12 @@ vector<int> MyAlgo::Dijkstra(int src, int dst){
     //     0
 
 vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){  // running time 
-    cout<<"sparation\n";
     vector<int> SPT(graph.get_size() + 5);
     vector<int> best_path;
     double best_len; 
     int src = requests[req_no].get_source();
     int dst =  requests[req_no].get_destination();
-    cout<<"Dijkstra\n";
     SPT = Dijkstra(src, dst);                               //the first SPT
-    cout<<"Dijkstra end\n";
     
     int cur_node = src;                                       //counting the first path's U(x,y)
     double c = 0;
@@ -196,7 +193,7 @@ vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){  // running t
     vector<int> new_path;
     double a;
     double b = 1;
-    cout<<"midpoint1\n";
+
     while(b != 0){                                              //creating many new SPT
         map<pair<int, int>, bool> used;
         pair<int,int> new_edge;
@@ -235,7 +232,7 @@ vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){  // running t
                 }
             }
         }        // 找到最小的 edge 
-        cout<<"midpoint2\n";
+
         if(minimum == numeric_limits<double>::infinity()){
             break;
         }else{
@@ -254,7 +251,7 @@ vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){  // running t
         else{
             SPT[new_edge.first] = new_edge.second;
         }
-        cout<<"midpoint3\n";
+
         cur_node = src;                                   //question:did you change the path? or just give me the old path?  
         while(cur_node != -1) {
             new_path.push_back(cur_node);
@@ -365,7 +362,7 @@ double MyAlgo::changing_obj(){
 }
 
 void MyAlgo::path_assignment(){
-    cout<< "run\n";
+
     initialize();
     double obj = M * delta;
     
@@ -401,6 +398,7 @@ void MyAlgo::path_assignment(){
         //
     }
     
+    cout<<"-----Final result------\n";
     for(auto x : x_i_p){
         vector<int> temp = x.first;
         cout << "PATH: ";
