@@ -337,11 +337,13 @@ double MyAlgo::changing_obj(){
     
     cout << "add beta" << endl;
     for(auto it : beta){
+        cout << "edge" << it.first.first << " " << it.first.second << endl;
         temp_obj += it.second * graph.get_channel_size(it.first.first, it.first.second);
     }
+
     cout << "add tau" << endl;
     for(int i = 0;i < requests.size(); i++){
-        temp_obj += tau[i]*requests[i].get_send_limit();
+        temp_obj += tau[i] * requests[i].get_send_limit();
     }
     return temp_obj;
 }
