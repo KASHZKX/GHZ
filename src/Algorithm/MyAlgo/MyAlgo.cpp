@@ -44,6 +44,7 @@ void MyAlgo::initialize(){
         }
     }
     ///test beta
+    /*
     for(int i = 0; i < graph.get_size(); i++){
         vector<int> temp = graph.get_neighbors_id(i);                            
         for(auto it: temp){
@@ -55,6 +56,7 @@ void MyAlgo::initialize(){
             }
         }
     }
+    */
 
     for(int i = 0; i < requests.size(); i++){
         tau.emplace_back(delta / requests[i].get_send_limit());
@@ -73,19 +75,43 @@ void MyAlgo::initialize(){
                 int src = requests[j].get_source();
                 int des = requests[j].get_destination();
                 double ent_p = exp(graph.Node_id2ptr(i)->distance(*graph.Node_id2ptr(it))*(-graph.get_entangle_alpha()));
-                if(i != src && i != des && it != src && it != des){
-                    Y[j][{i, it}] = -(log(ent_p)/log(exp(1))) - (log(sqrt(graph.Node_id2ptr(i)->get_swap_prob())/log(exp(1)))) - (log(sqrt(graph.Node_id2ptr(it)->get_swap_prob())/log(exp(1))));
-                }
-                else if((i == src && it != des) || (i == des && it != src)){
-                    Y[j][{i, it}] = -(log(ent_p)/log(exp(1))) - (log(sqrt(graph.Node_id2ptr(it)->get_swap_prob())/log(exp(1))));
-                }
-                else if((i == src && it != des) || (i == des && it != src)){
-                    Y[j][{i, it}] = -(log(ent_p)/log(exp(1))) - (log(sqrt(graph.Node_id2ptr(i)->get_swap_prob())/log(exp(1))));
+                if(i<it){
+                    if(i != src && i != des && it != src && it != des){
+                        Y[j][{i, it}] = -(log(ent_p)/log(exp(1))) - (log(sqrt(graph.Node_id2ptr(i)->get_swap_prob())/log(exp(1)))) - (log(sqrt(graph.Node_id2ptr(it)->get_swap_prob())/log(exp(1))));
+                    }
+                    else if((i == src && it != des) || (i == des && it != src)){
+                        Y[j][{i, it}] = -(log(ent_p)/log(exp(1))) - (log(sqrt(graph.Node_id2ptr(it)->get_swap_prob())/log(exp(1))));
+                    }
+                    else if((i == src && it != des) || (i == des && it != src)){
+                        Y[j][{i, it}] = -(log(ent_p)/log(exp(1))) - (log(sqrt(graph.Node_id2ptr(i)->get_swap_prob())/log(exp(1))));
+                    }
+                    else{
+                        Y[j][{i, it}] = -(log(ent_p)/log(exp(1)));
+                    }
                 }
                 else{
-                    Y[j][{i, it}] = -(log(ent_p)/log(exp(1)));
+                    if(i != src && i != des && it != src && it != des){
+                        Y[j][{it, i}] = -(log(ent_p)/log(exp(1))) - (log(sqrt(graph.Node_id2ptr(i)->get_swap_prob())/log(exp(1)))) - (log(sqrt(graph.Node_id2ptr(it)->get_swap_prob())/log(exp(1))));
+                    }
+                    else if((i == src && it != des) || (i == des && it != src)){
+                        Y[j][{it, i}] = -(log(ent_p)/log(exp(1))) - (log(sqrt(graph.Node_id2ptr(it)->get_swap_prob())/log(exp(1))));
+                    }
+                    else if((i == src && it != des) || (i == des && it != src)){
+                        Y[j][{it, i}] = -(log(ent_p)/log(exp(1))) - (log(sqrt(graph.Node_id2ptr(i)->get_swap_prob())/log(exp(1))));
+                    }
+                    else{
+                        Y[j][{it, i}] = -(log(ent_p)/log(exp(1)));
+                    }                  
                 }
+
             }
+                ////test X、Y
+                if(i<it){
+                    cout<<"edge["<<i<<","<<it<<"]: X:"<<X[{i,it}]<<"   Y:"<<Y[0][{i,it}]<<endl;
+                }
+                else{
+                    cout<<"edge["<<it<<","<<i<<"]: X:"<<X[{it,i}]<<"   Y:"<<Y[0][{it,i}]<<endl;
+                }         
         }
     }
     
