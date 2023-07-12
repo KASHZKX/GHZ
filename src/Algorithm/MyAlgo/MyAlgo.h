@@ -22,7 +22,7 @@ private:
     vector<double> alpha;
     map<vector<int>, double> x_i_p;
     map<pair<int,int>, double> beta;
-    double epsilon;
+    double epsilon=0.1;
     double delta;
     double M;
     vector<double> tau;                

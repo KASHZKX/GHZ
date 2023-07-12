@@ -28,9 +28,11 @@ void MyAlgo::next_time_slot(){
 void MyAlgo::initialize(){
     M = graph.get_size() + graph.get_num_of_edge() + requests.size(); //V+E+I
     delta = (1 + epsilon) * pow(((1 + epsilon) * M), (-1 / epsilon));
-    cout<<"V E I="<< graph.get_size() <<" "<< graph.get_num_of_edge() <<" "<< requests.size()<<endl;
+    //cout<<"V E I="<< graph.get_size() <<" "<< graph.get_num_of_edge() <<" "<< requests.size()<<endl;
+    cout<<"delta:"<<delta<<endl;
     for(int i = 0; i < graph.get_size(); i++){
         alpha.emplace_back(delta / graph.Node_id2ptr(i)->get_memory_cnt());       //alpha_set
+        cout<<"alpha id:"<<i<<" is"<<alpha[i]<<endl;
         vector<int> temp = graph.get_neighbors_id(i);                             //beta_set
         for(auto it: temp){
             if(i < it){
@@ -78,7 +80,6 @@ void MyAlgo::initialize(){
 }
 
 vector<int> MyAlgo::Dijkstra(int src, int dst){ 
-    cout<<"Dijkstra\n";
     const double INF = numeric_limits<double>::infinity();
     int n = graph.get_size();
     vector<double> distance(n, INF);
@@ -131,6 +132,7 @@ vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){  // running t
     double best_len; 
     int src = requests[req_no].get_source();
     int dst =  requests[req_no].get_destination();
+    cout<<"Dijkstra\n";
     SPT = Dijkstra(src, dst);                               //the first SPT
     cout<<"Dijkstra end\n";
     
@@ -138,21 +140,16 @@ vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){  // running t
     double c;
     double r;
     while(cur_node != dst){
-        cout << "cur_node: " << cur_node << endl;
+
         if(cur_node < SPT[cur_node]){
-            
             c += X[{cur_node,SPT[cur_node]}];
-            cout<<"X is ok\n";
             r += Y[req_no][{cur_node,SPT[cur_node]}];
         }
         else{
             c += X[{SPT[cur_node],cur_node}];  
-            cout<<"X is ok\n";
             r += Y[req_no][{SPT[cur_node],cur_node}];           
         }
-        cout<<"Y is ok\n";
         best_path.push_back(cur_node);
-        cout << "cur_node2: " << cur_node << endl;
         cur_node = SPT[cur_node];
     } 
     best_path.push_back(dst);
