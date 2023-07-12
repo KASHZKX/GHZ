@@ -373,6 +373,7 @@ void MyAlgo::path_assignment(){
 
         int req_no = 0;
         double smallest_U = numeric_limits<double>::infinity();
+        cout<<"\n------New round-------\n";
         for(unsigned int i = 0; i < requests.size(); i++){
             cur_path =  separation_oracle(i, U);
             cout << "smallest_U: " << smallest_U << " U: " << U << endl; 
