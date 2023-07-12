@@ -43,4 +43,5 @@ public:
     MyAlgo(string filename, int request_time_limit, int node_time_limit, double swap_prob, double entangle_alpha);
     ~MyAlgo();
 };
+
 #endif
