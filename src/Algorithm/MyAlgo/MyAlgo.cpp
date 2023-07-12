@@ -251,7 +251,7 @@ vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){  // running t
 }
 
 void MyAlgo::find_bottleneck(vector<int> path, int req_no){
-    cout<<"find_bottle\n";
+    
     double min_s_u = numeric_limits<double>::infinity();
     double min_s_uv = numeric_limits<double>::infinity();
     double s_i = requests[req_no].get_send_limit();
@@ -329,8 +329,11 @@ void MyAlgo::path_assignment(){
         }
         
         // compare
+        cout<<"find_bottle\n";
         find_bottleneck(best_path, req_no);
+        cout<<"ENd find_bottle\n";
         obj = changing_obj();
+        cout<<"changing_obj\n";
         //
     }
     
