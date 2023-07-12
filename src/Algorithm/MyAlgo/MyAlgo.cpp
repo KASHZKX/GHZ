@@ -293,16 +293,17 @@ void MyAlgo::find_bottleneck(vector<int> path, int req_no){
     double min_s_u = numeric_limits<double>::infinity();
     double min_s_uv = numeric_limits<double>::infinity();
     double s_i = requests[req_no].get_send_limit();
-    vector<double> s_u(graph.get_size());
-    vector<double> s_uv(graph.get_size());                                               
+    vector<double> s_u(graph.get_size() + 5);
+    vector<double> s_uv(graph.get_size() + 5);                                               
 
-    for(int id = 0; id < path.size(); id++){
-        if(id == 0 || path.size() - 1)
-            s_u[id] = graph.Node_id2ptr(id)->get_memory_cnt();// 是否要考慮 width
+   
+    for(int i = 0; i < path.size(); i++){
+        if(i == 0 || path.size() - 1)
+            s_u[path[i]] = graph.Node_id2ptr(path[i])->get_memory_cnt();// 是否要考慮 width
         else
-            s_u[id] = graph.Node_id2ptr(id)->get_memory_cnt() / 2;
-        if(s_u[id] < min_s_u)
-            min_s_u = s_u[id];
+            s_u[path[i]] = graph.Node_id2ptr(path[i])->get_memory_cnt() / 2;
+        if(s_u[path[i]] < min_s_u)
+            min_s_u = s_u[path[i]];
     }
 
     for(int i = 0; i < path.size() - 1; i++){
