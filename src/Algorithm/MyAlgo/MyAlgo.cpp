@@ -276,6 +276,7 @@ vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){  // running t
             }
         }
         new_len = c / r;
+        cout << "best_len: " << best_len << " new_len: " << new_len << endl; 
         if(new_len < best_len){
             best_len = new_len;
             req_Us = best_len;
