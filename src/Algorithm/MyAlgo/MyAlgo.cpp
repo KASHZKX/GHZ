@@ -278,7 +278,7 @@ vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){  // running t
         if(new_len < best_len){
             best_len = new_len;
             req_Us = best_len;
-            cout<<"req_US: "<<req_Us<<endl;
+            
             best_path = new_path;                                            //路線修改,新的spt產生
         } 
     }
@@ -288,6 +288,7 @@ vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){  // running t
         cout <<p << " ";
     }
     cout << endl;
+    cout<<"req_US: "<<req_Us<<endl;
     return best_path;
                                                                        
 }
