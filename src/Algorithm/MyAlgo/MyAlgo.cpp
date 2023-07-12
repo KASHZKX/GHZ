@@ -301,7 +301,7 @@ void MyAlgo::find_bottleneck(vector<int> path, int req_no){
     vector<double> s_uv(graph.get_size() + 5);                                               
 
    
-    for(int i = 0; i < path.size(); i++){
+    for(unsigned int i = 0; i < path.size(); i++){
         if(i == 0 || path.size() - 1)
             s_u[path[i]] = graph.Node_id2ptr(path[i])->get_memory_cnt();// 是否要考慮 width
         else
@@ -310,7 +310,7 @@ void MyAlgo::find_bottleneck(vector<int> path, int req_no){
             min_s_u = s_u[path[i]];
     }
 
-    for(int i = 0; i < path.size() - 1; i++){
+    for(unsigned int i = 0; i < path.size() - 1; i++){
         s_uv[i] = graph.get_channel_size(path[i], path[i+1]);
         if(s_u[i] < min_s_uv)
             min_s_uv = s_uv[i];
@@ -330,7 +330,7 @@ void MyAlgo::find_bottleneck(vector<int> path, int req_no){
         alpha[id] = alpha[id] * (1 + epsilon * s / s_u[id]);
     }
 
-    for(int i = 0; i < path.size() - 1; i++){
+    for(unsigned int i = 0; i < path.size() - 1; i++){
         beta[{path[i], path[i+1]}] = beta[{path[i], path[i+1]}] * (1 + epsilon * s / s_uv[i]);
     }
 
@@ -340,7 +340,7 @@ void MyAlgo::find_bottleneck(vector<int> path, int req_no){
 
 double MyAlgo::changing_obj(){
     double temp_obj = 0.0;
-    for(int i = 0; i < alpha.size(); i++){
+    for(unsigned int i = 0; i < alpha.size(); i++){
         temp_obj += alpha[i] * graph.Node_id2ptr(i)->get_memory_cnt();
     }
     
@@ -348,7 +348,7 @@ double MyAlgo::changing_obj(){
         temp_obj += it.second * graph.get_channel_size(it.first.first, it.first.second);
     }
 
-    for(int i = 0;i < requests.size(); i++){
+    for(unsigned int i = 0;i < requests.size(); i++){
         temp_obj += tau[i] * requests[i].get_send_limit();
     }
     return temp_obj;
@@ -366,7 +366,7 @@ void MyAlgo::path_assignment(){
 
         int req_no = 0;
         double smallest_U = numeric_limits<double>::infinity();
-        for(int i = 0; i < requests.size(); i++){
+        for(unsigned int i = 0; i < requests.size(); i++){
             cur_path =  separation_oracle(i, U);
             if(U < smallest_U){
                 smallest_U  = U;
@@ -377,7 +377,12 @@ void MyAlgo::path_assignment(){
         }
         
         // compare
-        cout<<"find_bottle\n";
+        cout << "find_bottle" << endl;
+        cout << "Real Best Path: ";
+        for(auto p : best_path){
+            cout << p << " ";
+        }
+        cout << endl;
         find_bottleneck(best_path, req_no);
         cout<<"End find_bottle\n";
         obj = changing_obj();
