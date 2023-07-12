@@ -329,16 +329,19 @@ void MyAlgo::find_bottleneck(vector<int> path, int req_no){
 }
 
 double MyAlgo::changing_obj(){
-    double temp_obj=0.0;
-    for(int i=0;i<alpha.size();i++){
-        temp_obj+=alpha[i]*graph.Node_id2ptr(i)->get_memory_cnt();
+    double temp_obj = 0.0;
+    cout << "add alpha" << endl;
+    for(int i = 0; i < alpha.size(); i++){
+        temp_obj += alpha[i] * graph.Node_id2ptr(i)->get_memory_cnt();
     }
-   
-    for(auto it:beta){
-        temp_obj+=it.second*graph.get_channel_size(it.first.first,it.first.second);
+    
+    cout << "add beta" << endl;
+    for(auto it : beta){
+        temp_obj += it.second * graph.get_channel_size(it.first.first, it.first.second);
     }
-    for(int i=0;i<requests.size();i++){
-        temp_obj+=tau[i]*requests[i].get_send_limit();
+    cout << "add tau" << endl;
+    for(int i = 0;i < requests.size(); i++){
+        temp_obj += tau[i]*requests[i].get_send_limit();
     }
     return temp_obj;
 }
@@ -370,7 +373,7 @@ void MyAlgo::path_assignment(){
         // compare
         cout<<"find_bottle\n";
         find_bottleneck(best_path, req_no);
-        cout<<"ENd find_bottle\n";
+        cout<<"End find_bottle\n";
         obj = changing_obj();
         cout<<"changing_obj\n";
         //
