@@ -36,7 +36,7 @@ public:
     int get_channel_size(int node1_id, int node2_id);
     int get_used_channel_size(int node1_id, int node2_id);
     int get_channel_entangle_succ_cnt(int node1_id, int node2_id);
-    int get_entangle_alpha();
+    double get_entangle_alpha();
     bool is_trusted(int node1_id, int node2_id);
     Node *Node_id2ptr(int id);
 

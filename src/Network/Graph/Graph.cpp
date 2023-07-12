@@ -88,7 +88,7 @@ int Graph::get_used_channel_size(int node1_id, int node2_id){
     return cnt;
 }
 
-int Graph::get_entangle_alpha(){
+double Graph::get_entangle_alpha(){
     return entangle_alpha;
 };
 
