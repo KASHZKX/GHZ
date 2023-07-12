@@ -316,7 +316,7 @@ void MyAlgo::find_bottleneck(vector<int> path, int req_no){
             min_s_uv = s_uv[i];
     }
     
-    cout << "min_s_u: " << min_s_u << " min_s_uv: " << min_s_uv << " s_i: " << s_i <<endl;
+    cout << "min_s_u: " << min_s_u << " min_s_uv: " << min_s_uv << " s_i: " << s_i  <<endl;
     double s = min(min_s_u, min(min_s_uv, s_i));
     
     map<vector<int>, double>::iterator it;
@@ -381,7 +381,7 @@ void MyAlgo::path_assignment(){
         find_bottleneck(best_path, req_no);
         cout<<"End find_bottle\n";
         obj = changing_obj();
-        cout<<"changing_obj\n";
+        cout<<"changing_obj obj: " << obj << endl ;
         //
     }
     
