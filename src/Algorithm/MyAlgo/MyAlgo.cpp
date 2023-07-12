@@ -229,7 +229,6 @@ vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){  // running t
                     }       
                     
                     if(temp2 < 0 && temp1 > 0){               // we need the smallest edge to change the SPT
-                        cout<<"candidate : "<<- temp1 / temp2 <<endl;
                         if(minimum > - temp1 / temp2){
                             // revise edge
                             new_edge = {i, neighbor};
@@ -248,7 +247,6 @@ vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){  // running t
             new_path.clear();
         }
         ////
-        cout<<"best candidate : "<<minimum <<endl;
         cur_node = new_edge.first;
         int cur_node2 = new_edge.second;
         while(cur_node != dst && cur_node2 != dst){
@@ -349,8 +347,15 @@ void MyAlgo::find_bottleneck(vector<int> path, int req_no){
 
     //now changing the X
     for(unsigned int i = 0; i < path.size() -1; i++){
-        X[{path[i],path[i+1]}] = alpha[path[i]] + alpha[path[i+1]] + beta[{path[i], path[i+1]}];
-        X[{path[i],path[i+1]}] = alpha[path[i]] + alpha[path[i+1]] + beta[{path[i+1], path[i]}];
+        if(path[i]<path[i+1]){
+            X[{path[i],path[i+1]}] = alpha[path[i]] + alpha[path[i+1]] + beta[{path[i], path[i+1]}];
+            X[{path[i+1],path[i]}] = alpha[path[i]] + alpha[path[i+1]] + beta[{path[i], path[i+1]}];
+        }
+        else{
+            X[{path[i],path[i+1]}] = alpha[path[i]] + alpha[path[i+1]] + beta[{path[i+1], path[i]}];
+            X[{path[i+1],path[i]}] = alpha[path[i]] + alpha[path[i+1]] + beta[{path[i+1], path[i]}];   
+        }
+
     }
 }
 
