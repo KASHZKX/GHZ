@@ -248,6 +248,7 @@ vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){  // running t
             new_path.clear();
         }
         ////
+        cout<<"best candidate : "<<minimum <<endl;
         cur_node = new_edge.first;
         int cur_node2 = new_edge.second;
         while(cur_node != dst && cur_node2 != dst){
