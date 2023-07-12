@@ -174,9 +174,9 @@ vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){  // running t
     SPT = Dijkstra(src, dst);                               //the first SPT
     cout<<"Dijkstra end\n";
     
-    int cur_node=src;                                       //counting the first path's U(x,y)
-    double c;
-    double r;
+    int cur_node = src;                                       //counting the first path's U(x,y)
+    double c = 0;
+    double r = 0;
     while(cur_node != dst){
 
         if(cur_node < SPT[cur_node]){
@@ -191,7 +191,7 @@ vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){  // running t
         cur_node = SPT[cur_node];
     } 
     best_path.push_back(dst);
-    best_len=c/r;
+    best_len = c / r;
 
     vector<int> new_path;
     double a;
@@ -210,7 +210,6 @@ vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){  // running t
                 }else{                                          // X[i, j] + X[p_j] - X[p_i] / Y[i, j] + Y[p_j] - Y[p_i]
                     temp1 = X[{i, neighbor}];
                     temp2 = Y[req_no][{i, neighbor}];
-                    int prev_node;
                     int cur_node = i;
                     while(cur_node != dst){
                         temp1 += X[{cur_node, SPT[cur_node]}];
@@ -266,7 +265,7 @@ vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){  // running t
         double new_len = 0;
         c = 0;
         r = 0;
-        for(int i = 0; i < new_path.size() - 1; i++){
+        for(unsigned int i = 0; i < new_path.size() - 1; i++){
             if(new_path[i] < new_path[i+1]){
                 c += X[{new_path[i], new_path[i+1]}];
                 r += Y[req_no][{new_path[i], new_path[i+1]}];
@@ -317,10 +316,15 @@ void MyAlgo::find_bottleneck(vector<int> path, int req_no){
             min_s_uv = s_uv[i];
     }
     
-    cout << "min_s_u: " << min_s_u << " min_s_uv: " << min_s_uv << "s_i: " << s_i <<endl;
+    cout << "min_s_u: " << min_s_u << " min_s_uv: " << min_s_uv << " s_i: " << s_i <<endl;
     double s = min(min_s_u, min(min_s_uv, s_i));
- 
-    x_i_p[path] += s;
+    
+    map<vector<int>, double>::iterator it;
+    it = x_i_p.find(path);
+    if(x_i_p.find(path) != x_i_p.end())
+        x_i_p[path] += s;
+    else
+        x_i_p[path] = s;
     
     for(auto id : path){
         alpha[id] = alpha[id] * (1 + epsilon * s / s_u[id]);
