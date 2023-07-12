@@ -271,13 +271,14 @@ vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){  // running t
                 c += X[{new_path[i+1], new_path[i]}];  
                 r += Y[req_no][{new_path[i+1], new_path[i]}];           
             }
-            cout<<"PATH:["<<new_path[i]<<" "<<new_path[i+1]<<"] with tot "<< c <<" / " << r <<endl;
+            //cout<<"PATH:["<<new_path[i]<<" "<<new_path[i+1]<<"] with tot "<< c <<" / " << r <<endl;
         }
         new_len = c / r;
         cout << "best_len: " << best_len << " new_len: " << new_len << endl; 
         if(new_len < best_len){
             best_len = new_len;
             req_Us = best_len;
+            cout<<"req_US: "<<req_Us<<endl;
             best_path = new_path;                                            //路線修改,新的spt產生
         } 
     }
