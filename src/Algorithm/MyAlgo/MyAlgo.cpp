@@ -75,9 +75,6 @@ void MyAlgo::initialize(){
                 int src = requests[j].get_source();
                 int des = requests[j].get_destination();
                 double ent_p = exp(graph.Node_id2ptr(i)->distance(*graph.Node_id2ptr(it))*(-graph.get_entangle_alpha()));
-                cout << "ent_p: " << ent_p << endl;
-                cout << "dist: " << graph.Node_id2ptr(i)->distance(*graph.Node_id2ptr(it)) << endl;
-                cout << "alpha:" << graph.get_entangle_alpha() << endl;
                 if(i<it){
                     if(i != src && i != des && it != src && it != des){
                         Y[j][{i, it}] = -(log(ent_p)/log(exp(1))) - (log(sqrt(graph.Node_id2ptr(i)->get_swap_prob())/log(exp(1)))) - (log(sqrt(graph.Node_id2ptr(it)->get_swap_prob())/log(exp(1))));
@@ -287,6 +284,9 @@ vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){  // running t
         } 
     }
 
+    for(auto p : best_path){
+        cout << "Best path: " << p << endl;
+    }
     return best_path;
                                                                        
 }
@@ -352,11 +352,9 @@ double MyAlgo::changing_obj(){
 }
 
 void MyAlgo::path_assignment(){
-    cout<<"run\n";
+    cout<< "run\n";
     initialize();
     double obj = M * delta;
-    //vector<vector<vector<int>>> req_paths(requests.size());
-    //vector<double> req_Us;
     
     vector<int> best_path;
     vector<int> cur_path;
@@ -364,7 +362,7 @@ void MyAlgo::path_assignment(){
     while(obj < 1){ // 是否在裡面做完 entangele, swap, send, separation_oracle 一個 SD 只找一條path?
 
         int req_no = 0;
-        double smallest_U= numeric_limits<double>::infinity();
+        double smallest_U = numeric_limits<double>::infinity();
         for(int i = 0; i < requests.size(); i++){
             cur_path =  separation_oracle(i, U);
             if(U < smallest_U){
@@ -385,10 +383,10 @@ void MyAlgo::path_assignment(){
     }
     
     for(auto x : x_i_p){
-        vector<int> temp=x.first;
+        vector<int> temp = x.first;
         cout << "PATH: ";
         for(auto it:temp){
-            cout<<it<<" ";
+            cout << it <<" ";
         }
         cout<<":";
         cout << x.second << endl;
