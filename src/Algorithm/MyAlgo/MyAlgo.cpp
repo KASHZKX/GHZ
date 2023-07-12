@@ -284,9 +284,11 @@ vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){  // running t
         } 
     }
 
+    cout << "Best path: ";
     for(auto p : best_path){
-        cout << "Best path: " << p << endl;
+        cout <<p << " ";
     }
+    cout << endl;
     return best_path;
                                                                        
 }
