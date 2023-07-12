@@ -58,11 +58,11 @@ void MyAlgo::initialize(){
     }
     */
 
-    for(int i = 0; i < requests.size(); i++){
+    for(unsigned  i = 0; i < requests.size(); i++){
         tau.emplace_back(delta / requests[i].get_send_limit());
     }
     Y.resize(requests.size() + 5);
-    for(int i = 0; i < graph.get_size(); i++){
+    for(unsigned int i = 0; i < graph.get_size(); i++){
         vector<int> temp = graph.get_neighbors_id(i);                             
         for(auto it: temp){
             if(i < it){
@@ -71,7 +71,7 @@ void MyAlgo::initialize(){
             else{
                 X[{it, i}] = alpha[it] + alpha[i] + beta[{it, i}];
             }
-            for(int j = 0;j < requests.size(); j++){
+            for(unsigned  j = 0;j < requests.size(); j++){
                 int src = requests[j].get_source();
                 int des = requests[j].get_destination();
                 double ent_p = exp(graph.Node_id2ptr(i)->distance(*graph.Node_id2ptr(it))*(-graph.get_entangle_alpha()));
@@ -166,7 +166,7 @@ vector<int> MyAlgo::Dijkstra(int src, int dst){
 vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){  // running time 
     cout<<"sparation\n";
     vector<int> SPT(graph.get_size() + 5);
-    vector<int> best_path(graph.get_size() + 5);
+    vector<int> best_path;
     double best_len; 
     int src = requests[req_no].get_source();
     int dst =  requests[req_no].get_destination();
