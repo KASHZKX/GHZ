@@ -337,6 +337,15 @@ void MyAlgo::find_bottleneck(vector<int> path, int req_no){
 
     tau[req_no] = tau[req_no] * (1 + epsilon * s / s_i);    
 
+    //now changing the X
+    for(unsigned int i = 0; i < path.size() -1; i++){
+        if(path[i]<path[i+1]){
+            X[{path[i],path[i+1]}] = alpha[path[i]] + alpha[path[i+1]] + beta[{path[i], path[i+1]}];
+        }
+        else{
+            X[{path[i],path[i+1]}] = alpha[path[i]] + alpha[path[i+1]] + beta[{path[i+1], path[i]}];
+        }
+    }
 }
 
 double MyAlgo::changing_obj(){
