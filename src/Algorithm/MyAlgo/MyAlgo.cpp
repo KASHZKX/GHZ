@@ -324,8 +324,7 @@ void MyAlgo::find_bottleneck(vector<int> path, int req_no){
     
     cout << "min_s_u: " << min_s_u << " min_s_uv: " << min_s_uv << " s_i: " << s_i  <<endl;
     double s = min(min_s_u, min(min_s_uv, s_i));
-    map<vector<int>, double>::iterator it;
-    it = x_i_p.find(path);
+   
     if(x_i_p.find(path) != x_i_p.end())
         x_i_p[path] += s;
     else
@@ -372,52 +371,70 @@ double MyAlgo::changing_obj(){
 }
 
 void MyAlgo::find_violate(){
-    vector<int>used_memory(graph.get_size());
-    map<vector<int>,double> used_channel;
+    vector<int> used_memory(graph.get_size());
+    map<vector<int>, double> used_channel;
+    map<pair<int, int>, int> used_request;
 
-    for(auto &it:x_i_p){
-        vector<int>path=it.first;
-        for(unsigned int i=0;i<path.size()-1;i++){
-            used_memory[path[i]]+=it.second;                         //memory add
-            used_memory[path[i+1]]+=it.second;
-            if(path[i]<path[i+1]){
-                auto iter=used_channel.find({path[i],path[i+1]});
-                if(iter!=used_channel.end()){    //channel add
-                    used_channel[{path[i],path[i+1]}]+=it.second;
+    for(auto &it : x_i_p){
+        vector<int> path = it.first;
+        int src = path[0];
+        int dst = path.back();
+    
+        if(used_request.find({src, dst}) != used_request.end())
+            used_request[{src, dst}] += it.second;
+        else
+            used_request[{src, dst}] = it.second;
+        
+        for(unsigned int i = 0; i < path.size() - 1; i++){
+            used_memory[path[i]] += it.second;                         //memory add
+            used_memory[path[i+1]] += it.second;
+            if(path[i] < path[i+1]){
+                auto iter = used_channel.find({path[i], path[i+1]});
+                if(iter != used_channel.end()){    //channel add
+                    used_channel[{path[i], path[i+1]}] += it.second;
                 }
                 else{
-                    used_channel[{path[i],path[i+1]}]=it.second;
+                    used_channel[{path[i], path[i+1]}] = it.second;
                 }
             }
             else{
-                auto iter=used_channel.find({path[i+1],path[i]});
-                if(iter!=used_channel.end()){
-                    used_channel[{path[i+1],path[i]}]+=it.second;
+                auto iter = used_channel.find({path[i+1], path[i]});
+                if(iter != used_channel.end()){
+                    used_channel[{path[i+1], path[i]}] += it.second;
                 }
                 else{
-                    used_channel[{path[i+1],path[i]}]=it.second;
+                    used_channel[{path[i+1], path[i]}] = it.second;
                 }  
             }
         }
     }
-    double max_magni=0.0;
+
+
+    double max_magni = 0.0;
     double cur_magni;
-    for(int i=0;i<graph.get_size();i++){
-        cur_magni=used_memory[i]/graph.Node_id2ptr(i)->get_memory_cnt();
-        if(cur_magni>max_magni){
-            max_magni=cur_magni;
+    for(int i = 0; i < graph.get_size(); i++){
+        cur_magni = used_memory[i] / graph.Node_id2ptr(i)->get_memory_cnt();
+        if(cur_magni > max_magni){
+            max_magni = cur_magni;
         }
     }
-    for(auto it:used_channel){
-        cur_magni=it.second/graph.get_channel_size(it.first[0],it.first[1]);
-        if(cur_magni>max_magni){
-            max_magni=cur_magni;
+    for(auto it : used_channel){
+        cur_magni = it.second / graph.get_channel_size(it.first[0],it.first[1]);
+        if(cur_magni > max_magni){
+            max_magni = cur_magni;
         }
     }
-    cout <<"Magnification:"<<max_magni<<endl;
+
+    for(auto it : used_request){
+        cur_magni = it.second / requests[0].get_send_limit();
+        if(cur_magni > max_magni){
+            max_magni = cur_magni;
+        }
+    }
+    cout << "Magnification:" << max_magni << endl;
 
     for(auto &x : x_i_p){
-        x.second/=max_magni;
+        x.second /= max_magni;
     }
     //check memory_and_channel
     /*
@@ -428,6 +445,16 @@ void MyAlgo::find_violate(){
         cout<<"["<<it.first[0]<<","<<it.first[1]<<"]:"<<it.second<<endl;
     }
     */
+}
+
+void MyAlgo::rounding(){
+    
+    for(unsigned int i = 0; i < requests.size(); i++){
+        for(auto p : x_i_p){
+
+        }
+
+    }
 }
 
 void MyAlgo::path_assignment(){
@@ -478,6 +505,7 @@ void MyAlgo::path_assignment(){
         cout<<":  ";
         cout << x.second << endl;
     }
+    rounding();
     // 
 
 }   
