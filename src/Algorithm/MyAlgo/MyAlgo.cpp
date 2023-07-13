@@ -385,7 +385,7 @@ void MyAlgo::find_violate(){
             used_memory[path[i+1]]+=it.second;
             if(path[i]<path[i+1]){
                 auto iter=used_channel.find({path[i],path[i+1]});
-                if(iter!=x_i_p.end()){    //channel add
+                if(iter!=used_channel.end()){    //channel add
                     used_channel[{path[i],path[i+1]}]+=it.second;
                 }
                 else{
@@ -394,7 +394,7 @@ void MyAlgo::find_violate(){
             }
             else{
                 auto iter=used_channel.find({path[i+1],path[i]});
-                if(iter!=x_i_p.end()){
+                if(iter!=used_channel.end()){
                     used_channel[{path[i+1],path[i]}]+=it.second;
                 }
                 else{
