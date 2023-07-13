@@ -196,20 +196,18 @@ vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){  // running t
     } 
     best_path.push_back(dst);
     best_len = c / r;
-    req_Us=best_len;
+    req_Us = best_len;
 
     vector<int> new_path;
-    double a;
-    double b = 1;
-
-    while(b != 0){                                              //creating many new SPT
+    
+                                                //creating many new SPT
         map<pair<int, int>, bool> used;
         pair<int,int> new_edge;
         double minimum = numeric_limits<double>::infinity();
         for(int i = 0; i < graph.get_size(); i++){
             vector<int> neighbors = graph.get_neighbors_id(i);  
             for(auto neighbor : neighbors){
-                double temp1=0, temp2=0;
+                double temp1 = 0, temp2 = 0;
                 if(SPT[i] == neighbor || SPT[neighbor] == i){   // checking used edge or unused
                     continue;   
                 }else{                                          // X[i, j] + X[p_j] - X[p_i] / Y[i, j] + Y[p_j] - Y[p_i]
@@ -233,8 +231,6 @@ vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){  // running t
                             // revise edge
                             new_edge = {i, neighbor};
                             minimum = - temp1 / temp2;
-                            a = minimum;
-                            b = 1 / 1 + a;
                         }
                     }
                 }
@@ -242,7 +238,7 @@ vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){  // running t
         }        // 找到最小的 edge 
 
         if(minimum == numeric_limits<double>::infinity()){
-            break;
+           
         }else{
             new_path.clear();
         }
@@ -282,6 +278,7 @@ vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){  // running t
             //cout<<"PATH:["<<new_path[i]<<" "<<new_path[i+1]<<"] with tot "<< c <<" / " << r <<endl;
         }
         new_len = c / r;
+        cout << "new edge: " <<  new_edge.first << " " <<  new_edge.second << endl;
         cout << "best_len: " << best_len << " new_len: " << new_len << endl; 
         if(new_len < best_len){
             best_len = new_len;
@@ -289,7 +286,7 @@ vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){  // running t
             
             best_path = new_path;                                            //路線修改,新的spt產生
         } 
-    }
+    
 
     cout << "Best path: ";
     for(auto p : best_path){
