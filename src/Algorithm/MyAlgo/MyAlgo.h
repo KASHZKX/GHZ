@@ -40,6 +40,7 @@ public:
     void find_bottleneck(vector<int>, int req_no);
     void initialize();
     double changing_obj();
+    void find_violate();
     MyAlgo(string filename, int request_time_limit, int node_time_limit, double swap_prob, double entangle_alpha);
     ~MyAlgo();
 };

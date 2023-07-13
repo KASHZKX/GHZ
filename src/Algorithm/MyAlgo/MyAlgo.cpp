@@ -375,6 +375,37 @@ double MyAlgo::changing_obj(){
     return temp_obj;
 }
 
+void MyAlgo::find_violate(){
+    vector<int>used_memory(graph.get_size());
+    map<pair<int,int>,double> used_channel;
+    for(auto it:x_i_p){
+        vector<int>path=it.first;
+        for(int i=0;i<path.size()-1;i++){
+            used_memory[path[i]]+=it.second;                         //memory add
+            used_memory[path[i+1]]+=it.second;
+            if(path[i]<path[i+1]){
+                if(x_i_p.find({path[i],path[i+1]})!=x_i_p.end()){    //channel add
+                    used_channel[{path[i],path[i+1]}]+=it.second;
+                }
+                used_channel[{path[i],path[i+1]}]=it.second;
+            }
+            else{
+                if(x_i_p.find({path[i+1],path[i]})!=x_i_p.end()){
+                    used_channel[{path[i+1],path[i]}]+=it.second;
+                }
+                used_channel[{path[i+1],path[i]}]=it.second;
+            }
+        }
+    }
+    //check memory_and_channel
+    for(int i=0;i<used_memory.size();i++){
+        cout<<i<<" with memory "<<used_memory[i]<<endl;
+    }
+    for(auto it:used_channel){
+        cout<<"["<<it.first.first<<","<<it.first.second<<"]:"<<it.second<<endl;
+    }
+}
+
 void MyAlgo::path_assignment(){
 
     initialize();
@@ -412,7 +443,7 @@ void MyAlgo::path_assignment(){
         cout<<"changing_obj obj: " << obj << endl ;
         //
     }
-    
+    find_violate();
     cout<<"-----Final result------\n";
     for(auto x : x_i_p){
         vector<int> temp = x.first;
