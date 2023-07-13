@@ -475,7 +475,7 @@ void MyAlgo::path_assignment(){
         for(auto it:temp){
             cout << it <<" ";
         }
-        cout<<":";
+        cout<<":  ";
         cout << x.second << endl;
     }
     // 
