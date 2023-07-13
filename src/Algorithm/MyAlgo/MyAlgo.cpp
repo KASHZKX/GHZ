@@ -376,7 +376,7 @@ double MyAlgo::changing_obj(){
 
 void MyAlgo::find_violate(){
     vector<int>used_memory(graph.get_size());
-    map<pair<int,int>,double> used_channel;
+    map<vector<int>,double> used_channel;
 
     for(auto &it:x_i_p){
         vector<int>path=it.first;
@@ -387,7 +387,6 @@ void MyAlgo::find_violate(){
                 auto iter=x_i_p.find({path[i],path[i+1]});
                 if(iter!=x_i_p.end()){    //channel add
                     used_channel[{path[i],path[i+1]}]+=it.second;
-                    cout<<"++"<<endl;
                 }
                 else{
                     used_channel[{path[i],path[i+1]}]=it.second;
@@ -397,7 +396,6 @@ void MyAlgo::find_violate(){
                 auto iter=x_i_p.find({path[i+1],path[i]});
                 if(iter!=x_i_p.end()){
                     used_channel[{path[i+1],path[i]}]+=it.second;
-                    cout<<"++"<<endl;
                 }
                 else{
                     used_channel[{path[i+1],path[i]}]=it.second;
@@ -410,7 +408,7 @@ void MyAlgo::find_violate(){
         cout<<i<<" with memory "<<used_memory[i]<<endl;
     }
     for(auto it:used_channel){
-        cout<<"["<<it.first.first<<","<<it.first.second<<"]:"<<it.second<<endl;
+        cout<<"["<<it.first[0]<<","<<it.first[1]<<"]:"<<it.second<<endl;
     }
 }
 
