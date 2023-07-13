@@ -393,7 +393,7 @@ void MyAlgo::find_violate(){
                 }
             }
             else{
-                auto iter=x_i_p.find({path[i],path[i+1]});
+                auto iter=x_i_p.find({path[i+1],path[i]});
                 if(iter!=x_i_p.end()){
                     used_channel[{path[i+1],path[i]}]+=it.second;
                 }
