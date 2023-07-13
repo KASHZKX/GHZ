@@ -196,7 +196,7 @@ vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){  // running t
     } 
     best_path.push_back(dst);
     best_len = c / r;
-    req_Us=best_len;
+    req_Us = best_len;
 
     vector<int> new_path;
     double a;
@@ -209,7 +209,7 @@ vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){  // running t
         for(int i = 0; i < graph.get_size(); i++){
             vector<int> neighbors = graph.get_neighbors_id(i);  
             for(auto neighbor : neighbors){
-                double temp1=0, temp2=0;
+                double temp1 = 0, temp2 = 0;
                 if(SPT[i] == neighbor || SPT[neighbor] == i){   // checking used edge or unused
                     continue;   
                 }else{                                          // X[i, j] + X[p_j] - X[p_i] / Y[i, j] + Y[p_j] - Y[p_i]
@@ -282,6 +282,7 @@ vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){  // running t
             //cout<<"PATH:["<<new_path[i]<<" "<<new_path[i+1]<<"] with tot "<< c <<" / " << r <<endl;
         }
         new_len = c / r;
+        cout << "new edge: " <<  new_edge.first << " " <<  new_edge.second << endl;
         cout << "best_len: " << best_len << " new_len: " << new_len << endl; 
         if(new_len < best_len){
             best_len = new_len;
