@@ -403,13 +403,34 @@ void MyAlgo::find_violate(){
             }
         }
     }
+    double max_magni=0.0;
+    double cur_magni;
+    for(int i=0;i<graph.get_size();i++){
+        cur_magni=used_memory[i]/graph.Node_id2ptr(i)->get_memory_cnt();
+        if(cur_magni>max_magni){
+            max_magni=cur_magni;
+        }
+    }
+    for(auto it:used_channel){
+        cur_magni=it.second/graph.get_channel_size(it.first[0],it.first[1]);
+        if(cur_magni>max_magni){
+            max_magni=cur_magni;
+        }
+    }
+    cout <<"Magnification:"<<max_magni<<endl;
+
+    for(auto &x : x_i_p){
+        x.second/=max_magni;
+    }
     //check memory_and_channel
+    /*
     for(unsigned int i=0;i<used_memory.size();i++){
         cout<<i<<" with memory "<<used_memory[i]<<endl;
     }
     for(auto it:used_channel){
         cout<<"["<<it.first[0]<<","<<it.first[1]<<"]:"<<it.second<<endl;
     }
+    */
 }
 
 void MyAlgo::path_assignment(){
