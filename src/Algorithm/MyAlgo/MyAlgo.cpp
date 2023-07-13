@@ -201,11 +201,10 @@ vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){  // running t
     vector<int> new_path;
     double a;
     double b = 1;
-
+    double minimum = numeric_limits<double>::infinity();
     while(b != 0){                                              //creating many new SPT
         map<pair<int, int>, bool> used;
         pair<int,int> new_edge;
-        double minimum = numeric_limits<double>::infinity();
         for(int i = 0; i < graph.get_size(); i++){
             vector<int> neighbors = graph.get_neighbors_id(i);  
             for(auto neighbor : neighbors){
