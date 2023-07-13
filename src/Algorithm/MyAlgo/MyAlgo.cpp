@@ -387,13 +387,19 @@ void MyAlgo::find_violate(){
                 if(x_i_p.find({path[i],path[i+1]})!=x_i_p.end()){    //channel add
                     used_channel[{path[i],path[i+1]}]+=it.second;
                 }
-                used_channel[{path[i],path[i+1]}]=it.second;
+                else{
+                    used_channel[{path[i],path[i+1]}]=it.second;
+                }
+                
             }
             else{
                 if(x_i_p.find({path[i+1],path[i]})!=x_i_p.end()){
                     used_channel[{path[i+1],path[i]}]+=it.second;
                 }
-                used_channel[{path[i+1],path[i]}]=it.second;
+                else{
+                    used_channel[{path[i+1],path[i]}]=it.second;
+                }
+                
             }
         }
     }
