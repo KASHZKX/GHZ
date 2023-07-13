@@ -327,7 +327,6 @@ void MyAlgo::find_bottleneck(vector<int> path, int req_no){
     
     cout << "min_s_u: " << min_s_u << " min_s_uv: " << min_s_uv << " s_i: " << s_i  <<endl;
     double s = min(min_s_u, min(min_s_uv, s_i));
-    
     map<vector<int>, double>::iterator it;
     it = x_i_p.find(path);
     if(x_i_p.find(path) != x_i_p.end())
@@ -378,23 +377,26 @@ double MyAlgo::changing_obj(){
 void MyAlgo::find_violate(){
     vector<int>used_memory(graph.get_size());
     map<pair<int,int>,double> used_channel;
-    
+
     for(auto &it:x_i_p){
         vector<int>path=it.first;
         for(unsigned int i=0;i<path.size()-1;i++){
             used_memory[path[i]]+=it.second;                         //memory add
             used_memory[path[i+1]]+=it.second;
             if(path[i]<path[i+1]){
-                if(x_i_p.find({path[i],path[i+1]})!=x_i_p.end()){    //channel add
+                auto iter=x_i_p.find({path[i],path[i+1]});
+                cout<<iter<<endl;
+                if(iter!=x_i_p.end()){    //channel add
                     used_channel[{path[i],path[i+1]}]+=it.second;
                 }
                 else{
                     used_channel[{path[i],path[i+1]}]=it.second;
                 }
-                
             }
             else{
-                if(x_i_p.find({path[i+1],path[i]})!=x_i_p.end()){
+                auto iter=x_i_p.find({path[i],path[i+1]});
+                cout<<iter<<endl;
+                if(iter!=x_i_p.end()){
                     used_channel[{path[i+1],path[i]}]+=it.second;
                 }
                 else{
