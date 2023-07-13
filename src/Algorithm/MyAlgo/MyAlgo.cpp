@@ -378,7 +378,8 @@ double MyAlgo::changing_obj(){
 void MyAlgo::find_violate(){
     vector<int>used_memory(graph.get_size());
     map<pair<int,int>,double> used_channel;
-    for(auto it:x_i_p){
+    map<pair<int,int>::iterator iter;
+    for(auto &it:x_i_p){
         vector<int>path=it.first;
         for(int i=0;i<path.size()-1;i++){
             used_memory[path[i]]+=it.second;                         //memory add
