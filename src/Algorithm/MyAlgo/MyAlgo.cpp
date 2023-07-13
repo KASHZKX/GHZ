@@ -449,6 +449,7 @@ void MyAlgo::find_violate(){
 
 void MyAlgo::rounding(){
     vector<map<vector<int>, double>> each_request(requests.size());
+    vector<map<vector<int>, int>> I_request(requests.size());
     for(auto it : x_i_p){
         vector<int> path = it.first;
         int src = path[0];
@@ -462,8 +463,13 @@ void MyAlgo::rounding(){
     }
 
     for(unsigned int i = 0; i < requests.size(); i++){
+        double total_prob = 0;
         for(auto it : each_request[i]){
-            
+            double frac_prob;
+            int i_prob = it.second;
+            I_request[i][it.first] = i_prob;
+            frac_prob = it.second - i_prob;
+            total_prob += frac_prob;
         }
     }
     
