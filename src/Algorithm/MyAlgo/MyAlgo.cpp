@@ -199,8 +199,7 @@ vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){  // running t
     req_Us = best_len;
 
     vector<int> new_path;
-    double a;
-    double b = 1;
+    
                                                 //creating many new SPT
         map<pair<int, int>, bool> used;
         pair<int,int> new_edge;
@@ -232,8 +231,6 @@ vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){  // running t
                             // revise edge
                             new_edge = {i, neighbor};
                             minimum = - temp1 / temp2;
-                            a = minimum;
-                            b = 1 / 1 + a;
                         }
                     }
                 }
