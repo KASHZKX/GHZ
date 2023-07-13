@@ -448,13 +448,25 @@ void MyAlgo::find_violate(){
 }
 
 void MyAlgo::rounding(){
-    
-    for(unsigned int i = 0; i < requests.size(); i++){
-        for(auto p : x_i_p){
-
+    vector<map<vector<int>, double>> each_request(requests.size());
+    for(auto it : x_i_p){
+        vector<int> path = it.first;
+        int src = path[0];
+        int dst = path.back();
+        for(unsigned int i = 0; i < requests.size(); i++){
+            if(src == requests[i].get_source() && dst == requests[i].get_destination()){
+                each_request[i][path] = it.second;
+                break;
+            }
         }
-
     }
+
+    for(unsigned int i = 0; i < requests.size(); i++){
+        for(auto it : each_request[i]){
+            
+        }
+    }
+    
 }
 
 void MyAlgo::path_assignment(){
