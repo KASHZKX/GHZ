@@ -468,6 +468,7 @@ void MyAlgo::rounding(){
         double unused_frac_prob=(double)requests[i].get_send_limit();
         int unused_I=requests[i].get_send_limit();
         vector<double>accumulate;
+        accumulate.push_back(0.0);
         for(auto it : each_request[i]){
             double frac_prob;
             int i_prob = it.second;
