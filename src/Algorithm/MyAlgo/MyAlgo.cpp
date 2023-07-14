@@ -529,7 +529,7 @@ void MyAlgo::path_assignment(){
 
         int req_no = 0;
         double smallest_U = numeric_limits<double>::infinity();
-        //cout<<"\n------New round-------\n";
+        cout<<"\n------New round-------\n";
         for(unsigned int i = 0; i < requests.size(); i++){
             cur_path =  separation_oracle(i, U);
             //cout << "smallest_U: " << smallest_U << " U: " << U << "\n\n"; 
@@ -542,8 +542,9 @@ void MyAlgo::path_assignment(){
         }
         
         // compare
-        /*
+        
         cout << "find_bottle" << endl;
+        /*
         cout << "Real Best Path: ";
         for(auto p : best_path){
             cout << p << " ";
@@ -551,9 +552,9 @@ void MyAlgo::path_assignment(){
         cout << endl;
         */
         find_bottleneck(best_path, req_no);
-        //cout<<"End find_bottle\n";
+        cout<<"End find_bottle\n";
         obj = changing_obj();
-        //cout<<"changing_obj obj: " << obj << endl ;
+        cout<<"changing_obj obj: " << obj << endl ;
     }
     find_violate();
     /*
