@@ -28,8 +28,8 @@ void MyAlgo::next_time_slot(){
 void MyAlgo::initialize(){
     M = graph.get_size() + graph.get_num_of_edge() + requests.size(); //V+E+I
     delta = (1 + epsilon) * pow(((1 + epsilon) * M), (-1 / epsilon));
-    cout<<"V E I="<< graph.get_size() <<" "<< graph.get_num_of_edge() <<" "<< requests.size()<<endl;
-    cout<<"delta:"<<delta<<endl;
+    //cout<<"V E I="<< graph.get_size() <<" "<< graph.get_num_of_edge() <<" "<< requests.size()<<endl;
+    //cout<<"delta:"<<delta<<endl;
     for(int i = 0; i < graph.get_size(); i++){
         alpha.emplace_back(delta / graph.Node_id2ptr(i)->get_memory_cnt());       //alpha_set
         //cout<<"alpha id:"<<i<<" is"<<alpha[i]<<endl;
@@ -116,7 +116,7 @@ void MyAlgo::initialize(){
 
             }
                 ////test X、Y
-                cout<<"edge["<<i<<","<<it<<"]: X:"<<X[{i,it}]<<"   Y:"<<Y[0][{i,it}]<<endl;
+                //cout<<"edge["<<i<<","<<it<<"]: X:"<<X[{i,it}]<<"   Y:"<<Y[0][{i,it}]<<endl;
                 
     
         }
@@ -278,8 +278,8 @@ vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){  // running t
             //cout<<"PATH:["<<new_path[i]<<" "<<new_path[i+1]<<"] with tot "<< c <<" / " << r <<endl;
         }
         new_len = c / r;
-        cout << "new edge: " <<  new_edge.first << " " <<  new_edge.second << endl;
-        cout << "best_len: " << best_len << " new_len: " << new_len << endl; 
+        //cout << "new edge: " <<  new_edge.first << " " <<  new_edge.second << endl;
+        //cout << "best_len: " << best_len << " new_len: " << new_len << endl; 
         if(new_len < best_len){
             best_len = new_len;
             req_Us = best_len;
@@ -288,12 +288,13 @@ vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){  // running t
         } 
     
 
+    /*
     cout << "Best path: ";
     for(auto p : best_path){
         cout <<p << " ";
     }
     cout << endl;
-   
+    */
     return best_path;
                                                                        
 }
@@ -322,7 +323,7 @@ void MyAlgo::find_bottleneck(vector<int> path, int req_no){
             min_s_uv = s_uv[i];
     }
     
-    cout << "min_s_u: " << min_s_u << " min_s_uv: " << min_s_uv << " s_i: " << s_i  <<endl;
+    //cout << "min_s_u: " << min_s_u << " min_s_uv: " << min_s_uv << " s_i: " << s_i  <<endl;
     double s = min(min_s_u, min(min_s_uv, s_i));
    
     if(x_i_p.find(path) != x_i_p.end())
@@ -431,7 +432,7 @@ void MyAlgo::find_violate(){
             max_magni = cur_magni;
         }
     }
-    cout << "Magnification:" << max_magni << endl;
+    //cout << "Magnification:" << max_magni << endl;
 
     for(auto &x : x_i_p){
         x.second /= max_magni;
@@ -494,7 +495,7 @@ void MyAlgo::rounding(){
                     for(auto it : each_request[i]){
                         if(index==k){
                             I_request[i][it.first]++;
-                            //cout<<" someone added!\n";
+                            cout<<"random prob="<<temp<<" so "<<k<<" added!\n";
                             break;
                         }
                         index+=1;
