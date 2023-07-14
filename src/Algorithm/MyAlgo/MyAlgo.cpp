@@ -487,12 +487,13 @@ void MyAlgo::rounding(){
             uniform_real_distribution<double> dis(0.0, total_prob);
             double temp=dis(gen);
             for(unsigned int k=0;k<accumulate.size();k++){
-                cout<<"distri:"<<accumulate[k]<<" v.s "<< temp<<endl;
+                cout<<"distri:"<<accumulate[k]<<" v.s "<< temp<<" v.s "<<accumulate[k+1]<<endl;
                 if(temp>accumulate[k] && temp<accumulate[k+1]){
-                    int index=0;
+                    unsigned int index=0;
                     for(auto it : each_request[i]){
                         if(index==k){
                             I_request[i][it.first]++;
+                            cout<<" someone added!\n";
                             break;
                         }
                         index+=1;
