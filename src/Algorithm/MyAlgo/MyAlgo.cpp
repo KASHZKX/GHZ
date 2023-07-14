@@ -496,7 +496,7 @@ void MyAlgo::rounding(){
                     for(auto it : each_request[i]){
                         if(index==k){
                             I_request[i][it.first]++;
-                            cout<<"random prob="<<temp<<" so "<<k<<" added!\n";
+                            //cout<<"random prob="<<temp<<" so "<<k<<" added!\n";
                             break;
                         }
                         index+=1;
@@ -529,10 +529,10 @@ void MyAlgo::path_assignment(){
 
         int req_no = 0;
         double smallest_U = numeric_limits<double>::infinity();
-        cout<<"\n------New round-------\n";
+        //cout<<"\n------New round-------\n";
         for(unsigned int i = 0; i < requests.size(); i++){
             cur_path =  separation_oracle(i, U);
-            cout << "smallest_U: " << smallest_U << " U: " << U << "\n\n"; 
+            //cout << "smallest_U: " << smallest_U << " U: " << U << "\n\n"; 
             if(U < smallest_U){
                 smallest_U  = U;
                 best_path = cur_path;
@@ -542,6 +542,7 @@ void MyAlgo::path_assignment(){
         }
         
         // compare
+        /*
         cout << "find_bottle" << endl;
         cout << "Real Best Path: ";
         for(auto p : best_path){
@@ -552,9 +553,11 @@ void MyAlgo::path_assignment(){
         cout<<"End find_bottle\n";
         obj = changing_obj();
         cout<<"changing_obj obj: " << obj << endl ;
+        */
         //
     }
     find_violate();
+    /*
     cout<<"-----Final result------\n";
     for(auto x : x_i_p){
         vector<int> temp = x.first;
@@ -565,6 +568,7 @@ void MyAlgo::path_assignment(){
         cout<<":  ";
         cout << x.second << endl;
     }
+    */
     rounding();
     // 
 
