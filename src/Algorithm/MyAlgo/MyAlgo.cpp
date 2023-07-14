@@ -464,15 +464,42 @@ void MyAlgo::rounding(){
 
     for(unsigned int i = 0; i < requests.size(); i++){
         double total_prob = 0;
+        double unused_frac_prob=(double)requests[i].get_send_limit();
+        int unused_I=requests[i].get_send_limit();
+        vector<double>accumulate;
         for(auto it : each_request[i]){
             double frac_prob;
             int i_prob = it.second;
             I_request[i][it.first] = i_prob;
             frac_prob = it.second - i_prob;
             total_prob += frac_prob;
+            accumulate.push_back(total_prob);
+            unused_frac_prob -= it.second;
+            unused_I -= (int) it.second;
+        }
+        unused_frac_prob -= (int) unused_frac_prob;
+        unused_I -= (int) unused_frac_prob;
+        total_prob += unused_frac_prob;
+        cout<<"total_prob:"<<total_prob<<" unused_I:"<<unused_I<<endl;
+        for(int j=0;j<unused_I;j++){
+            random_device rd;  
+            mt19937 gen(rd()); 
+            uniform_real_distribution<double> dis(0.0, total_prob);
+            double temp=dis(gen);
+            for(int k=0;k<accumulate.size();k++){
+                cout<<"distri:"<<accumulate[k]<<" v.s "<< temp<<endl;
+                if(temp>accumulate[k] && temp<accumulate[k+1]){
+                    int index=0;
+                    for(auto it : each_request[i]){
+                        if(index==k){
+                            I_request[i][it.first]++;
+                        }
+                        index+=1;
+                    }
+                }
+            }
         }
     }
-    
 }
 
 void MyAlgo::path_assignment(){
