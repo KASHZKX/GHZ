@@ -497,6 +497,7 @@ void MyAlgo::rounding(){
                         }
                         index+=1;
                     }
+                    break;
                 }
             }
         }
