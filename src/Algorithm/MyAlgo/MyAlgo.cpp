@@ -549,12 +549,11 @@ void MyAlgo::path_assignment(){
             cout << p << " ";
         }
         cout << endl;
-        find_bottleneck(best_path, req_no);
-        cout<<"End find_bottle\n";
-        obj = changing_obj();
-        cout<<"changing_obj obj: " << obj << endl ;
         */
-        //
+        find_bottleneck(best_path, req_no);
+        //cout<<"End find_bottle\n";
+        obj = changing_obj();
+        //cout<<"changing_obj obj: " << obj << endl ;
     }
     find_violate();
     /*
