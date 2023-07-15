@@ -528,6 +528,7 @@ vector<map<vector<int>, int>> MyAlgo::rounding(){
 void MyAlgo::dfs(int src, int dst, vector<vector<int>> &ans, vector<int> &path, vector<bool> &visited){
         //base case
     visited[src] = true;
+    path.push_back(src);
     if(src == dst){
         ans.push_back(path);
         cout << "allpath: ";
@@ -541,7 +542,6 @@ void MyAlgo::dfs(int src, int dst, vector<vector<int>> &ans, vector<int> &path, 
     else{
         for(auto i : graph.get_neighbors_id(src)){ 
             if(!visited[i]){
-                path.push_back(i);
                 dfs(i, dst, ans, path, visited);
             }
         }
@@ -557,7 +557,6 @@ vector<vector<int>> MyAlgo::allPathsSourceTarget(int src, int dst){
     for(int i = 0; i < graph.get_size(); i++){
         visited[i] = false;
     }
-    path.push_back(src);
     dfs(src, dst, ans, path, visited);
     return ans;
 }
@@ -570,8 +569,7 @@ void MyAlgo::path_assignment(){
         int dst = requests[i].get_destination();
         all_source_target_path.push_back(allPathsSourceTarget(src, dst));
     }
-    while(1){};
-    
+
     double obj = M * delta;
     vector<int> best_path;
     vector<int> cur_path;
