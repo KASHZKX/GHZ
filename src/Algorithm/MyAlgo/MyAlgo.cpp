@@ -231,9 +231,9 @@ vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){
                 
                 if(temp2 < 0 && temp1 > 0){               // we need the smallest edge to change the SPT
                     if(minimum > - temp1 / temp2){
-                        // revise edge
                         new_edge = {i, neighbor};
                         minimum = - temp1 / temp2;
+                        cout << i << " " << neighbor << " value: " << minimum << endl;
                     }
                 }
             }
