@@ -520,6 +520,7 @@ vector<map<vector<int>, int>> MyAlgo::rounding(){
 void MyAlgo::dfs(int src, int dst, vector<vector<int>> &ans, vector<int> &path, vector<bool> &visited){
         //base case
     path.push_back(src);
+    visited[src] = true;
     if(src == dst){
         ans.push_back(path);
         return;
