@@ -485,8 +485,8 @@ vector<map<vector<int>, int>> MyAlgo::rounding(){
 
     for(unsigned int i = 0; i < requests.size(); i++){
         double total_prob = 0;
-        double unused_frac_prob=(double)requests[i].get_send_limit();
-        int unused_I=requests[i].get_send_limit();
+        double unused_frac_prob = (double)requests[i].get_send_limit();
+        int unused_I = requests[i].get_send_limit();
         vector<double>accumulate;
         accumulate.push_back(0.0);
         for(auto it : each_request[i]){
@@ -504,7 +504,7 @@ vector<map<vector<int>, int>> MyAlgo::rounding(){
         total_prob += unused_frac_prob;
         accumulate.push_back(0.0);
         cout<<"total_prob:"<<total_prob<<" unused_I:"<<unused_I<<endl;
-        for(int j = 0; j < unused_I; j++){
+        for(int j = 0; j < (int)total_prob; j++){
             random_device rd;  
             mt19937 gen(rd()); 
             uniform_real_distribution<double> dis(0.0, total_prob);
