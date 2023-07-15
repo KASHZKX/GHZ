@@ -531,11 +531,11 @@ void MyAlgo::dfs(int src, int dst, vector<vector<int>> &ans, vector<int> &path, 
     path.push_back(src);
     if(src == dst){
         ans.push_back(path);
-        cout << "allpath: ";
-        for(auto p : path){
-            cout << p << "->";
-        }
-        cout << endl;
+        // cout << "allpath: ";
+        // for(auto p : path){
+        //     cout << p << "->";
+        // }
+        // cout << endl;
 
     } 
     else{
@@ -568,10 +568,7 @@ void MyAlgo::path_assignment(){
         int dst = requests[i].get_destination();
         all_source_target_path.push_back(allPathsSourceTarget(src, dst));
     }
-    while (1)
-    {
-       
-    }
+
     
     double obj = M * delta;
     vector<int> best_path;
