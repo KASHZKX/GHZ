@@ -529,11 +529,11 @@ void MyAlgo::dfs(int src, int dst, vector<vector<int>> &ans, vector<int> &path, 
     path.push_back(src);
     if(src == dst){
         ans.push_back(path);
-        cout << "allpath: ";
-        for(auto p : path){
-            cout << p << "->";
-        }
-        cout << endl;
+        // cout << "allpath: ";
+        // for(auto p : path){
+        //     cout << p << "->";
+        // }
+        // cout << endl;
 
     } 
     else{
