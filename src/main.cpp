@@ -51,7 +51,7 @@ int main(){
     default_setting["swap_prob"] = 1;
     default_setting["entangle_alpha"] = 0.002;
     default_setting["node_time_limit"] = 1;
-    default_setting["new_request_cnt"] = 30;
+    default_setting["new_request_cnt"] = 10;
     default_setting["request_time_limit"] = 1;
     default_setting["total_time_slot"] = 1;
     default_setting["service_time"] = 100;
@@ -129,8 +129,8 @@ int main(){
                 
                 vector<AlgorithmBase*> algorithms;
                 // algorithms.emplace_back(new Greedy(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha));
-                algorithms.emplace_back(new QCAST(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha));
-                algorithms.emplace_back(new REPS(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha));
+                // algorithms.emplace_back(new QCAST(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha));
+                // algorithms.emplace_back(new REPS(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha));
                 algorithms.emplace_back(new MyAlgo(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha));
                 //algorithms.emplace_back(new MyGreedyAlgo(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha));
                 //algorithms.emplace_back(new MyAlgo2(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha));
