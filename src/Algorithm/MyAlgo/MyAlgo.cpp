@@ -532,7 +532,7 @@ vector<map<vector<int>, int>> MyAlgo::rounding(){
             for(auto it2:Final_path){
                 cout<<it2<<" ";
             }
-            cout<<"     "<<it.second<<endl;
+            cout<<"     Qubits:"<<it.second<<endl;
         }
     }
     return I_request;
