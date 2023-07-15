@@ -184,7 +184,6 @@ vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){
     cout<<":"<<brute_min<<endl;
 
     SPT = Dijkstra(src, dst);                               //the first SPT is get by dijkstra
-    cout <<"Dijkstra end" << endl;  
     int cur_node = src;                                     //counting the first path's U(X,Y)=c* e^r
     double c = 0;                                           //c=SUM[u,v]:alpha(u)+alpha(v)+beta(u,v)==X[u,v]
     double r = 0;                                           //r=SUM[u,v]:-ln(Pr(u,v))==Y[u,v]
@@ -242,6 +241,12 @@ vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){
     }        // 找到最小的 edge 
 
     if(minimum == numeric_limits<double>::infinity()){   //原本設計是有break,但之後用不到
+        cout << "best_path: ";
+        for(auto p : best_path){
+            cout << p << "->";
+        }
+        cout << endl;
+        cout << "U: " << req_Us << endl;
         return best_path;
     }else{
         new_path.clear();
