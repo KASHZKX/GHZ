@@ -7,8 +7,8 @@
 #include "Network/Graph/Graph.h"
 #include "Algorithm/AlgorithmBase/AlgorithmBase.h"
 #include "Algorithm/Greedy/Greedy.h"
-// #include "Algorithm/QCAST/QCAST.h"
-// #include "Algorithm/REPS/REPS.h"
+#include "Algorithm/QCAST/QCAST.h"
+#include "Algorithm/REPS/REPS.h"
 #include "Algorithm/MyAlgo/MyAlgo.h"
 // #include "Algorithm/MyAlgo2/MyAlgo2.h"
 // #include "Algorithm/MyGreedyAlgo/MyGreedyAlgo.h"
@@ -129,8 +129,8 @@ int main(){
                 
                 vector<AlgorithmBase*> algorithms;
                 // algorithms.emplace_back(new Greedy(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha));
-                // algorithms.emplace_back(new QCAST(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha));
-                // algorithms.emplace_back(new REPS(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha));
+                algorithms.emplace_back(new QCAST(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha));
+                algorithms.emplace_back(new REPS(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha));
                 algorithms.emplace_back(new MyAlgo(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha));
                 //algorithms.emplace_back(new MyGreedyAlgo(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha));
                 //algorithms.emplace_back(new MyAlgo2(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha));
