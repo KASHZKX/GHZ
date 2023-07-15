@@ -184,12 +184,12 @@ vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){
     cout<<":"<<brute_min<<endl;
 
     SPT = Dijkstra(src, dst);                               //the first SPT is get by dijkstra
-    
+    cout <<"Dijkstra end" << endl;  
     int cur_node = src;                                     //counting the first path's U(X,Y)=c* e^r
     double c = 0;                                           //c=SUM[u,v]:alpha(u)+alpha(v)+beta(u,v)==X[u,v]
     double r = 0;                                           //r=SUM[u,v]:-ln(Pr(u,v))==Y[u,v]
     while(cur_node != dst){
-
+        cout << "first while" << endl;
         if(cur_node < SPT[cur_node]){                       //[can alter]no need if else
             c += X[{cur_node,SPT[cur_node]}];               
             r += Y[req_no][{cur_node,SPT[cur_node]}];
@@ -220,12 +220,14 @@ vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){
                 temp2 = Y[req_no][{i, neighbor}];
                 int cur_node = i;
                 while(cur_node != dst){
+                    cout << "second while" << endl;
                     temp1 += X[{cur_node, SPT[cur_node]}];
                     temp2 += Y[req_no][{cur_node, SPT[cur_node]}];
                     cur_node = SPT[cur_node];
                 } 
                 cur_node = neighbor;
                 while(cur_node != dst){
+                     cout << "third while" << endl;
                     temp1 -= X[{cur_node, SPT[cur_node]}];
                     temp2 -= Y[req_no][{cur_node, SPT[cur_node]}];
                     cur_node = SPT[cur_node];
@@ -251,6 +253,7 @@ vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){
     cur_node = new_edge.first;
     int cur_node2 = new_edge.second;
     while(cur_node != dst && cur_node2 != dst){
+        cout << "forth while" << endl;
         cur_node=SPT[cur_node];
         cur_node2=SPT[cur_node2];
     }
@@ -263,6 +266,7 @@ vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){
 
     cur_node = src;                                   
     while(cur_node != -1) {
+        cout << "fifth while" << endl;
         new_path.push_back(cur_node);
         cur_node = SPT[cur_node];
     }       
