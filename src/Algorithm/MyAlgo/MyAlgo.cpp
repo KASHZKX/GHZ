@@ -613,6 +613,5 @@ void MyAlgo::path_assignment(){
             assign_resource(p.first, p.second, i);
         }
     }
-
 }   
 
