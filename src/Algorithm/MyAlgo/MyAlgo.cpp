@@ -262,6 +262,7 @@ vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){
 
     cur_node = src;                                   
     while(cur_node != dst) {
+        cout<<cur_node<<" ";
         new_path.push_back(cur_node);
         cur_node = SPT[cur_node];
     }       
