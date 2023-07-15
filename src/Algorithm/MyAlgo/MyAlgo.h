@@ -37,7 +37,7 @@ public:
     void entangle();
     void swap();
     void send();
-    void dfs(int s, int t, vector<vector<int>> &ans, vector<int> &path, vector<int> &visited);    
+    void dfs(int s, int t, vector<vector<int>> &ans, vector<int> &path, vector<bool> &visited);    
     vector<vector<int>> allPathsSourceTarget(int src, int dst);
     void next_time_slot();
     void find_bottleneck(vector<int>, int req_no);
