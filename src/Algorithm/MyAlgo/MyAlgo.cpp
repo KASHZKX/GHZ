@@ -259,6 +259,7 @@ vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){
     else{
         SPT[new_edge.first] = new_edge.second;
     }
+    cout<<"NEW EDGE"<<new_edge.first<<"-"<<new_edge.second<<endl;
 
     cur_node = src;                                   
     while(cur_node != dst) {
@@ -266,6 +267,7 @@ vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){
         new_path.push_back(cur_node);
         cur_node = SPT[cur_node];
         if(cur_node==SPT[cur_node]){
+            cout<<cur_node;
             cout<<"ERROR--------------------------\n";
             break;
         }
