@@ -202,7 +202,12 @@ vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){
     best_path.push_back(dst);
     best_len = c * exp(r);
     req_Us = best_len;
-
+    cout << "origin path: ";
+    for(auto p : best_path){
+            cout << p << "->";
+    }
+    cout << endl;
+    
     vector<int> new_path;   
     map<pair<int, int>, bool> used;
     pair<int,int> new_edge;
