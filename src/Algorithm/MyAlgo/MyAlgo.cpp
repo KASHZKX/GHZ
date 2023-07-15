@@ -230,7 +230,6 @@ vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){
                         if(minimum > - temp1 / temp2){
                             new_edge = {i, neighbor};
                             minimum = - temp1 / temp2;
-                            cout << i << " " << neighbor << " value: " << minimum << endl;
                         }
                     }
                 }
