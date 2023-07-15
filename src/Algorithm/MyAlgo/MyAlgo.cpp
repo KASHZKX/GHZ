@@ -523,10 +523,13 @@ void MyAlgo::dfs(int src, int dst, vector<vector<int>> &ans, vector<int> &path, 
     if(src == dst){
         ans.push_back(path);
         return;
-    } else{
+    } 
+    else{
         for(auto i : graph.get_neighbors_id(src)){ 
-            if(!visited[i])
+            if(!visited[i]){
+                cout << i << endl;
                 dfs(i, dst, ans, path, visited);
+            }
         }
     }
     path.pop_back();
@@ -536,7 +539,7 @@ vector<vector<int>> MyAlgo::allPathsSourceTarget(int src, int dst){
     vector<vector<int>> ans;
     vector<int> path;
     vector<bool> visited(graph.get_size());
-    for(unsigned int i = 0; i < graph.get_size(); i++){
+    for(int i = 0; i < graph.get_size(); i++){
         visited[i] = false;
     }
     path.push_back(src);
