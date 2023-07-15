@@ -265,6 +265,10 @@ vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){
         cout<<cur_node<<" ";
         new_path.push_back(cur_node);
         cur_node = SPT[cur_node];
+        if(cur_node==SPT[cur_node]){
+            cout<<"error\n";
+            break;
+        }
     }       
     new_path.push_back(dst);
 
