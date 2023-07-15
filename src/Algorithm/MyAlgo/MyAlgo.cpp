@@ -150,7 +150,7 @@ vector<int> MyAlgo::Dijkstra(int src, int dst){
     //     0
 
 vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){     
-    vector<int> SPT(graph.get_size() + 5);                  //nodes' parent in the spanning tree
+    vector<int> SPT;                  //nodes' parent in the spanning tree
     vector<int> best_path;
     double best_len; 
     int src = requests[req_no].get_source();
