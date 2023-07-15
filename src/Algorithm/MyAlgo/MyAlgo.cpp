@@ -517,7 +517,7 @@ vector<map<vector<int>, int>> MyAlgo::rounding(){
     return I_request;
 }
 
-void MyAlgo::dfs(int src, int dst, vector<vector<int>> &ans, vector<int> &path){
+void MyAlgo::dfs(int src, int dst, vector<vector<int>> &ans, vector<int> &path, vector<int> &visited){
         //base case
     path.push_back(src);
     if(src == dst){
@@ -525,7 +525,8 @@ void MyAlgo::dfs(int src, int dst, vector<vector<int>> &ans, vector<int> &path){
         return;
     } else{
         for(auto i : graph.get_neighbors_id(src)){ 
-            dfs(i, dst, ans, path);
+            if(!visited[i])
+                dfs(i, dst, ans, path, visited);
         }
     }
     path.pop_back();
@@ -534,13 +535,18 @@ void MyAlgo::dfs(int src, int dst, vector<vector<int>> &ans, vector<int> &path){
 vector<vector<int>> MyAlgo::allPathsSourceTarget(int src, int dst){
     vector<vector<int>> ans;
     vector<int> path;
+    vector<bool> visited(graph.get_size());
+    for(unsigned int i = 0; i < graph.get_size(); i++){
+        visited[i] = false;
+    }
     path.push_back(src);
-    dfs(src, dst, ans, path);
+    dfs(src, dst, ans, path, visited);
     return ans;
 }
 
 void MyAlgo::path_assignment(){
     initialize();
+    
     for(unsigned int i = 0; i < requests.size(); i++){
         int src = requests[i].get_source();
         int dst = requests[i].get_destination();
