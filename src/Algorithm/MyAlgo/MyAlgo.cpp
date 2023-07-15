@@ -241,7 +241,6 @@ vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){
         }else{
             new_path.clear();
         }
-        cout << "new_edge: "<< new_edge.first << " " << new_edge.second << endl;
         
         cur_node = new_edge.first;
         int cur_node2 = new_edge.second;
