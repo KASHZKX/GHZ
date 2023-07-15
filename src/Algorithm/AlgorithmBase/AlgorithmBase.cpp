@@ -146,6 +146,27 @@ void AlgorithmBase::assign_resource(vector<int> path, int reqno){
     if(DEBUG) cerr<< "---------AlgorithmBase::assign_resource----------end" << endl;
 }
 
+void AlgorithmBase::assign_resource(vector<int> path, int width, int reqno){
+    
+    if(DEBUG) cerr<< "---------AlgorithmBase::assign_resource----------" << endl;
+    if(DEBUG) {
+        cerr<<"find a path to build! with width:    "<<width<<endl;
+        for(auto ele:path){
+            cerr<<ele<<" ";
+        }
+        cerr << endl;
+    }
+    if(width == 0x3f3f3f3f){
+        cerr<<"error:\twidth = INF"<<endl;
+        exit(1);
+    }
+    while(width-- > 0){
+       
+        requests[reqno] +=  graph.build_path(path);
+    }
+    if(DEBUG) cerr<< "---------AlgorithmBase::assign_resource----------end" << endl;
+}
+
 vector<int> AlgorithmBase::BFS(int source, int destination){
     // if(source > graph.get_size() || destination > graph.get_size()){
     //     cerr<<"error:\tnode id is out of range"<<endl;

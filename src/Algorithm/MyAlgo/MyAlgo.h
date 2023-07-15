@@ -22,7 +22,8 @@ private:
     vector<double> alpha;
     map<vector<int>, double> x_i_p;
     map<pair<int,int>, double> beta;
-    double epsilon=0.1;
+    vector<vector<vector<int>>> all_source_target_path;
+    double epsilon = 0.1;
     double delta;
     double M;
     vector<double> tau;                
@@ -36,12 +37,14 @@ public:
     void entangle();
     void swap();
     void send();
+    void dfs(int s, int t, vector<vector<int>> &ans, vector<int> &path);    
+    vector<vector<int>> allPathsSourceTarget(int src, int dst);
     void next_time_slot();
     void find_bottleneck(vector<int>, int req_no);
     void initialize();
     double changing_obj();
     void find_violate();
-    void rounding();
+    vector<map<vector<int>, int>> rounding();
     MyAlgo(string filename, int request_time_limit, int node_time_limit, double swap_prob, double entangle_alpha);
     ~MyAlgo();
 };

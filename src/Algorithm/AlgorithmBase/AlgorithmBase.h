@@ -34,6 +34,7 @@ public:
     int find_width(vector<int> path);
     vector<int> BFS(int source, int destination);
     void assign_resource(vector<int> path, int reqno);
+    void assign_resource(vector<int> path, int width, int reqno);
     void base_entangle();
     void base_swap();
     void base_send();
