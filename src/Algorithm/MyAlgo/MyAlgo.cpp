@@ -284,18 +284,19 @@ vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){
         best_path = new_path;                                            //路線修改,新的spt產生
     } 
     
-    if(best_path!=brute_path){                                           //checking brute && best
+    if(best_path != brute_path){                                           //checking brute && best
         cout<<"DIFF!!!\n";
     }
 
 
-    /*
+    
     cout << "Best path: ";
     for(auto p : best_path){
         cout <<p << " ";
     }
     cout << endl;
-    */
+    cout << "U: " << best_len << endl;
+    
     return best_path;                                                    
 }
 
@@ -528,7 +529,6 @@ void MyAlgo::dfs(int src, int dst, vector<vector<int>> &ans, vector<int> &path, 
     else{
         for(auto i : graph.get_neighbors_id(src)){ 
             if(!visited[i]){
-                cout << i << endl;
                 dfs(i, dst, ans, path, visited);
             }
         }
