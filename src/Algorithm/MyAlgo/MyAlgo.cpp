@@ -226,7 +226,7 @@ vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){
                         temp2 -= Y[req_no][{cur_node, SPT[cur_node]}];
                         cur_node = SPT[cur_node];
                     }       
-                    // cout << "edge: " << i << " " << neighbor<< endl;
+    
                     if(temp2 < 0 && temp1 > 0 && used_edge.find({i, neighbor}) != used_edge.end()){               // we need the smallest edge to change the SPT
                         if(minimum > - temp1 / temp2){
                             new_edge = {i, neighbor};
@@ -243,7 +243,7 @@ vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){
         }else{
             new_path.clear();
         }
-        ////
+        cout << "new_edge: "<< new_edge.first << " " << new_edge.second << endl;
         
         cur_node = new_edge.first;
         int cur_node2 = new_edge.second;
