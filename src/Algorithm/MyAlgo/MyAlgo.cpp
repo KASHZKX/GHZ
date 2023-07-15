@@ -161,7 +161,7 @@ vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){
     for(auto it:all_source_target_path[req_no]){            //brute sort U_count
         double c=0;
         double r=0;
-        for(int i=0;i<it.size()-1;i++){
+        for(unsigned int i=0;i<it.size()-1;i++){
             c += X[{it[i],it[i+1]}];               
             r += Y[req_no][{it[i],it[i+1]}]; 
         }
@@ -505,7 +505,7 @@ vector<map<vector<int>, int>> MyAlgo::rounding(){
             }
         }
     }
-    for(int i = 0; i < I_request.size(); i++){
+    for(unsigned int i = 0; i < I_request.size(); i++){
         for(auto it:I_request[i]){
             vector<int>Final_path =it.first;
             for(auto it2:Final_path){
@@ -519,17 +519,17 @@ vector<map<vector<int>, int>> MyAlgo::rounding(){
 
 void MyAlgo::dfs(int src, int dst, vector<vector<int>> &ans, vector<int> &path){
         //base case
+    path.push_back(src);
     if(src == dst){
         ans.push_back(path);
         return;
+    } else{
+        for(auto i : graph.get_neighbors_id(src)){ 
+            dfs(i, dst, ans, path);
+        }
     }
+    path.pop_back();
 
-    for(auto i : graph.get_neighbors_id(src)){ 
-        cout << i << endl;
-        path.push_back(i);
-        dfs(i, dst, ans, path);
-        path.pop_back();
-    }
 }
 vector<vector<int>> MyAlgo::allPathsSourceTarget(int src, int dst){
     vector<vector<int>> ans;
@@ -572,7 +572,7 @@ void MyAlgo::path_assignment(){
     find_violate();
     vector<map<vector<int>, int>>path = rounding();
 
-    for(int i = 0; i < path.size(); i++){
+    for(unsigned int i = 0; i < path.size(); i++){
         for(auto p : path[i]){
             assign_resource(p.first, p.second, i);
         }
