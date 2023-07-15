@@ -233,12 +233,12 @@ vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){
                     temp2 -= Y[req_no][{cur_node, SPT[cur_node]}];
                     cur_node = SPT[cur_node];
                 }       
-                cout << "edge: " << i << " " << neighbor<< endl;
+                // cout << "edge: " << i << " " << neighbor<< endl;
                 if(temp2 < 0 && temp1 > 0){               // we need the smallest edge to change the SPT
                     if(minimum > - temp1 / temp2){
                         new_edge = {i, neighbor};
                         minimum = - temp1 / temp2;
-                        cout << i << " " << neighbor << " value: " << minimum << endl;
+                        // cout << i << " " << neighbor << " value: " << minimum << endl;
                     }
                 }
             }
@@ -601,7 +601,7 @@ void MyAlgo::path_assignment(){
         find_bottleneck(best_path, req_no);
         //cout<<"End find_bottle\n";
         obj = changing_obj();
-        //cout<<"changing_obj obj: " << obj << endl ;
+        cout<<"changing_obj obj: " << obj << endl ;
     }
     find_violate();
     vector<map<vector<int>, int>>path = rounding();
