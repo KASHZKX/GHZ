@@ -569,6 +569,7 @@ void MyAlgo::path_assignment(){
         int dst = requests[i].get_destination();
         all_source_target_path.push_back(allPathsSourceTarget(src, dst));
     }
+    while(1){};
     
     double obj = M * delta;
     vector<int> best_path;
