@@ -184,7 +184,6 @@ vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){
     cout<<":"<<brute_min<<endl;
 
     SPT = Dijkstra(src, dst);                               //the first SPT is get by dijkstra
-    cout <<"Dijkstra end" << endl;  
     int cur_node = src;                                     //counting the first path's U(X,Y)=c* e^r
     double c = 0;                                           //c=SUM[u,v]:alpha(u)+alpha(v)+beta(u,v)==X[u,v]
     double r = 0;                                           //r=SUM[u,v]:-ln(Pr(u,v))==Y[u,v]
@@ -203,7 +202,12 @@ vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){
     best_path.push_back(dst);
     best_len = c * exp(r);
     req_Us = best_len;
-
+    cout << "origin path: ";
+    for(auto p : best_path){
+            cout << p << "->";
+    }
+    cout << endl;
+    
     vector<int> new_path;   
     map<pair<int, int>, bool> used;
     pair<int,int> new_edge;
@@ -229,12 +233,12 @@ vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){
                     temp2 -= Y[req_no][{cur_node, SPT[cur_node]}];
                     cur_node = SPT[cur_node];
                 }       
-                
+                cout << "edge: " << i << " " << neighbor<< endl;
                 if(temp2 < 0 && temp1 > 0){               // we need the smallest edge to change the SPT
                     if(minimum > - temp1 / temp2){
-                        // revise edge
                         new_edge = {i, neighbor};
                         minimum = - temp1 / temp2;
+                        cout << i << " " << neighbor << " value: " << minimum << endl;
                     }
                 }
             }
@@ -242,6 +246,12 @@ vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){
     }        // 找到最小的 edge 
 
     if(minimum == numeric_limits<double>::infinity()){   //原本設計是有break,但之後用不到
+        cout << "best_path: ";
+        for(auto p : best_path){
+            cout << p << "->";
+        }
+        cout << endl;
+        cout << "U: " << req_Us << endl;
         return best_path;
     }else{
         new_path.clear();
@@ -259,24 +269,12 @@ vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){
     else{
         SPT[new_edge.first] = new_edge.second;
     }
-    cout<<"NEW EDGE"<<new_edge.first<<"-"<<new_edge.second<<endl;
 
     cur_node = src;                                   
     while(cur_node != dst) {
-        cout<<cur_node<<" ";
         new_path.push_back(cur_node);
         cur_node = SPT[cur_node];
-        if(cur_node==SPT[cur_node]){
-            cout<<cur_node<<" ";
-            cout<<"ERROR--------------------------\n";
-            for(int i=0;i<SPT.size();i++){
-                cout<<"SPT["<<i<<"]"<<SPT[i]<<endl;
-            }
-            if(SPT.size()==0){
-                cout<<"size=0\n";
-            }
-            break;
-        }
+        
     }       
     new_path.push_back(dst);
 
@@ -544,11 +542,11 @@ void MyAlgo::dfs(int src, int dst, vector<vector<int>> &ans, vector<int> &path, 
     path.push_back(src);
     if(src == dst){
         ans.push_back(path);
-        // cout << "allpath: ";
-        // for(auto p : path){
-        //     cout << p << "->";
-        // }
-        // cout << endl;
+        cout << "allpath: ";
+        for(auto p : path){
+            cout << p << "->";
+        }
+        cout << endl;
 
     } 
     else{
