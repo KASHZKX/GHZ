@@ -264,24 +264,12 @@ vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){
     else{
         SPT[new_edge.first] = new_edge.second;
     }
-    cout<<"NEW EDGE"<<new_edge.first<<"-"<<new_edge.second<<endl;
 
     cur_node = src;                                   
     while(cur_node != dst) {
-        cout<<cur_node<<" ";
         new_path.push_back(cur_node);
         cur_node = SPT[cur_node];
-        if(cur_node==SPT[cur_node]){
-            cout<<cur_node<<" ";
-            cout<<"ERROR--------------------------\n";
-            for(int i=0;i<SPT.size();i++){
-                cout<<"SPT["<<i<<"]"<<SPT[i]<<endl;
-            }
-            if(SPT.size()==0){
-                cout<<"size=0\n";
-            }
-            break;
-        }
+        
     }       
     new_path.push_back(dst);
 
