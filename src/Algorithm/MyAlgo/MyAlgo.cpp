@@ -177,7 +177,7 @@ vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){
             brute_path = it;
         }
     }
-    cout<<"[BRUTE]req:"<<req_no<<" ";
+    cout<<"\n[BRUTE]req:"<<req_no<<" ";
     for(auto it:brute_path){
         cout<<it<<"->";
     }
@@ -266,7 +266,7 @@ vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){
         new_path.push_back(cur_node);
         cur_node = SPT[cur_node];
         if(cur_node==SPT[cur_node]){
-            cout<<"error\n";
+            cout<<"ERROR--------------------------\n";
             break;
         }
     }       
