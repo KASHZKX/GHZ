@@ -520,7 +520,6 @@ vector<map<vector<int>, int>> MyAlgo::rounding(){
 
 void MyAlgo::dfs(int src, int dst, vector<vector<int>> &ans, vector<int> &path, vector<bool> &visited){
         //base case
-    path.push_back(src);
     visited[src] = true;
     if(src == dst){
         ans.push_back(path);
@@ -529,6 +528,7 @@ void MyAlgo::dfs(int src, int dst, vector<vector<int>> &ans, vector<int> &path, 
     else{
         for(auto i : graph.get_neighbors_id(src)){ 
             if(!visited[i]){
+                path.push_back(src);
                 dfs(i, dst, ans, path, visited);
             }
         }
