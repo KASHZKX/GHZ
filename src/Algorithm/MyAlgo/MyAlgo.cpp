@@ -536,7 +536,6 @@ void MyAlgo::dfs(int src, int dst, vector<vector<int>> &ans, vector<int> &path, 
             cout << p << "->";
         }
         cout << endl;
-        return;
 
     } 
     else{
