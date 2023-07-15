@@ -155,6 +155,27 @@ vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){
     double best_len; 
     int src = requests[req_no].get_source();
     int dst =  requests[req_no].get_destination();
+
+    double brute_min=numeric_limits<double>::infinity();
+    vector<int>brute_path;
+    for(auto it:all_source_target_path[req_no]){            //brute sort U_count
+        double c=0;
+        double r=0;
+        for(int i=0;i<it.size()-1;i++){
+            c += X[{it[i],it[i+1]}];               
+            r += Y[req_no][{it[i],it[i+1]}]; 
+        }
+        if(c * exp(r)<brute_min){
+            brute_min=c * exp(r);
+            brute_path=it;
+        }
+    }
+    cout<<"[BRUTE]req:"<<req_no<<" ";
+    for(auto it:brute_path){
+        cout<<it<<"->";
+    }
+    cout<<":"<<brute_min<<endl;
+
     SPT = Dijkstra(src, dst);                               //the first SPT is get by dijkstra
     
     int cur_node = src;                                     //counting the first path's U(X,Y)=c* e^r
@@ -263,6 +284,10 @@ vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){
         best_path = new_path;                                            //路線修改,新的spt產生
     } 
     
+    if(best_path!=brute_path){                                           //checking brute && best
+        cout<<"DIFF!!!\n";
+    }
+
 
     /*
     cout << "Best path: ";
