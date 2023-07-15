@@ -546,6 +546,7 @@ void MyAlgo::dfs(int src, int dst, vector<vector<int>> &ans, vector<int> &path, 
             }
         }
     }
+    visited[src] = false;
     path.pop_back();
 
 }
