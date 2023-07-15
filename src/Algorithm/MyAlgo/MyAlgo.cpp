@@ -158,13 +158,6 @@ vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){
 
     double brute_min=numeric_limits<double>::infinity();
     vector<int>brute_path;
-    // for(auto it:all_source_target_path[req_no]){
-    //     cout << "all path: ";
-    //     for(auto p:it){
-    //         cout<<p<<"->";
-    //     }
-    //     cout<<endl;
-    // }
     for(auto it:all_source_target_path[req_no]){            //brute sort U_count
         double c=0;
         double r=0;
@@ -207,115 +200,110 @@ vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){
             cout << p << "->";
     }
     cout << endl;
-    
+    map<pair<int, int>, bool> used_edge;
     vector<int> new_path;   
-    map<pair<int, int>, bool> used;
     pair<int,int> new_edge;
-    double minimum = numeric_limits<double>::infinity();
-    for(int i = 0; i < graph.get_size(); i++){                 //creating many new SPT
-        vector<int> neighbors = graph.get_neighbors_id(i);  
-        for(auto neighbor : neighbors){
-            double temp1 = 0, temp2 = 0;
-            if(SPT[i] == neighbor || SPT[neighbor] == i){      // checking used edge or unused
-                continue;   
-            }else{                                             // if unused
-                temp1 = X[{i, neighbor}];
-                temp2 = Y[req_no][{i, neighbor}];
-                int cur_node = i;
-                while(cur_node != dst){
-                    temp1 += X[{cur_node, SPT[cur_node]}];
-                    temp2 += Y[req_no][{cur_node, SPT[cur_node]}];
-                    cur_node = SPT[cur_node];
-                } 
-                cur_node = neighbor;
-                while(cur_node != dst){
-                    temp1 -= X[{cur_node, SPT[cur_node]}];
-                    temp2 -= Y[req_no][{cur_node, SPT[cur_node]}];
-                    cur_node = SPT[cur_node];
-                }       
-                // cout << "edge: " << i << " " << neighbor<< endl;
-                if(temp2 < 0 && temp1 > 0){               // we need the smallest edge to change the SPT
-                    if(minimum > - temp1 / temp2){
-                        new_edge = {i, neighbor};
-                        minimum = - temp1 / temp2;
-                        // cout << i << " " << neighbor << " value: " << minimum << endl;
+    while(1){
+        double minimum = numeric_limits<double>::infinity();
+        for(int i = 0; i < graph.get_size(); i++){                 //creating many new SPT
+            vector<int> neighbors = graph.get_neighbors_id(i);  
+            for(auto neighbor : neighbors){
+                double temp1 = 0, temp2 = 0;
+                if(SPT[i] == neighbor || SPT[neighbor] == i){      // checking used edge or unused
+                    continue;   
+                }else{                                             // if unused
+                    temp1 = X[{i, neighbor}];
+                    temp2 = Y[req_no][{i, neighbor}];
+                    int cur_node = i;
+                    while(cur_node != dst){
+                        temp1 += X[{cur_node, SPT[cur_node]}];
+                        temp2 += Y[req_no][{cur_node, SPT[cur_node]}];
+                        cur_node = SPT[cur_node];
+                    } 
+                    cur_node = neighbor;
+                    while(cur_node != dst){
+                        temp1 -= X[{cur_node, SPT[cur_node]}];
+                        temp2 -= Y[req_no][{cur_node, SPT[cur_node]}];
+                        cur_node = SPT[cur_node];
+                    }       
+                    // cout << "edge: " << i << " " << neighbor<< endl;
+                    if(temp2 < 0 && temp1 > 0 && used_edge.find({i, neighbor}) != used_edge.end()){               // we need the smallest edge to change the SPT
+                        if(minimum > - temp1 / temp2){
+                            new_edge = {i, neighbor};
+                            minimum = - temp1 / temp2;
+                            // cout << i << " " << neighbor << " value: " << minimum << endl;
+                        }
                     }
                 }
             }
-        }
-    }        // 找到最小的 edge 
+        }        // 找到最小的 edge 
 
-    if(minimum == numeric_limits<double>::infinity()){   //原本設計是有break,但之後用不到
-        cout << "best_path: ";
-        for(auto p : best_path){
-            cout << p << "->";
+        if(minimum == numeric_limits<double>::infinity()){   //原本設計是有break,但之後用不到
+            break;
+        }else{
+            new_path.clear();
         }
-        cout << endl;
-        cout << "U: " << req_Us << endl;
-        return best_path;
-    }else{
-        new_path.clear();
-    }
-    ////
-    cur_node = new_edge.first;
-    int cur_node2 = new_edge.second;
-    while(cur_node != dst && cur_node2 != dst){
-        cur_node=SPT[cur_node];
-        cur_node2=SPT[cur_node2];
-    }
-    if(cur_node == dst){
-        SPT[new_edge.second] = new_edge.first;
-    }
-    else{
-        SPT[new_edge.first] = new_edge.second;
-    }
-
-    cur_node = src;                                   
-    while(cur_node != dst) {
-        new_path.push_back(cur_node);
-        cur_node = SPT[cur_node];
+        ////
         
-    }       
-    new_path.push_back(dst);
-
-    double new_len = 0;                                         //counting the new path's U(X,Y)=c* e^r
-    c = 0;
-    r = 0;
-    for(unsigned int i = 0; i < new_path.size() - 1; i++){
-        if(new_path[i] < new_path[i+1]){                        //[can alter]no need if else
-            c += X[{new_path[i], new_path[i+1]}];
-            r += Y[req_no][{new_path[i], new_path[i+1]}];
+        cur_node = new_edge.first;
+        int cur_node2 = new_edge.second;
+        used_edge[new_edge] = true;
+        while(cur_node != dst && cur_node2 != dst){
+            cur_node=SPT[cur_node];
+            cur_node2=SPT[cur_node2];
+        }
+        if(cur_node == dst){
+            SPT[new_edge.second] = new_edge.first;
         }
         else{
-            c += X[{new_path[i+1], new_path[i]}];  
-            r += Y[req_no][{new_path[i+1], new_path[i]}];           
+            SPT[new_edge.first] = new_edge.second;
         }
-        //cout<<"PATH:["<<new_path[i]<<" "<<new_path[i+1]<<"] with tot "<< c <<" / " << r <<endl;
-    }
-    new_len =  c * exp(r);
-    //cout << "new edge: " <<  new_edge.first << " " <<  new_edge.second << endl;
-    //cout << "best_len: " << best_len << " new_len: " << new_len << endl; 
-    if(new_len < best_len){
-        best_len = new_len;
-        req_Us = best_len;
+
+        cur_node = src;                                   
+        while(cur_node != dst) {
+            new_path.push_back(cur_node);
+            cur_node = SPT[cur_node];
+            
+        }       
+        new_path.push_back(dst);
+
+        double new_len = 0;                                         //counting the new path's U(X,Y)=c* e^r
+        c = 0;
+        r = 0;
+        for(unsigned int i = 0; i < new_path.size() - 1; i++){
+            if(new_path[i] < new_path[i+1]){                        //[can alter]no need if else
+                c += X[{new_path[i], new_path[i+1]}];
+                r += Y[req_no][{new_path[i], new_path[i+1]}];
+            }
+            else{
+                c += X[{new_path[i+1], new_path[i]}];  
+                r += Y[req_no][{new_path[i+1], new_path[i]}];           
+            }
+            //cout<<"PATH:["<<new_path[i]<<" "<<new_path[i+1]<<"] with tot "<< c <<" / " << r <<endl;
+        }
+        new_len =  c * exp(r);
+        if(new_len < best_len){
+            best_len = new_len;
+            req_Us = best_len;
+            
+            best_path = new_path;                                            //路線修改,新的spt產生
+        } 
         
-        best_path = new_path;                                            //路線修改,新的spt產生
-    } 
-    
+       
+    }
     if(best_path != brute_path){                                           //checking brute && best
         cout<<"DIFF!!!\n";
     }
 
-
-    
     cout << "Best path: ";
     for(auto p : best_path){
         cout <<p << " ";
     }
     cout << endl;
     cout << "U: " << best_len << endl;
-    
-    return best_path;                                                    
+        
+    return best_path;  
+                                                    
 }
 
 void MyAlgo::find_bottleneck(vector<int> path, int req_no){
