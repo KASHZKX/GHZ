@@ -503,7 +503,7 @@ vector<map<vector<int>, int>> MyAlgo::rounding(){
         unused_I -= (int) unused_frac_prob;
         total_prob += unused_frac_prob;
         accumulate.push_back(0.0);
-        //cout<<"total_prob:"<<total_prob<<" unused_I:"<<unused_I<<endl;
+        cout<<"total_prob:"<<total_prob<<" unused_I:"<<unused_I<<endl;
         for(int j = 0; j < unused_I; j++){
             random_device rd;  
             mt19937 gen(rd()); 
