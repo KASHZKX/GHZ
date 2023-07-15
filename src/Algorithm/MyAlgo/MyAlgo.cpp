@@ -525,6 +525,7 @@ void MyAlgo::dfs(int src, int dst, vector<vector<int>> &ans, vector<int> &path){
     }
 
     for(auto i : graph.get_neighbors_id(src)){ 
+        cout << i << endl;
         path.push_back(i);
         dfs(i, dst, ans, path);
         path.pop_back();
