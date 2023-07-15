@@ -453,7 +453,9 @@ void MyAlgo::find_violate(){
     //cout << "Magnification:" << max_magni << endl;
 
     for(auto &x : x_i_p){
+        cout << "before: " << x.second;
         x.second /= max_magni;
+        cout << " after: " << x.second << endl;
     }
     //check memory_and_channel
     /*
