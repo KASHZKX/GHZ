@@ -528,7 +528,7 @@ void MyAlgo::dfs(int src, int dst, vector<vector<int>> &ans, vector<int> &path, 
     else{
         for(auto i : graph.get_neighbors_id(src)){ 
             if(!visited[i]){
-                path.push_back(src);
+                path.push_back(i);
                 dfs(i, dst, ans, path, visited);
             }
         }
