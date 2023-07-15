@@ -1,4 +1,4 @@
-gurobi_path = /opt/gurobi952/linux64
+gurobi_path = /home/oba/danger/gurobi951/linux64/
 
 # on server
 #gurobi_path=/home/oba/danger/gurobi951/linux64/
