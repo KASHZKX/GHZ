@@ -158,13 +158,13 @@ vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){
 
     double brute_min=numeric_limits<double>::infinity();
     vector<int>brute_path;
-    for(auto it:all_source_target_path[req_no]){
-        cout << "all path: ";
-        for(auto p:it){
-            cout<<p<<"->";
-        }
-        cout<<endl;
-    }
+    // for(auto it:all_source_target_path[req_no]){
+    //     cout << "all path: ";
+    //     for(auto p:it){
+    //         cout<<p<<"->";
+    //     }
+    //     cout<<endl;
+    // }
     for(auto it:all_source_target_path[req_no]){            //brute sort U_count
         double c=0;
         double r=0;
@@ -549,11 +549,11 @@ void MyAlgo::dfs(int src, int dst, vector<vector<int>> &ans, vector<int> &path, 
     path.push_back(src);
     if(src == dst){
         ans.push_back(path);
-        // cout << "allpath: ";
-        // for(auto p : path){
-        //     cout << p << "->";
-        // }
-        // cout << endl;
+        cout << "allpath: ";
+        for(auto p : path){
+            cout << p << "->";
+        }
+        cout << endl;
 
     } 
     else{
