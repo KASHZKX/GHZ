@@ -540,7 +540,6 @@ vector<vector<int>> MyAlgo::allPathsSourceTarget(int src, int dst){
 
 void MyAlgo::path_assignment(){
     initialize();
-    all_source_target_path.resize(requests.size());
     for(unsigned int i = 0; i < requests.size(); i++){
         int src = requests[i].get_source();
         int dst = requests[i].get_destination();
