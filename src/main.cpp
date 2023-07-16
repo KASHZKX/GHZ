@@ -141,7 +141,7 @@ int main(){
                     cout<< "---------generating requests in main.cpp----------" << endl;
 
                     for(int q = 0; q < new_request_cnt && t < service_time; q++){
-                        Request new_request;
+                        Request new_request=nullptr;
                         bool check_no_repeat;
                         do{
                             check_no_repeat=true;
