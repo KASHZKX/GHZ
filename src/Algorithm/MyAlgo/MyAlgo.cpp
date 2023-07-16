@@ -470,26 +470,30 @@ vector<map<vector<int>, int>> MyAlgo::rounding(){
 
     for(unsigned int i = 0; i < requests.size(); i++){
         double total_prob = 0;
-        double unused_frac_prob = (double)requests[i].get_send_limit();
-        int unused_I = requests[i].get_send_limit();
+        double used_prob = 0;
+        int used_I=0;
+        int distri_I=0;
         vector<double>accumulate;
-        accumulate.push_back(0.0);
-        for(auto it : each_request[i]){
+        accumulate.push_back(0.0);                                              // [0,a1,a2,...,0]
+        for(auto it : each_request[i]){                    
             double frac_prob;
-            int i_prob = it.second;
+
+            int i_prob = it.second;                                             //每個path先取整數部分=>確定分配
             I_request[i][it.first] = i_prob;
+            used_I+=i_prob;
+
             frac_prob = it.second - i_prob;
             total_prob += frac_prob;
             accumulate.push_back(total_prob);
-            unused_frac_prob -= it.second;
-            unused_I -= (int) it.second;
+            used_prob += it.second;
         }
-        unused_frac_prob -= (int) unused_frac_prob;
-        unused_I -= (int) unused_frac_prob;
-        total_prob += unused_frac_prob;
+        used_I += (int)(requests[i].get_send_limit()- used_prob);               //unused_I=取底[ri - sum(request.I) - (unused.I)]
+        distri_I=requests[i].get_send_limit()-used_I;
+        
+        total_prob += (requests[i].get_send_limit()-used_prob)-(int)(requests[i].get_send_limit()- used_prob);
         accumulate.push_back(0.0);
-        cout<<"total_prob:"<<total_prob<<" unused_I:"<<unused_I<<endl;
-        for(int j = 0; j < (int)total_prob; j++){
+        cout<<"total_prob:"<<total_prob<<" distri_I:"<<distri_I<<endl;
+        for(int j = 0; j < distri_I; j++){
             random_device rd;  
             mt19937 gen(rd()); 
             uniform_real_distribution<double> dis(0.0, total_prob);
