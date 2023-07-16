@@ -144,7 +144,7 @@ int main(){
                         bool check_no_repeat;
                         do{
                             check_no_repeat=true;
-                            new_request = generate_new_request(num_of_node, request_time_limit);
+                            Request new_request = generate_new_request(num_of_node, request_time_limit);
                             for(auto it:algorithms[0]->get_requests()){
                                 if(it.get_source()==new_request.get_source() && it.get_destination()==new_request.get_destination()){
                                     check_no_repeat=false;
