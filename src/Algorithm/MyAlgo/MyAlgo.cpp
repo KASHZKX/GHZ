@@ -286,6 +286,7 @@ vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){
     }
     if(best_path != brute_path){                                           //checking brute && best
         cout<<"DIFF!!!\n";
+        exit(1);
     }
 
     cout << "Best path: ";
