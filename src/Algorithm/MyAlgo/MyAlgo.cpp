@@ -436,6 +436,7 @@ void MyAlgo::find_violate(){
     //cout << "Magnification:" << max_magni << endl;
 
     for(auto &x : x_i_p){
+        cout << "send_limit: " << requests[0].get_send_limit();
         cout << "before: " << x.second;
         x.second /= max_magni;
         cout << " after: " << x.second << endl;
