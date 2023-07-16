@@ -247,7 +247,7 @@ vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){
 
         cout << "minimum: " << minimum << endl;
         cout << "fabs: " << fabs(minimum - numeric_limits<double>::infinity()) << endl;
-        if(fabs(minimum - numeric_limits<double>::infinity()) < 0.000001){   //原本設計是有break,但之後用不到
+        if(minimum == numeric_limits<double>::infinity()){   //原本設計是有break,但之後用不到
             break;
         }else{
             new_path.clear();
