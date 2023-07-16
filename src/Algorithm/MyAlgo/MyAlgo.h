@@ -17,7 +17,7 @@ using namespace std;
 class MyAlgo:public AlgorithmBase {
 
 private:
-    map<pair<int,int>, double> X;
+    map<pair<int,int>, vector<double>> X;
     vector<map<pair<int,int>, double>> Y;
     vector<double> alpha;
     map<vector<int>, double> x_i_p;
@@ -32,7 +32,7 @@ public:
     map<int, int> path_length_encode;
     map<int, int> path_length_cnt;
     vector<int> separation_oracle(int req_no, double &U);
-    vector<int> Dijkstra(int src, int dst);
+    vector<int> Dijkstra(int src, int dst, int req_no);
     void path_assignment();
     void entangle();
     void swap();
