@@ -224,7 +224,7 @@ vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){
                         temp2 += Y[req_no][{cur_node, SPT[cur_node]}];
                         cur_node = SPT[cur_node];
                     } 
-                    cout << "Cp_i" << endl;
+                    // cout << "Cp_i" << endl;
                     cur_node = neighbor;
                     while(cur_node != dst){
                         // cout  << "edge: " << cur_node <<" "<<SPT[cur_node] << endl;
