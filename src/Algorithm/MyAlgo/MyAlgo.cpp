@@ -245,6 +245,7 @@ vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){
             }
         }        // 找到最小的 edge 
 
+        cout << "minimum: " << minimum << endl;
         if(fabs(minimum - numeric_limits<double>::infinity()) < 0.000001){   //原本設計是有break,但之後用不到
             break;
         }else{
