@@ -214,20 +214,28 @@ vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){
                 }else{                                             // if unused
                     temp1 = X[{i, neighbor}];
                     temp2 = Y[req_no][{i, neighbor}];
+                    cout << "C(i, j): " << temp1 << " r(i, j)" << temp2 << endl;
                     int cur_node = i;
+                    cout << "Cp_j" << endl;
                     while(cur_node != dst){
+                        cout  << "edge: " << cur_node << SPT[cur_node] << endl;
+                        cout  << "C: " << X[{cur_node, SPT[cur_node]}] << "R: " << Y[req_no][{cur_node, SPT[cur_node]}] << endl;
                         temp1 += X[{cur_node, SPT[cur_node]}];
                         temp2 += Y[req_no][{cur_node, SPT[cur_node]}];
                         cur_node = SPT[cur_node];
                     } 
+                    cout << "Cp_i" << endl;
                     cur_node = neighbor;
                     while(cur_node != dst){
+                        cout  << "edge: " << cur_node << SPT[cur_node] << endl;
+                        cout  << "C: " << X[{cur_node, SPT[cur_node]}] << "R: " << Y[req_no][{cur_node, SPT[cur_node]}] << endl;
                         temp1 -= X[{cur_node, SPT[cur_node]}];
                         temp2 -= Y[req_no][{cur_node, SPT[cur_node]}];
                         cur_node = SPT[cur_node];
                     }       
                     if(temp2 < 0 && temp1 > 0){               // we need the smallest edge to change the SPT
                         if(minimum > - temp1 / temp2){
+                            
                             new_edge = {i, neighbor};
                             minimum = - temp1 / temp2;
                         }
@@ -236,7 +244,7 @@ vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){
             }
         }        // 找到最小的 edge 
 
-        if(minimum - numeric_limits<double>::infinity() < 0.000001){   //原本設計是有break,但之後用不到
+        if(fabs(minimum - numeric_limits<double>::infinity()) < 0.000001){   //原本設計是有break,但之後用不到
             break;
         }else{
             new_path.clear();
