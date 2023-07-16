@@ -35,6 +35,7 @@ Network/Graph/Graph.o: Network/Graph/Graph.cpp Network/Graph/Graph.h config.h
 Request/Request.o: Request/Request.cpp Request/Request.h config.h
 	g++ -std=c++17 -c -g -Wall -Wextra -O3 Request/Request.cpp Request/Request.h config.h
 	mv Request.o Request/Request.o
+	
 Request/WholeRequest.o: Request/WholeRequest.cpp Request/WholeRequest.h config.h
 	g++ -std=c++17 -c -g -Wall -Wextra -O3 Request/WholeRequest.cpp Request/WholeRequest.h config.h
 	mv WholeRequest.o Request/WholeRequest.o
