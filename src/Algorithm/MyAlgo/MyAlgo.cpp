@@ -251,19 +251,7 @@ vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){
             new_path.clear();
         }
         
-        cur_node = new_edge.first;
-        int cur_node2 = new_edge.second;
-        used_edge[new_edge] = true;
-        while(cur_node != dst && cur_node2 != dst){
-            cur_node=SPT[cur_node];
-            cur_node2=SPT[cur_node2];
-        }
-        if(cur_node == dst){
-            SPT[new_edge.second] = new_edge.first;
-        }
-        else{
-            SPT[new_edge.first] = new_edge.second;
-        }
+        SPT[new_edge.first]=new_edge.second;
 
         cur_node = src;                                   
         while(cur_node != dst) {
