@@ -34,7 +34,12 @@ void AlgorithmBase::base_next_time_slot(){
         res["fidelity"] += requests[reqno].get_fidelity();
         finished_reqno.push_back(reqno);
         if(requests[reqno].get_throughput() != 0){
-            res["throughputs"]+= requests[reqno].get_throughput();
+            if(requests[reqno].get_throughput() >= requests[reqno].get_send_limit()){
+                res["throughputs"]+= requests[reqno].get_send_limit();
+            }else{
+                res["throughputs"]+= requests[reqno].get_throughput();
+            }
+                
         }
     }
 
