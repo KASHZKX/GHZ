@@ -89,8 +89,10 @@ void Request::swap(){
     for(auto &path:paths){
         if(path == nullptr)continue;
         if(path->get_entangle_succ()) {
-            path->swap();
-            throughput++;
+            if( path->swap()){
+                throughput++;
+            }
+        
         }
     }
 }
