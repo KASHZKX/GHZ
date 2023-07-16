@@ -141,7 +141,6 @@ int main(){
                     cout<< "---------generating requests in main.cpp----------" << endl;
 
                     for(int q = 0; q < new_request_cnt && t < service_time; q++){
-                        Request new_request=nullptr;
                         bool check_no_repeat;
                         do{
                             check_no_repeat=true;
@@ -151,13 +150,14 @@ int main(){
                                     check_no_repeat=false;
                                 }
                             }
+                            if(check_no_repeat==true){
+                                cout<<q << ". source: " << new_request.get_source()<<", destination: "<<new_request.get_destination()<<endl;
+                                for(auto &algo:algorithms){
+                                    result[T][algo->get_name()]["total_request"]++; 
+                                    algo->add_new_request(new_request);
+                                }
+                            }
                         }while(check_no_repeat==false);
-                        
-                        cout<<q << ". source: " << new_request.get_source()<<", destination: "<<new_request.get_destination()<<endl;
-                        for(auto &algo:algorithms){
-                            result[T][algo->get_name()]["total_request"]++; 
-                            algo->add_new_request(new_request);
-                        }
                     }
                     cout<< "---------generating requests in main.cpp----------end" << endl;
                     
