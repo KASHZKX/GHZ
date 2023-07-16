@@ -482,7 +482,7 @@ vector<map<vector<int>, int>> MyAlgo::rounding(){
             I_request[i][it.first] = i_prob;
             used_I+=i_prob;
 
-            frac_prob = it.second - i_prob;
+            frac_prob = it.second - i_prob;                                     //total_prob代表random區間,丟進accumulate
             total_prob += frac_prob;
             accumulate.push_back(total_prob);
             used_prob += it.second;

@@ -39,7 +39,7 @@ int main(){
     string file_path = "../data/";
 
     map<string, double> default_setting;
-    default_setting["num_of_node"] = 20;
+    default_setting["num_of_node"] = 40;
     default_setting["social_density"] = 0.5;
     default_setting["area_alpha"] = 0.1;
     default_setting["memory_cnt_avg"] = 50;
