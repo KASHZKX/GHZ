@@ -214,12 +214,12 @@ vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){
                 }else{                                             // if unused
                     temp1 = X[{i, neighbor}];
                     temp2 = Y[req_no][{i, neighbor}];
-                    cout <<"(i, j): "<< i << " "<< neighbor <<" C(i, j): " << temp1 << " r(i, j)" << temp2 << endl;
+                    // cout <<"(i, j): "<< i << " "<< neighbor <<" C(i, j): " << temp1 << " r(i, j)" << temp2 << endl;
                     int cur_node = i;
-                    cout << "Cp_j" << endl;
+                    // cout << "Cp_j" << endl;
                     while(cur_node != dst){
-                        cout  << "edge: " << cur_node << " "<< SPT[cur_node] << endl;
-                        cout  << "C: " << X[{cur_node, SPT[cur_node]}] << " R: " << Y[req_no][{cur_node, SPT[cur_node]}] << endl;
+                        // cout  << "edge: " << cur_node << " "<< SPT[cur_node] << endl;
+                        // cout  << "C: " << X[{cur_node, SPT[cur_node]}] << " R: " << Y[req_no][{cur_node, SPT[cur_node]}] << endl;
                         temp1 += X[{cur_node, SPT[cur_node]}];
                         temp2 += Y[req_no][{cur_node, SPT[cur_node]}];
                         cur_node = SPT[cur_node];
@@ -227,18 +227,18 @@ vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){
                     cout << "Cp_i" << endl;
                     cur_node = neighbor;
                     while(cur_node != dst){
-                        cout  << "edge: " << cur_node <<" "<<SPT[cur_node] << endl;
-                        cout  << "C: " << X[{cur_node, SPT[cur_node]}] << " R: " << Y[req_no][{cur_node, SPT[cur_node]}] << endl;
+                        // cout  << "edge: " << cur_node <<" "<<SPT[cur_node] << endl;
+                        // cout  << "C: " << X[{cur_node, SPT[cur_node]}] << " R: " << Y[req_no][{cur_node, SPT[cur_node]}] << endl;
                         temp1 -= X[{cur_node, SPT[cur_node]}];
                         temp2 -= Y[req_no][{cur_node, SPT[cur_node]}];
                         cur_node = SPT[cur_node];
                     }       
                     if(temp2 < 0 && temp1 > 0){               // we need the smallest edge to change the SPT
                         if(minimum > - temp1 / temp2){
-                            cout  << "change edge: " <<  i <<" "<< neighbor << endl;
+                            // cout  << "change edge: " <<  i <<" "<< neighbor << endl;
                             new_edge = {i, neighbor};
                             minimum = - temp1 / temp2;
-                            cout << "Cost: " << minimum << endl;
+                            // cout << "Cost: " << minimum << endl;
                         }
                     }
                 }
