@@ -251,17 +251,16 @@ vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){
             new_path.clear();
         }
         
-        SPT[new_edge.first]=new_edge.second;
+        SPT[new_edge.second]=new_edge.first;
 
         cur_node = src;                                   
         while(cur_node != dst) {
             cout<<cur_node<<" ";
             new_path.push_back(cur_node);
             cur_node = SPT[cur_node];
-            
         }       
         new_path.push_back(dst);
-
+        
         double new_len = 0;                                         //counting the new path's U(X,Y)=c* e^r
         c = 0;
         r = 0;
