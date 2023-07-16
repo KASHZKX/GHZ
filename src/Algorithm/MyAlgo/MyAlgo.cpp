@@ -500,8 +500,7 @@ vector<map<vector<int>, int>> MyAlgo::rounding(){
         }
         used_I += (int)(requests[i].get_send_limit()- used_prob);               //unused_I=取底[ri - sum(request.I) - (unused.I)]
         distri_I=requests[i].get_send_limit()-used_I;
-        
-        total_prob += (requests[i].get_send_limit()-used_prob)-(int)(requests[i].get_send_limit()- used_prob);
+
         accumulate.push_back(0.0);
         cout<<"total_prob:"<<total_prob<<" distri_I:"<<distri_I<<endl;
         cout<<"accumulate:";
