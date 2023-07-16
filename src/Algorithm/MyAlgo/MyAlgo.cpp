@@ -507,13 +507,14 @@ vector<map<vector<int>, int>> MyAlgo::rounding(){
         for(auto it:accumulate){
             cout<<it<<" ";
         }
+        cout<<endl;
         for(int j = 0; j < distri_I; j++){
             random_device rd;  
             mt19937 gen(rd()); 
             uniform_real_distribution<double> dis(0.0, total_prob);
             double temp = dis(gen);
             for(unsigned int k = 0; k < accumulate.size() - 1; k++){
-                cout<<"and "<<temp<<endl;
+                cout<<"ramdom:"<<temp<<endl;
                 if(temp > accumulate[k] && temp < accumulate[k+1]){
                     unsigned int index = 0;
                     for(auto it : each_request[i]){
