@@ -50,13 +50,15 @@ void MyAlgo::initialize(){
     for(int i = 0; i < graph.get_size(); i++){
         vector<int> temp = graph.get_neighbors_id(i);                             
         for(auto it: temp){
-            if(i < it){                                                           //X=alpha(left_node)+alpha(right_node)+beta(edge between them)
-                X[{i, it}] = alpha[i] + alpha[it] + beta[{i, it}];
-                X[{it, i}] = alpha[i] + alpha[it] + beta[{i, it}];
-            }
-            else{
-                X[{it, i}] = alpha[it] + alpha[i] + beta[{it, i}];
-                X[{i, it}] = alpha[it] + alpha[i] + beta[{it, i}];
+            for(unsigned  j = 0;j < requests.size(); j++){
+                if(i < it){                                                           //X=alpha(left_node)+alpha(right_node)+beta(edge between them)
+                    X[{i, it}].push_back( alpha[i] + alpha[it] + beta[{i, it}] + tau[j]);
+                    X[{it, i}].push_back( alpha[i] + alpha[it] + beta[{i, it}] + tau[j]);
+                }
+                else{
+                    X[{it, i}].push_back(alpha[it] + alpha[i] + beta[{it, i}] + tau[j]);
+                    X[{i, it}].push_back(alpha[it] + alpha[i] + beta[{it, i}] + tau[j]);
+                }
             }
             for(unsigned  j = 0;j < requests.size(); j++){                       //Y=-ln(edge)-ln(repeater_1^(1/2))-ln(repeater_2^(1/2))
                 int src = requests[j].get_source();
@@ -104,7 +106,7 @@ void MyAlgo::initialize(){
     }
 }
 
-vector<int> MyAlgo::Dijkstra(int src, int dst){ 
+vector<int> MyAlgo::Dijkstra(int src, int dst, int req_no){ 
     const double INF = numeric_limits<double>::infinity();
     int n = graph.get_size();
     vector<double> distance(n, INF);
@@ -120,8 +122,8 @@ vector<int> MyAlgo::Dijkstra(int src, int dst){
         if(used[cur_node]) continue;
         used[cur_node] = true;
         for(int neighbor : graph.get_neighbors_id(cur_node)) {
-            if(distance[cur_node] + X[{cur_node, neighbor}] < distance[neighbor]) {
-                distance[neighbor] = distance[cur_node] + X[{cur_node, neighbor}];
+            if(distance[cur_node] + X[{cur_node, neighbor}][req_no] < distance[neighbor]) {
+                distance[neighbor] = distance[cur_node] + X[{cur_node, neighbor}][req_no];
                 parent[neighbor] = cur_node;
                 pq.push({distance[neighbor], neighbor});
             }
@@ -162,7 +164,7 @@ vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){
         double c=0;
         double r=0;
         for(unsigned int i=0;i<it.size()-1;i++){
-            c += X[{it[i],it[i+1]}];               
+            c += X[{it[i],it[i+1]}][req_no];               
             r += Y[req_no][{it[i],it[i+1]}]; 
         }
         if(c * exp(r) < brute_min){
@@ -176,17 +178,17 @@ vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){
     }
     cout<<":"<<brute_min<<endl;
 
-    SPT = Dijkstra(src, dst);                               //the first SPT is get by dijkstra
+    SPT = Dijkstra(src, dst,req_no);                               //the first SPT is get by dijkstra
     int cur_node = src;                                     //counting the first path's U(X,Y)=c* e^r
     double c = 0;                                           //c=SUM[u,v]:alpha(u)+alpha(v)+beta(u,v)==X[u,v]
     double r = 0;                                           //r=SUM[u,v]:-ln(Pr(u,v))==Y[u,v]
     while(cur_node != dst){
         if(cur_node < SPT[cur_node]){                       //[can alter]no need if else
-            c += X[{cur_node,SPT[cur_node]}];               
+            c += X[{cur_node,SPT[cur_node]}][req_no];               
             r += Y[req_no][{cur_node,SPT[cur_node]}];
         }
         else{
-            c += X[{SPT[cur_node],cur_node}];  
+            c += X[{SPT[cur_node],cur_node}][req_no];  
             r += Y[req_no][{SPT[cur_node],cur_node}];           
         }
         best_path.push_back(cur_node);
@@ -212,7 +214,7 @@ vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){
                 if(SPT[i] == neighbor || SPT[neighbor] == i){      // checking used edge or unused
                     continue;   
                 }else{                                             // if unused
-                    temp1 = X[{i, neighbor}];
+                    temp1 = X[{i, neighbor}][req_no];
                     temp2 = Y[req_no][{i, neighbor}];
                     // cout <<"(i, j): "<< i << " "<< neighbor <<" C(i, j): " << temp1 << " r(i, j)" << temp2 << endl;
                     int cur_node = i;
@@ -220,7 +222,7 @@ vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){
                     while(cur_node != dst){
                         // cout  << "edge: " << cur_node << " "<< SPT[cur_node] << endl;
                         // cout  << "C: " << X[{cur_node, SPT[cur_node]}] << " R: " << Y[req_no][{cur_node, SPT[cur_node]}] << endl;
-                        temp1 += X[{cur_node, SPT[cur_node]}];
+                        temp1 += X[{cur_node, SPT[cur_node]}][req_no];
                         temp2 += Y[req_no][{cur_node, SPT[cur_node]}];
                         cur_node = SPT[cur_node];
                     } 
@@ -229,7 +231,7 @@ vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){
                     while(cur_node != dst){
                         // cout  << "edge: " << cur_node <<" "<<SPT[cur_node] << endl;
                         // cout  << "C: " << X[{cur_node, SPT[cur_node]}] << " R: " << Y[req_no][{cur_node, SPT[cur_node]}] << endl;
-                        temp1 -= X[{cur_node, SPT[cur_node]}];
+                        temp1 -= X[{cur_node, SPT[cur_node]}][req_no];
                         temp2 -= Y[req_no][{cur_node, SPT[cur_node]}];
                         cur_node = SPT[cur_node];
                     }       
@@ -265,11 +267,11 @@ vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){
         r = 0;
         for(unsigned int i = 0; i < new_path.size() - 1; i++){
             if(new_path[i] < new_path[i+1]){                        //[can alter]no need if else
-                c += X[{new_path[i], new_path[i+1]}];
+                c += X[{new_path[i], new_path[i+1]}][req_no];
                 r += Y[req_no][{new_path[i], new_path[i+1]}];
             }
             else{
-                c += X[{new_path[i+1], new_path[i]}];  
+                c += X[{new_path[i+1], new_path[i]}][req_no];  
                 r += Y[req_no][{new_path[i+1], new_path[i]}];           
             }
             //cout<<"PATH:["<<new_path[i]<<" "<<new_path[i+1]<<"] with tot "<< c <<" / " << r <<endl;
@@ -284,7 +286,9 @@ vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){
         
        
     }
-
+    if(best_path != brute_path){                                           //checking brute && best
+        cout<<"DIFF!!!\n";
+    }
 
     cout << "Best path: ";
     for(auto p : best_path){
@@ -292,11 +296,7 @@ vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){
     }
     cout << endl;
     cout << "U: " << best_len << endl;
-    
-    if(best_path != brute_path){                                           //checking brute && best
-        cout<<"DIFF!!!\n";
-        exit(1);
-    }
+        
     return best_path;  
                                                     
 }
@@ -345,12 +345,12 @@ void MyAlgo::find_bottleneck(vector<int> path, int req_no){
     //now changing the X
     for(unsigned int i = 0; i < path.size() -1; i++){
         if(path[i]<path[i+1]){
-            X[{path[i],path[i+1]}] = alpha[path[i]] + alpha[path[i+1]] + beta[{path[i], path[i+1]}];
-            X[{path[i+1],path[i]}] = alpha[path[i]] + alpha[path[i+1]] + beta[{path[i], path[i+1]}];
+            X[{path[i],path[i+1]}][req_no] = alpha[path[i]] + alpha[path[i+1]] + beta[{path[i], path[i+1]}];
+            X[{path[i+1],path[i]}][req_no] = alpha[path[i]] + alpha[path[i+1]] + beta[{path[i], path[i+1]}];
         }
         else{
-            X[{path[i],path[i+1]}] = alpha[path[i]] + alpha[path[i+1]] + beta[{path[i+1], path[i]}];
-            X[{path[i+1],path[i]}] = alpha[path[i]] + alpha[path[i+1]] + beta[{path[i+1], path[i]}];   
+            X[{path[i],path[i+1]}][req_no] = alpha[path[i]] + alpha[path[i+1]] + beta[{path[i+1], path[i]}];
+            X[{path[i+1],path[i]}][req_no] = alpha[path[i]] + alpha[path[i+1]] + beta[{path[i+1], path[i]}];   
         }
 
     }
