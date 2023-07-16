@@ -33,6 +33,7 @@ public:
     virtual void path_assignment()=0;
     int find_width(vector<int> path);
     vector<int> BFS(int source, int destination);
+    vector<Request> get_requests();
     void assign_resource(vector<int> path, int reqno);
     void assign_resource(vector<int> path, int width, int reqno);
     void base_entangle();

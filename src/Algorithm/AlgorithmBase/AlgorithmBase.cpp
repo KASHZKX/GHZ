@@ -211,6 +211,10 @@ vector<int> AlgorithmBase::BFS(int source, int destination){
     return path_nodes;
 }
 
+vector<Request> AlgorithmBase::get_requests(){
+    return requests;
+};
+
 int AlgorithmBase::total_throughput(){
     return res["throughputs"];
 }
