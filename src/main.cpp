@@ -141,11 +141,11 @@ int main(){
                     cout<< "---------generating requests in main.cpp----------" << endl;
 
                     for(int q = 0; q < new_request_cnt && t < service_time; q++){
-
+                        Request new_request;
                         bool check_no_repeat;
                         do{
                             check_no_repeat=true;
-                            Request new_request = generate_new_request(num_of_node, request_time_limit);
+                            new_request = generate_new_request(num_of_node, request_time_limit);
                             for(auto it:algorithms[0]->get_requests()){
                                 if(it.get_source()==new_request.get_source() && it.get_destination()==new_request.get_destination()){
                                     check_no_repeat=false;
