@@ -468,6 +468,17 @@ vector<map<vector<int>, int>> MyAlgo::rounding(){
         }
     }
 
+    for(unsigned int i = 0; i < each_request.size(); i++){
+        for(auto it:each_request[i]){
+            vector<int>undistri_path =it.first;
+            cout<<"[undistri] ";
+            for(auto it2:undistri_path){
+                cout<<it2<<" ";
+            }
+            cout<<"     Qubits:"<<it.second<<endl;
+        }
+    }
+
     for(unsigned int i = 0; i < requests.size(); i++){
         double total_prob = 0;
         double used_prob = 0;
