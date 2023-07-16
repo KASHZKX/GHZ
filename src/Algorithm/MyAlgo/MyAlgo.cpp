@@ -214,12 +214,12 @@ vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){
                 }else{                                             // if unused
                     temp1 = X[{i, neighbor}];
                     temp2 = Y[req_no][{i, neighbor}];
-                    cout << "C(i, j): " << temp1 << " r(i, j)" << temp2 << endl;
+                    cout <<"(i, j): "<< i << " "<< neighbor <<" C(i, j): " << temp1 << " r(i, j)" << temp2 << endl;
                     int cur_node = i;
                     cout << "Cp_j" << endl;
                     while(cur_node != dst){
                         cout  << "edge: " << cur_node << " "<< SPT[cur_node] << endl;
-                        cout  << "C: " << X[{cur_node, SPT[cur_node]}] << "R: " << Y[req_no][{cur_node, SPT[cur_node]}] << endl;
+                        cout  << "C: " << X[{cur_node, SPT[cur_node]}] << " R: " << Y[req_no][{cur_node, SPT[cur_node]}] << endl;
                         temp1 += X[{cur_node, SPT[cur_node]}];
                         temp2 += Y[req_no][{cur_node, SPT[cur_node]}];
                         cur_node = SPT[cur_node];
@@ -228,7 +228,7 @@ vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){
                     cur_node = neighbor;
                     while(cur_node != dst){
                         cout  << "edge: " << cur_node <<" "<<SPT[cur_node] << endl;
-                        cout  << "C: " << X[{cur_node, SPT[cur_node]}] << "R: " << Y[req_no][{cur_node, SPT[cur_node]}] << endl;
+                        cout  << "C: " << X[{cur_node, SPT[cur_node]}] << " R: " << Y[req_no][{cur_node, SPT[cur_node]}] << endl;
                         temp1 -= X[{cur_node, SPT[cur_node]}];
                         temp2 -= Y[req_no][{cur_node, SPT[cur_node]}];
                         cur_node = SPT[cur_node];
