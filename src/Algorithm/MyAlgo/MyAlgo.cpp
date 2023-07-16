@@ -226,7 +226,7 @@ vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){
                         temp2 -= Y[req_no][{cur_node, SPT[cur_node]}];
                         cur_node = SPT[cur_node];
                     }       
-                    if(temp2 < 0 && temp1 > 0 && used_edge.find({i, neighbor}) == used_edge.end()){               // we need the smallest edge to change the SPT
+                    if(temp2 < 0 && temp1 > 0){               // we need the smallest edge to change the SPT
                         if(minimum > - temp1 / temp2){
                             new_edge = {i, neighbor};
                             minimum = - temp1 / temp2;
