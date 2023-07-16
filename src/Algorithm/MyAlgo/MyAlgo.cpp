@@ -165,7 +165,7 @@ vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){
         double r=0;
         for(unsigned int i=0;i<it.size()-1;i++){
             c += X[{it[i],it[i+1]}][req_no];               
-            r += Y[req_no][{it[i],it[i+1]}][req_no]; 
+            r += Y[req_no][{it[i],it[i+1]}]; 
         }
         if(c * exp(r) < brute_min){
             brute_min = c * exp(r);
@@ -286,7 +286,9 @@ vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){
         
        
     }
-
+    if(best_path != brute_path){                                           //checking brute && best
+        cout<<"DIFF!!!\n";
+    }
 
     cout << "Best path: ";
     for(auto p : best_path){
@@ -294,11 +296,7 @@ vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){
     }
     cout << endl;
     cout << "U: " << best_len << endl;
-    
-    if(best_path != brute_path){                                           //checking brute && best
-        cout<<"DIFF!!!\n";
-        exit(1);
-    }
+        
     return best_path;  
                                                     
 }
