@@ -428,7 +428,6 @@ void MyAlgo::find_violate(){
     }
 
     for(auto it : used_request){
-         cout << "send_limit: " << requests[0].get_send_limit();
         cur_magni = it.second / requests[0].get_send_limit();
         if(cur_magni > max_magni){
             max_magni = cur_magni;
