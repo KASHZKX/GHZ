@@ -583,7 +583,7 @@ void MyAlgo::check_enough(vector<map<vector<int>, int>> &path){
         flag=true;
         for(int i=0;i<over_memory.size();i++){
             if(over_memory[i]>0){
-                cout<<"redece memory:"<<i<<" to"<<over_memory[i];
+                cout<<"redece memory:"<<i<<" to"<<over_memory[i]<<endl;
                 flag=false;
             }
         }
