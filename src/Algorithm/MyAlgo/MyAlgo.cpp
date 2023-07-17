@@ -578,30 +578,22 @@ void MyAlgo::check_enough(vector<map<vector<int>, int>> &path){
         }
     }
 
-    for(int i=0;i<over_memory.size();i++){
-        if(over_memory[i]>0){
-            cout<<"OVER MEMORY:"<<i<<" over"<<over_memory[i]<<endl;
-        }    
-    }
-    for(auto &it:over_channel){
-        if(it.second>0){
-            cout<<"OVER CHANNEL:";
-            for(auto it2:it.first){
-                cout<<it2<<" ";
-            }
-            cout<<" over"<<it.second<<endl;
-        }
-    }
     bool flag=false;
     while(flag==false){
         flag=true;
-        for(auto it:over_memory){
-            if(it>0){
+        for(int i=0;i<over_memory.size();i++){
+            if(over_memory[i]>0){
+                cout<<"redece memory:"<<i<<" to"<<over_memory[i];
                 flag=false;
             }
         }
         for(auto it:over_channel){
             if(it.second>0){
+                cout<<"OVER CHANNEL:";
+                for(auto it2:it.first){
+                    cout<<it2<<" ";
+                }
+                cout<<" over"<<it.second<<endl;
                 flag=false;
             }
         }
