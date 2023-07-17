@@ -537,10 +537,10 @@ void MyAlgo::check_enough(vector<map<vector<int>, int>> &path){
     vector<int>over_memory(graph.get_size());
     map<vector<int>,int> over_channel;
     map<vector<int>,int>::iterator iter;
-    for(int i=0;i<path.size();i++){
+    for(int i=0;i<(int)path.size();i++){
         for(auto it:path[i]){
             vector<int>cur_path=it.first;
-            for(int j=0;j<cur_path.size()-1;j++){
+            for(int j=0;j<(int)cur_path.size()-1;j++){
                 memory_used[cur_path[j]]+=it.second;
                 memory_used[cur_path[j+1]]+=it.second;
                 iter=channel_used.find({cur_path[j],cur_path[j+1]});
@@ -581,7 +581,7 @@ void MyAlgo::check_enough(vector<map<vector<int>, int>> &path){
     bool flag=false;
     while(flag==false){
         flag=true;
-        for(int i=0;i<over_memory.size();i++){
+        for(int i=0;i<(int)over_memory.size();i++){
             if(over_memory[i]>0){
                 cout<<"redece memory:"<<i<<" to"<<over_memory[i]<<endl;
                 flag=false;
@@ -600,16 +600,16 @@ void MyAlgo::check_enough(vector<map<vector<int>, int>> &path){
         int long_len=0;
         int long_req=-1;
         vector<int>long_path;
-        for(int i=0;i<path.size();i++){
+        for(int i=0;i<(int)path.size();i++){
             for(auto it:path[i]){
-                if(it.first.size()>long_len && it.second>0){
+                if((int)it.first.size()>long_len && it.second>0){
                     long_len=it.first.size();
                     long_path=it.first;
                     long_req=i;
                 }
             }
         }
-        for(int i=0;i<long_path.size()-1;i++){
+        for(int i=0;i<(int)long_path.size()-1;i++){
             over_memory[long_path[i]]--;
             over_memory[long_path[i+1]]--;
             over_channel[{long_path[i],long_path[i+1]}]--;
