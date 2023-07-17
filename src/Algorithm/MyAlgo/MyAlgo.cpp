@@ -602,7 +602,7 @@ void MyAlgo::check_enough(vector<map<vector<int>, int>> &path){
         vector<int>long_path;
         for(int i=0;i<path.size();i++){
             for(auto it:path[i]){
-                if(it.first.size()>long_len){
+                if(it.first.size()>long_len && it.second>0){
                     long_len=it.first.size();
                     long_path=it.first;
                     long_req=i;
