@@ -561,18 +561,21 @@ void MyAlgo::check_enough(vector<map<vector<int>, int>> &path){
         for(auto it:graph.get_neighbors_id(i)){
             iter=over_channel.find({i,it});
             if(iter!=over_channel.end()){
-               over_channel[{i,it}]+=graph.get_channel_size(i,it);
-               over_channel[{it,i}]+=graph.get_channel_size(i,it);
+               over_channel[{i,it}]-=graph.get_channel_size(i,it);
+               over_channel[{it,i}]-=graph.get_channel_size(i,it);
             }
             else{
-               over_channel[{i,it}]=graph.get_channel_size(i,it);
-               over_channel[{it,i}]=graph.get_channel_size(i,it);
+               over_channel[{i,it}]=-graph.get_channel_size(i,it);
+               over_channel[{it,i}]=-graph.get_channel_size(i,it);
             }
         }
     }
 
     for(auto &it:over_channel){
-        it.second=channel_used[{it.first}]-it.second;
+        iter=channel_used.find(it.first);
+        if(iter!=channel_used.end()){
+            it.second=channel_used[{it.first}]+it.second;
+        }
     }
 
     for(int i=0;i<over_memory.size();i++){
