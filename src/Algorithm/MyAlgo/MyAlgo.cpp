@@ -575,7 +575,7 @@ void MyAlgo::check_enough(vector<map<vector<int>, int>> &path){
         iter=channel_used.find(it.first);
         if(iter!=channel_used.end()){
             cout<<channel_used[{it.first}]<<"//"<<it.second<<endl;
-            it.second=channel_used[{it.first}]+it.second;
+            it.second=channel_used[{it.first}]+it.second/2;
         }
     }
 
