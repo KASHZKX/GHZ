@@ -524,6 +524,15 @@ vector<map<vector<int>, int>> MyAlgo::rounding(){
 }
 
 void MyAlgo::check_enough(vector<map<vector<int>, int>> &path){
+    for(unsigned int i = 0; i < path.size(); i++){
+        for(auto it:path[i]){
+            vector<int>Final_path =it.first;
+            for(auto it2:Final_path){
+                cout<<it2<<" ";
+            }
+            cout<<"     Qubits:"<<it.second<<endl;
+        }
+    }
     vector<int>memory_used(graph.get_size());
     map<vector<int>,int> channel_used; 
     vector<int>over_memory(graph.get_size());
@@ -609,15 +618,7 @@ void MyAlgo::check_enough(vector<map<vector<int>, int>> &path){
         }
         path[long_req][long_path]--;
     }
-    for(unsigned int i = 0; i < path.size(); i++){
-        for(auto it:path[i]){
-            vector<int>Final_path =it.first;
-            for(auto it2:Final_path){
-                cout<<it2<<" ";
-            }
-            cout<<"     Qubits:"<<it.second<<endl;
-        }
-    }
+
     cout<<"Reduece finish\n";
 }
 void MyAlgo::dfs(int src, int dst, vector<vector<int>> &ans, vector<int> &path, vector<bool> &visited){
