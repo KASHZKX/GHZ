@@ -574,24 +574,57 @@ void MyAlgo::check_enough(vector<map<vector<int>, int>> &path){
     for(auto &it:over_channel){
         iter=channel_used.find(it.first);
         if(iter!=channel_used.end()){
-            cout<<channel_used[{it.first}]<<"//"<<it.second<<endl;
             it.second=channel_used[{it.first}]+it.second/2;
         }
     }
 
     for(int i=0;i<over_memory.size();i++){
-        //if(over_memory[i]>0){
+        if(over_memory[i]>0){
             cout<<"OVER MEMORY:"<<i<<" over"<<over_memory[i]<<endl;
-        //}    
+        }    
     }
     for(auto &it:over_channel){
-        //if(it.second>0){
+        if(it.second>0){
             cout<<"OVER CHANNEL:";
             for(auto it2:it.first){
                 cout<<it2<<" ";
             }
             cout<<" over"<<it.second<<endl;
-        //}
+        }
+    }
+    bool flag=false;
+    while(flag==false){
+        flag=true;
+        for(auto it:over_memory){
+            if(it>0){
+                flag=false;
+            }
+        }
+        for(auto it:over_channel){
+            if(it.second>0){
+                flag=false;
+            }
+        }
+        int long_len=0;
+        int long_req=-1;
+        vector<int>long_path;
+        for(int i=0;i<path.size();i++){
+            for(auto it:path[i]){
+                if(it.first.size()>long_len){
+                    long_len=it.first.size();
+                    long_path=it.first;
+                    long_req=i;
+                }
+            }
+        }
+        for(int i=0;i<long_path.size()-1;i++){
+            over_memory[long_path[i]]--;
+            over_memory[long_path[i+1]]--;
+            over_channel[{long_path[i],long_path[i+1]}]--;
+            over_channel[{long_path[i+1],long_path[i]}]--;
+        }
+        path[long_req][long_path]--;
+        
     }
 }
 void MyAlgo::dfs(int src, int dst, vector<vector<int>> &ans, vector<int> &path, vector<bool> &visited){
