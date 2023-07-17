@@ -519,15 +519,7 @@ vector<map<vector<int>, int>> MyAlgo::rounding(){
             }
         }
     }
-    for(unsigned int i = 0; i < I_request.size(); i++){
-        for(auto it:I_request[i]){
-            vector<int>Final_path =it.first;
-            for(auto it2:Final_path){
-                cout<<it2<<" ";
-            }
-            cout<<"     Qubits:"<<it.second<<endl;
-        }
-    }
+
     return I_request;
 }
 
@@ -617,7 +609,16 @@ void MyAlgo::check_enough(vector<map<vector<int>, int>> &path){
         }
         path[long_req][long_path]--;
     }
-    cout<<"reduece finish\n";
+    for(unsigned int i = 0; i < path.size(); i++){
+        for(auto it:path[i]){
+            vector<int>Final_path =it.first;
+            for(auto it2:Final_path){
+                cout<<it2<<" ";
+            }
+            cout<<"     Qubits:"<<it.second<<endl;
+        }
+    }
+    cout<<"Reduece finish\n";
 }
 void MyAlgo::dfs(int src, int dst, vector<vector<int>> &ans, vector<int> &path, vector<bool> &visited){
         //base case
@@ -690,6 +691,15 @@ void MyAlgo::path_assignment(){
     vector<map<vector<int>, int>>path = rounding();
 
     check_enough(path);
+    for(unsigned int i = 0; i < path.size(); i++){
+        for(auto it:path[i]){
+            vector<int>Final_path =it.first;
+            for(auto it2:Final_path){
+                cout<<it2<<" ";
+            }
+            cout<<"     Qubits:"<<it.second<<endl;
+        }
+    }
     for(unsigned int i = 0; i < path.size(); i++){
         for(auto p : path[i]){
             assign_resource(p.first, p.second, i);
