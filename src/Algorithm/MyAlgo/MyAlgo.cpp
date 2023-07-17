@@ -576,18 +576,18 @@ void MyAlgo::check_enough(vector<map<vector<int>, int>> &path){
     }
 
     for(int i=0;i<over_memory.size();i++){
-        if(over_memory[i]>0){
+        //if(over_memory[i]>0){
             cout<<"OVER MEMORY:"<<i<<" over"<<over_memory[i]<<endl;
-        }    
+        //}    
     }
     for(auto &it:over_channel){
-        if(it.second>0){
+        //if(it.second>0){
             cout<<"OVER CHANNEL:";
             for(auto it2:it.first){
                 cout<<it2<<" ";
             }
             cout<<" over"<<it.second<<endl;
-        }
+        //}
     }
 }
 void MyAlgo::dfs(int src, int dst, vector<vector<int>> &ans, vector<int> &path, vector<bool> &visited){
