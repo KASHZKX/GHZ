@@ -158,25 +158,25 @@ vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){
     int src = requests[req_no].get_source();
     int dst =  requests[req_no].get_destination();
 
-    double brute_min=numeric_limits<double>::infinity();
-    vector<int>brute_path;
-    for(auto it:all_source_target_path[req_no]){            //brute sort U_count
-        double c=0;
-        double r=0;
-        for(unsigned int i=0;i<it.size()-1;i++){
-            c += X[{it[i],it[i+1]}][req_no];               
-            r += Y[req_no][{it[i],it[i+1]}]; 
-        }
-        if(c * exp(r) < brute_min){
-            brute_min = c * exp(r);
-            brute_path = it;
-        }
-    }
-    cout<<"\n[BRUTE]req:"<<req_no<<" ";
-    for(auto it:brute_path){
-        cout<<it<<"->";
-    }
-    cout<<":"<<brute_min<<endl;
+    // double brute_min=numeric_limits<double>::infinity();
+    // vector<int>brute_path;
+    // for(auto it:all_source_target_path[req_no]){            //brute sort U_count
+    //     double c=0;
+    //     double r=0;
+    //     for(unsigned int i=0;i<it.size()-1;i++){
+    //         c += X[{it[i],it[i+1]}][req_no];               
+    //         r += Y[req_no][{it[i],it[i+1]}]; 
+    //     }
+    //     if(c * exp(r) < brute_min){
+    //         brute_min = c * exp(r);
+    //         brute_path = it;
+    //     }
+    // }
+    // cout<<"\n[BRUTE]req:"<<req_no<<" ";
+    // for(auto it:brute_path){
+    //     cout<<it<<"->";
+    // }
+    // cout<<":"<<brute_min<<endl;
 
     SPT = Dijkstra(src, dst,req_no);                               //the first SPT is get by dijkstra
     int cur_node = src;                                     //counting the first path's U(X,Y)=c* e^r
@@ -278,9 +278,9 @@ vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){
         
        
     }
-    if(best_path != brute_path){                                           //checking brute && best
-        cout<<"DIFF!!!\n";
-    }
+    // if(best_path != brute_path){                                           //checking brute && best
+    //     cout<<"DIFF!!!\n";
+    // }
 
     cout << "Best path: ";
     for(auto p : best_path){
@@ -429,9 +429,7 @@ void MyAlgo::find_violate(){
 
     for(auto &x : x_i_p){
 
-        cout << "before: " << x.second;
         x.second /= max_magni;
-        cout << " after: " << x.second << endl;
     }
     //check memory_and_channel
     /*
@@ -462,11 +460,11 @@ vector<map<vector<int>, int>> MyAlgo::rounding(){
     for(unsigned int i = 0; i < each_request.size(); i++){
         for(auto it:each_request[i]){
             vector<int>undistri_path =it.first;
-            cout<<"[undistri] ";
-            for(auto it2:undistri_path){
-                cout<<it2<<" ";
-            }
-            cout<<"     Qubits:"<<it.second<<endl;
+            // cout<<"[undistri] ";
+            // for(auto it2:undistri_path){
+            //     cout<<it2<<" ";
+            // }
+            // cout<<"     Qubits:"<<it.second<<endl;
         }
     }
 
@@ -493,19 +491,19 @@ vector<map<vector<int>, int>> MyAlgo::rounding(){
         distri_I=requests[i].get_send_limit()-used_I;
 
         accumulate.push_back(0.0);
-        cout<<"total_prob:"<<total_prob<<" distri_I:"<<distri_I<<endl;
-        cout<<"accumulate:";
-        for(auto it:accumulate){
-            cout<<it<<" ";
-        }
-        cout<<endl;
+        // cout<<"total_prob:"<<total_prob<<" distri_I:"<<distri_I<<endl;
+        // cout<<"accumulate:";
+        // for(auto it:accumulate){
+        //     cout<<it<<" ";
+        // }
+        // cout<<endl;
         for(int j = 0; j < distri_I; j++){
             random_device rd;  
             mt19937 gen(rd()); 
             uniform_real_distribution<double> dis(0.0, total_prob);
             double temp = dis(gen);
             for(unsigned int k = 0; k < accumulate.size() - 1; k++){
-                cout<<"ramdom:"<<temp<<endl;
+                // cout<<"ramdom:"<<temp<<endl;
                 if(temp > accumulate[k] && temp < accumulate[k+1]){
                     unsigned int index = 0;
                     for(auto it : each_request[i]){
@@ -533,6 +531,65 @@ vector<map<vector<int>, int>> MyAlgo::rounding(){
     return I_request;
 }
 
+void MyAlgo::check_enough(vector<map<vector<int>, int>> &path){
+    vector<int>memory_used(graph.get_size());
+    map<vector<int>,int> channel_used; 
+    vector<int>over_memory(graph.get_size());
+    map<vector<int>,int> over_channel;
+    map<vector<int>,int>::iterator iter;
+    for(int i=0;i<path.size();i++){
+        for(auto it:path[i]){
+            vector<int>cur_path=it.first;
+            for(int j=0;j<cur_path.size()-1;j++){
+                memory_used[cur_path[j]]+=it.second;
+                memory_used[cur_path[j+1]]+=it.second;
+                iter=channel_used.find({cur_path[j],cur_path[j+1]});
+                if(iter!=channel_used.end()){
+                    channel_used[{cur_path[j],cur_path[j+1]}]+=it.second;
+                    channel_used[{cur_path[j+1],cur_path[j]}]+=it.second;
+                }
+                else{
+                    channel_used[{cur_path[j],cur_path[j+1]}]=it.second;
+                    channel_used[{cur_path[j+1],cur_path[j]}]=it.second;
+                }
+            }
+        }
+    }
+
+    for(int i=0;i<graph.get_size();i++){
+        over_memory[i]=memory_used[i]-graph.Node_id2ptr(i)->get_memory_cnt();
+        for(auto it:graph.get_neighbors_id(i)){
+            iter=over_channel.find({i,it});
+            if(iter!=over_channel.end()){
+               over_channel[{i,it}]+=graph.get_channel_size(i,it);
+               over_channel[{it,i}]+=graph.get_channel_size(i,it);
+            }
+            else{
+               over_channel[{i,it}]=graph.get_channel_size(i,it);
+               over_channel[{it,i}]=graph.get_channel_size(i,it);
+            }
+        }
+    }
+
+    for(auto &it:over_channel){
+        it.second=channel_used[{it.first}]-it.second;
+    }
+
+    for(int i=0;i<over_memory.size();i++){
+        if(over_memory[i]>0){
+            cout<<"OVER MEMORY:"<<i<<" over"<<over_memory[i]<<endl;
+        }    
+    }
+    for(auto &it:over_channel){
+        if(it.second>0){
+            cout<<"OVER CHANNEL:";
+            for(auto it2:it.first){
+                cout<<it2<<" ";
+            }
+            cout<<" over"<<it.second<<endl;
+        }
+    }
+}
 void MyAlgo::dfs(int src, int dst, vector<vector<int>> &ans, vector<int> &path, vector<bool> &visited){
         //base case
     visited[src] = true;
@@ -571,18 +628,18 @@ vector<vector<int>> MyAlgo::allPathsSourceTarget(int src, int dst){
 void MyAlgo::path_assignment(){
     initialize();
     
-    for(unsigned int i = 0; i < requests.size(); i++){
-        int src = requests[i].get_source();
-        int dst = requests[i].get_destination();
-        all_source_target_path.push_back(allPathsSourceTarget(src, dst));
-    }
+    // for(unsigned int i = 0; i < requests.size(); i++){
+    //     int src = requests[i].get_source();
+    //     int dst = requests[i].get_destination();
+    //     all_source_target_path.push_back(allPathsSourceTarget(src, dst));
+    // }
 
     
     double obj = M * delta;
     vector<int> best_path;
     vector<int> cur_path;
     double U;
-    while(obj < 1){ // 是否在裡面做完 entangele, swap, send, separation_oracle 一個 SD 只找一條path?
+    while(obj < 1){
         int req_no = 0;
         double smallest_U = numeric_limits<double>::infinity();
         //cout<<"\n------New round-------\n";
@@ -603,6 +660,7 @@ void MyAlgo::path_assignment(){
     find_violate();
     vector<map<vector<int>, int>>path = rounding();
 
+    check_enough(path);
     for(unsigned int i = 0; i < path.size(); i++){
         for(auto p : path[i]){
             assign_resource(p.first, p.second, i);
