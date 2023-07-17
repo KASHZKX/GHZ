@@ -624,8 +624,8 @@ void MyAlgo::check_enough(vector<map<vector<int>, int>> &path){
             over_channel[{long_path[i+1],long_path[i]}]--;
         }
         path[long_req][long_path]--;
-        
     }
+    cout<<"reduece finish\n";
 }
 void MyAlgo::dfs(int src, int dst, vector<vector<int>> &ans, vector<int> &path, vector<bool> &visited){
         //base case
