@@ -584,7 +584,7 @@ void MyAlgo::check_enough(vector<map<vector<int>, int>> &path){
         flag=true;
         for(int i=0;i<(int)over_memory.size();i++){
             if(over_memory[i]>0){
-                cout<<"redece memory:"<<i<<" to"<<over_memory[i]<<endl;
+                //cout<<"redece memory:"<<i<<" to"<<over_memory[i]<<endl;
                 flag=false;
             }
         }
@@ -619,7 +619,7 @@ void MyAlgo::check_enough(vector<map<vector<int>, int>> &path){
         path[long_req][long_path]--;
     }
 
-    cout<<"Reduece finish\n";
+    cout<<"--------------Reduece finish-------------\n";
 }
 void MyAlgo::dfs(int src, int dst, vector<vector<int>> &ans, vector<int> &path, vector<bool> &visited){
         //base case
