@@ -122,7 +122,7 @@ const Node Node::operator++(int)
     {
         cout << id << " " << remain << " " << memory_cnt << endl;
         cerr << "error:\tmemory is out of maximum value, maybe release twice occurs" << endl;
-        // exit(1);
+        exit(1);
     }
     // cerr<<"node++ : "<<id<<endl;
     Node tmp = *this;
