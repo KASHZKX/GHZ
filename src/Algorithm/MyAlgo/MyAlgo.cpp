@@ -699,6 +699,9 @@ vector<vector<int>> MyAlgo::allPathsSourceTarget(int src, int dst){
 }
 
 void MyAlgo::path_assignment(){
+    for(int i = 0; i < graph.get_size(); i++){
+        cout << "node" << i <<" mem: " << graph.Node_id2ptr(i)->get_remain() << endl; 
+    }
     initialize();
     
     for(unsigned int i = 0; i < requests.size(); i++){
