@@ -56,15 +56,12 @@ bool Channel::is_assignable(){
 	Node &node1 = *node1_ptr;
 	Node &node2 = *node2_ptr;
 	if(!node1.is_assignable()){
-		cout <<"node: " <<node1_ptr->get_id() <<" mem:" <<node1_ptr->get_remain() << " node: " << node2_ptr->get_id() << " mem: " << node2_ptr->get_remain() << endl;
 		return false;
 	}
 	if(!node2.is_assignable()){
-		cout <<"node: " <<node1_ptr->get_id() <<" mem:" <<node1_ptr->get_remain() << " node: " << node2_ptr->get_id() << " mem: " << node2_ptr->get_remain() << endl;
 		return false;
 	}	
 	if(used){
-		cout << "used" << endl;
 		return false;
 	}					
 	return true;

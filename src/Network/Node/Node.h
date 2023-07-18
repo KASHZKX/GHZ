@@ -30,7 +30,7 @@ public:
     bool is_assignable()const;                   //return if we can use this node to build an entangle or not
     int get_remain()const;                       //return the number of qubit is not used 
     void print()const;
-    
+    void revise(int mem);
     bool operator==(const Node &right)const;
     bool operator!=(const Node &right)const;
     bool operator<(const Node &right)const;

@@ -54,6 +54,10 @@ double Node::distance(const Node &right) const
     return sqrt(delta_x * delta_x + delta_y * delta_y);
 }
 
+void Node::revise(int mem){
+    remain = mem;
+}
+
 void Node::release()
 {
     cout << "Node release " << id << endl;
