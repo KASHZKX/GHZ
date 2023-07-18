@@ -25,6 +25,7 @@ Channel* Graph::assign_channel(Node &node1, Node &node2){
         for(auto& channel: channels[make_pair(node2, node1)]){
             if(channel.is_assignable()){
                 channel.assign();
+                cout << "build: " << node1.get_id() << " " << node2.get_id() << endl;
                 return &channel;
             }
         }
@@ -32,6 +33,7 @@ Channel* Graph::assign_channel(Node &node1, Node &node2){
         for(auto& channel: channels[make_pair(node1, node2)]){
             if(channel.is_assignable()){
                 channel.assign();
+                cout << "build: " << node1.get_id() << " " << node2.get_id() << endl;
                 return &channel;
             }
         }
