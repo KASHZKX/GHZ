@@ -604,7 +604,7 @@ void MyAlgo::check_enough(vector<map<vector<int>, int>> &path){
         for(int i = 0; i < (int)path.size(); i++){
             for(auto it : path[i]){
                 int associate_flag=false;
-                for(int j=0;j<it.first.size()-1;j++){
+                for(int j=0;j<(int)it.first.size()-1;j++){
                     if(over_memory[it.first[j]]>0){
                         associate_flag=true;
                         continue;
@@ -614,7 +614,7 @@ void MyAlgo::check_enough(vector<map<vector<int>, int>> &path){
                         continue;
                     }
                 }
-                if(over_memory[it.first[it.first.size()]]>0){
+                if(over_memory[it.first[it.first.size()-1]]>0){
                     associate_flag=true;
                 }
                 if(associate_flag==true && (int)it.first.size() > long_len && it.second > 0){
