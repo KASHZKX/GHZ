@@ -27,6 +27,7 @@ void AlgorithmBase::base_next_time_slot(){
     vector<int> finished_reqno;
     for(int reqno = 0; reqno < (int)requests.size(); reqno++) {
         if(!requests[reqno].is_finished()) {
+            cout << "yoyo";
             continue;
         }
         res["finished_throughputs"]++;
