@@ -24,18 +24,14 @@ Channel* Graph::assign_channel(Node &node1, Node &node2){
     if(node1 > node2){
         for(auto& channel: channels[make_pair(node2, node1)]){
             if(channel.is_assignable()){
-                cout << "before remain mem: node" << node1.get_id() << " " <<node1.get_remain() <<" node" <<node2.get_id() << " " << node2.get_remain() << endl;
                 channel.assign();
-                cout << "before remain mem: node" << node1.get_id() << " " <<node1.get_remain() <<" node" <<node2.get_id() << " " << node2.get_remain() << endl;
                 return &channel;
             }
         }
     }else{
         for(auto& channel: channels[make_pair(node1, node2)]){
             if(channel.is_assignable()){
-                cout << "before remain mem: node" << node1.get_id() << " " <<node1.get_remain() <<" node" <<node2.get_id() << " " << node2.get_remain() << endl;
                 channel.assign();
-                cout << "before remain mem: node" << node1.get_id() << " " <<node1.get_remain() <<" node" <<node2.get_id() << " " << node2.get_remain() << endl;
                 return &channel;
             }
         }
@@ -196,6 +192,7 @@ void Graph::refresh(){ // refresh all channel entangle status
 void Graph::release(){ //clean all assigned resource(node and channel)
     for(auto &chans:channels){
         for(auto &e:chans.second){
+            cout << e.get_node1_ptr()->get_id() << " " << e.get_node2_ptr()->get_id() << endl;
             e.release();
         }
     }
