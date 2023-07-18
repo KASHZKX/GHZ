@@ -20,9 +20,7 @@ void AlgorithmBase::base_next_time_slot(){
     graph.release();
     cout << "finish release" << endl;
     for(auto &request: requests){
-        cout << "finish 1" << endl;
         request.next_timeslot();
-        cout << "finish 2" << endl;
     }
 
     //好強
@@ -45,7 +43,7 @@ void AlgorithmBase::base_next_time_slot(){
                 
         }
     }
-
+    cout << "yo" << endl;
     reverse(finished_reqno.begin(), finished_reqno.end());
     for(int reqno : finished_reqno) {
         requests.erase(requests.begin() + reqno);
