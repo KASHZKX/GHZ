@@ -603,7 +603,21 @@ void MyAlgo::check_enough(vector<map<vector<int>, int>> &path){
         vector<int> long_path;
         for(int i = 0; i < (int)path.size(); i++){
             for(auto it : path[i]){
-                if((int)it.first.size() > long_len && it.second > 0){
+                int associate_flag=false;
+                for(int j=0;j<it.first.size()-1;j++){
+                    if(over_memory[it.first[j]]>0){
+                        associate_flag=true;
+                        continue;
+                    }
+                    if(over_channel[{it.first[j],it.first[j+1]}]>0){
+                        associate_flag=true;
+                        continue;
+                    }
+                }
+                if(over_memory[it.first[it.first.size()]]>0){
+                    associate_flag=true;
+                }
+                if(associate_flag==true && (int)it.first.size() > long_len && it.second > 0){
                     long_len = it.first.size();
                     long_path = it.first;
                     long_req = i;
