@@ -604,17 +604,22 @@ void MyAlgo::check_enough(vector<map<vector<int>, int>> &path){
         for(int i = 0; i < (int)path.size(); i++){
             for(auto it : path[i]){
                 int associate_flag=false;
+                for(auto temp:it.first){
+                    cout<<temp<<" ";
+                }
+                cout<<"-----------"<<endl;
                 for(int j=0;j<(int)it.first.size()-1;j++){
-                    cout<<"memory check:"<<over_memory[it.first[j]]<<endl;
+
+                    cout<<"memory check:"<<j<<"||"<<over_memory[it.first[j]]<<endl;
                     if(over_memory[it.first[j]]>0){
                         associate_flag=true;
-                        continue;
+                        break;
                     }
             
                     iter = over_channel.find({it.first[j],it.first[j+1]});
                     if(iter!=over_channel.end() && over_channel[{it.first[j],it.first[j+1]}]>0){
                         associate_flag=true;
-                        continue;
+                        break;
                     }
 
                 }
