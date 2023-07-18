@@ -194,7 +194,7 @@ void Graph::release(){ //clean all assigned resource(node and channel)
         for(auto &e:chans.second){
     
             e.release();
-
+             cout << "after node"<<e.get_node1_ptr()->get_id() << " " << e.get_node1_ptr()->get_remain()<<" node" << e.get_node2_ptr()->get_id() <<" "<<e.get_node2_ptr()->get_remain() << endl;
         }
     }
 }
