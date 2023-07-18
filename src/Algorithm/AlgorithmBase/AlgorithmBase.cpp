@@ -18,7 +18,6 @@ double AlgorithmBase::get_swap_prob(){
 void AlgorithmBase::base_next_time_slot(){
     graph.refresh();
     graph.release();
-    cout << "finish release" << endl;
     for(auto &request: requests){
         request.next_timeslot();
     }
@@ -27,11 +26,10 @@ void AlgorithmBase::base_next_time_slot(){
     vector<int> finished_reqno;
     for(int reqno = 0; reqno < (int)requests.size(); reqno++) {
         if(!requests[reqno].is_finished()) {
-            cout<< reqno << " yoyo" << endl;
             continue;
         }
         res["finished_throughputs"]++;
-        (*graph.Node_id2ptr(requests[reqno].get_source()))++;
+        // (*graph.Node_id2ptr(requests[reqno].get_source()))++;
         res["path_length"] += requests[reqno].get_send_path_length();
         res["fidelity"] += requests[reqno].get_fidelity();
         finished_reqno.push_back(reqno);
@@ -44,7 +42,7 @@ void AlgorithmBase::base_next_time_slot(){
                 
         }
     }
-    cout << "yo" << endl;
+   
     reverse(finished_reqno.begin(), finished_reqno.end());
     for(int reqno : finished_reqno) {
         requests.erase(requests.begin() + reqno);
