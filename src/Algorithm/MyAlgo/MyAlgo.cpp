@@ -609,14 +609,17 @@ void MyAlgo::check_enough(vector<map<vector<int>, int>> &path){
                         associate_flag=true;
                         continue;
                     }
+                    cout<<" error 1"<<endl;
                     if(over_channel[{it.first[j],it.first[j+1]}]>0){
                         associate_flag=true;
                         continue;
                     }
+                    cout<<" error 2"<<endl;
                 }
                 if(over_memory[it.first[it.first.size()-1]]>0){
                     associate_flag=true;
                 }
+                cout<<" error 1"<<endl;
                 if(associate_flag==true && (int)it.first.size() > long_len && it.second > 0){
                     long_len = it.first.size();
                     long_path = it.first;
