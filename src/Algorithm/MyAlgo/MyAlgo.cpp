@@ -579,12 +579,12 @@ void MyAlgo::check_enough(vector<map<vector<int>, int>> &path){
         }
     }
 
-    bool flag = false;
-    while(flag == false){
+    bool flag;
+    while(1){
         flag = true;
         for(int i = 0; i < (int)over_memory.size(); i++){
             if(over_memory[i] > 0){
-                //cout<<"redece memory:"<<i<<" to"<<over_memory[i]<<endl;
+                cout<<"OVER MEMORY:"<<i<<":"<<over_memory[i]<<endl;
                 flag = false;
             }
         }
@@ -598,12 +598,42 @@ void MyAlgo::check_enough(vector<map<vector<int>, int>> &path){
                 flag = false;
             }
         }
+        if(flag==true){
+            cout<<"--------------Reduece finish-------------\n";
+            break;
+        }
         int long_len = 0;
         int long_req = -1;
         vector<int> long_path;
         for(int i = 0; i < (int)path.size(); i++){
             for(auto it : path[i]){
-                if((int)it.first.size() > long_len && it.second > 0){
+                int associate_flag=false;
+                /*
+                for(auto temp:it.first){
+                    cout<<temp<<" ";
+                }
+                cout<<"-----------"<<endl;
+                */
+                for(int j=0;j<(int)it.first.size()-1;j++){
+
+                    //cout<<"memory check:"<<j<<"||"<<over_memory[it.first[j]]<<endl;
+                    if(over_memory[it.first[j]]>0){
+                        associate_flag=true;
+                        break;
+                    }
+                    //cout<<"channel check:"<<j<<"/"<<j+1<<"||"<<over_channel[{it.first[j],it.first[j+1]}]<<endl;
+                    iter = over_channel.find({it.first[j],it.first[j+1]});
+                    if(iter!=over_channel.end() && over_channel[{it.first[j],it.first[j+1]}]>0){
+                        associate_flag=true;
+                        break;
+                    }
+
+                }
+                if(over_memory[it.first[it.first.size()-1]]>0){
+                    associate_flag=true;
+                }
+
+                if(associate_flag==true && (int)it.first.size() > long_len && it.second > 0){
                     long_len = it.first.size();
                     long_path = it.first;
                     long_req = i;
@@ -619,7 +649,7 @@ void MyAlgo::check_enough(vector<map<vector<int>, int>> &path){
         path[long_req][long_path]--;
     }
 
-    cout<<"--------------Reduece finish-------------\n";
+    
 }
 
 void MyAlgo::readd(vector<map<vector<int>, int>> &path){
@@ -717,7 +747,10 @@ void MyAlgo::path_assignment(){
     
     for(unsigned int i = 0; i < path.size(); i++){
         for(auto p : path[i]){
-            assign_resource(p.first, p.second, i);
+            if(p.second!=0){
+                assign_resource(p.first, p.second, i);
+            }
+            
         }
     }
 }   
