@@ -3,6 +3,7 @@
 Node::Node(int id, int memory_cnt, int time_limit, double pos_x, double pos_y, double swap_prob) : id(id), swap_prob(swap_prob), memory_cnt(memory_cnt), time_limit(time_limit), remain(memory_cnt)
 {
     pos = make_pair(pos_x, pos_y);
+    cout << "node" <<id << " remain: " << remain;
     if (DEBUG)
         cerr << "new Node " << id << endl;
 }
