@@ -18,6 +18,7 @@ double AlgorithmBase::get_swap_prob(){
 void AlgorithmBase::base_next_time_slot(){
     graph.refresh();
     graph.release();
+    cout << "finish release" << endl;
     for(auto &request: requests){
         request.next_timeslot();
     }
