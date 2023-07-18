@@ -120,7 +120,7 @@ const Node Node::operator++(int)
 {
     if (remain >= memory_cnt)
     {
-        cout << id << " " << remain << " " << memory_cnt << endl;
+        // cout << id << " " << remain << " " << memory_cnt << endl;
         cerr << "error:\tmemory is out of maximum value, maybe release twice occurs" << endl;
         // exit(1);
     }
