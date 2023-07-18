@@ -144,6 +144,16 @@ void Request::next_timeslot(){
     // return (time_limit == 0) && (throughput > 0);
 }
 
+void Request::add_cur(int num){
+    cur_send += num;
+}
+
+int Request::get_cur_send(){
+    return cur_send;
+}
+
 void Request::operator+=(Path *path){
     paths.emplace_back(path);
 }
+
+

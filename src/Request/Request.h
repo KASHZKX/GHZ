@@ -19,6 +19,7 @@ protected:
     int source, destination;
     int time_limit;
     int send_limit = 3;
+    int cur_send = 0;
     int throughput = 0;
     int status;
     int send_path_length;
@@ -35,6 +36,8 @@ public:
     int get_throughput();
     int get_send_path_length();
     int get_send_limit();
+    int get_cur_send();
+    void add_cur(int num);
     double get_fidelity();
     vector<Path *> get_paths();
     

@@ -653,13 +653,22 @@ void MyAlgo::check_enough(vector<map<vector<int>, int>> &path){
 }
 
 void MyAlgo::readd(vector<map<vector<int>, int>> &path){
-    for(unsigned int i = 0; i < requests.size(); i++){
-        for(auto it : path[i]){
-            vector<int> each_path = it.first;
-            
+    bool flag = true;
+    while(flag){
+        for(unsigned int i = 0; i < requests.size(); i++){
+            if(requests[i].get_send_limit() < requests[i].get_cur_send()){
+                for(auto it : path[i]){
+                    vector<int> each_path = it.first;
+                    bool assign = false;
+                    for(int j = 0; j < each_path.size() - 1; j++){
+                        if(j == 0 || j == each_path.size() - 1){
+
+                        }
+                    }
+                }
+            }
         }
     }
-
 }
 
 void MyAlgo::dfs(int src, int dst, vector<vector<int>> &ans, vector<int> &path, vector<bool> &visited){
@@ -746,6 +755,7 @@ void MyAlgo::path_assignment(){
                 cout<<it2<<" ";
             }
             cout<<"     Qubits:"<<it.second<<endl;
+            requests[i].add_cur(it.second);
         }
     }
 
