@@ -579,8 +579,8 @@ void MyAlgo::check_enough(vector<map<vector<int>, int>> &path){
         }
     }
 
-    bool flag = false;
-    while(flag == false){
+    bool flag;
+    while(1){
         flag = true;
         for(int i = 0; i < (int)over_memory.size(); i++){
             if(over_memory[i] > 0){
@@ -597,6 +597,10 @@ void MyAlgo::check_enough(vector<map<vector<int>, int>> &path){
                 cout <<" over" << it.second <<endl;
                 flag = false;
             }
+        }
+        if(flag==true){
+            cout<<"--------------Reduece finish-------------\n";
+            break;
         }
         int long_len = 0;
         int long_req = -1;
@@ -643,7 +647,7 @@ void MyAlgo::check_enough(vector<map<vector<int>, int>> &path){
         path[long_req][long_path]--;
     }
 
-    cout<<"--------------Reduece finish-------------\n";
+    
 }
 
 void readd(vector<map<vector<int>, int>> &path){
