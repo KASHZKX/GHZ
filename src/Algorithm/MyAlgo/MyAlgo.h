@@ -43,6 +43,7 @@ public:
     void find_bottleneck(vector<int>, int req_no);
     void initialize();
     void check_enough(vector<map<vector<int>, int>> &path);
+    void readd(vector<map<vector<int>, int>> &path);
     double changing_obj();
     void find_violate();
     vector<map<vector<int>, int>> rounding();

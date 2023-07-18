@@ -533,94 +533,99 @@ void MyAlgo::check_enough(vector<map<vector<int>, int>> &path){
             cout<<"     Qubits:"<<it.second<<endl;
         }
     }
-    vector<int>memory_used(graph.get_size());
+    vector<int> memory_used(graph.get_size());
     map<vector<int>,int> channel_used; 
-    vector<int>over_memory(graph.get_size());
+    vector<int> over_memory(graph.get_size());
     map<vector<int>,int> over_channel;
     map<vector<int>,int>::iterator iter;
-    for(int i=0;i<(int)path.size();i++){
-        for(auto it:path[i]){
-            vector<int>cur_path=it.first;
-            for(int j=0;j<(int)cur_path.size()-1;j++){
-                memory_used[cur_path[j]]+=it.second;
-                memory_used[cur_path[j+1]]+=it.second;
-                iter=channel_used.find({cur_path[j],cur_path[j+1]});
-                if(iter!=channel_used.end()){
-                    channel_used[{cur_path[j],cur_path[j+1]}]+=it.second;
-                    channel_used[{cur_path[j+1],cur_path[j]}]+=it.second;
+    for(int i = 0; i <(int)path.size(); i++){
+        for(auto it : path[i]){
+            vector<int> cur_path = it.first;
+            for(int j = 0; j < (int)cur_path.size() - 1; j++){
+                memory_used[cur_path[j]] += it.second;
+                memory_used[cur_path[j+1]] += it.second;
+                iter = channel_used.find({cur_path[j],cur_path[j+1]});
+                if(iter != channel_used.end()){
+                    channel_used[{cur_path[j], cur_path[j+1]}] += it.second;
+                    channel_used[{cur_path[j+1], cur_path[j]}] += it.second;
                 }
                 else{
-                    channel_used[{cur_path[j],cur_path[j+1]}]=it.second;
-                    channel_used[{cur_path[j+1],cur_path[j]}]=it.second;
+                    channel_used[{cur_path[j], cur_path[j+1]}] = it.second;
+                    channel_used[{cur_path[j+1], cur_path[j]}] = it.second;
                 }
             }
         }
     }
 
-    for(int i=0;i<graph.get_size();i++){
-        over_memory[i]=memory_used[i]-graph.Node_id2ptr(i)->get_memory_cnt();
-        for(auto it:graph.get_neighbors_id(i)){
-            iter=over_channel.find({i,it});
-            if(iter!=over_channel.end()){
-               over_channel[{i,it}]-=graph.get_channel_size(i,it);
-               over_channel[{it,i}]-=graph.get_channel_size(i,it);
+    for(int i = 0; i < graph.get_size(); i++){
+        over_memory[i] = memory_used[i] - graph.Node_id2ptr(i)->get_memory_cnt();
+        for(auto it : graph.get_neighbors_id(i)){
+            iter = over_channel.find({i,it});
+            if(iter != over_channel.end()){
+               over_channel[{i, it}] -= graph.get_channel_size(i, it);
+               over_channel[{it, i}] -= graph.get_channel_size(i, it);
             }
             else{
-               over_channel[{i,it}]=-graph.get_channel_size(i,it);
-               over_channel[{it,i}]=-graph.get_channel_size(i,it);
+               over_channel[{i, it}] = -graph.get_channel_size(i, it);
+               over_channel[{it, i}] = -graph.get_channel_size(i, it);
             }
         }
     }
 
-    for(auto &it:over_channel){
-        iter=channel_used.find(it.first);
-        if(iter!=channel_used.end()){
-            it.second=channel_used[{it.first}]+it.second/2;
+    for(auto &it : over_channel){
+        iter = channel_used.find(it.first);
+        if(iter != channel_used.end()){
+            it.second = channel_used[{it.first}] + it.second / 2; 
         }
     }
 
-    bool flag=false;
-    while(flag==false){
-        flag=true;
-        for(int i=0;i<(int)over_memory.size();i++){
-            if(over_memory[i]>0){
+    bool flag = false;
+    while(flag == false){
+        flag = true;
+        for(int i = 0; i < (int)over_memory.size(); i++){
+            if(over_memory[i] > 0){
                 //cout<<"redece memory:"<<i<<" to"<<over_memory[i]<<endl;
-                flag=false;
+                flag = false;
             }
         }
-        for(auto it:over_channel){
-            if(it.second>0){
+        for(auto it : over_channel){
+            if(it.second > 0){
                 cout<<"OVER CHANNEL:";
-                for(auto it2:it.first){
-                    cout<<it2<<" ";
+                for(auto it2 : it.first){
+                    cout << it2 << " ";
                 }
-                cout<<" over"<<it.second<<endl;
-                flag=false;
+                cout <<" over" << it.second <<endl;
+                flag = false;
             }
         }
-        int long_len=0;
-        int long_req=-1;
-        vector<int>long_path;
-        for(int i=0;i<(int)path.size();i++){
-            for(auto it:path[i]){
-                if((int)it.first.size()>long_len && it.second>0){
-                    long_len=it.first.size();
-                    long_path=it.first;
-                    long_req=i;
+        int long_len = 0;
+        int long_req = -1;
+        vector<int> long_path;
+        for(int i = 0; i < (int)path.size(); i++){
+            for(auto it : path[i]){
+                if((int)it.first.size() > long_len && it.second > 0){
+                    long_len = it.first.size();
+                    long_path = it.first;
+                    long_req = i;
                 }
             }
         }
-        for(int i=0;i<(int)long_path.size()-1;i++){
+        for(int i = 0; i < (int)long_path.size() - 1; i++){
             over_memory[long_path[i]]--;
             over_memory[long_path[i+1]]--;
-            over_channel[{long_path[i],long_path[i+1]}]--;
-            over_channel[{long_path[i+1],long_path[i]}]--;
+            over_channel[{long_path[i], long_path[i+1]}]--;
+            over_channel[{long_path[i+1], long_path[i]}]--;
         }
         path[long_req][long_path]--;
     }
 
     cout<<"--------------Reduece finish-------------\n";
 }
+
+void readd(vector<map<vector<int>, int>> &path){
+    
+}
+
 void MyAlgo::dfs(int src, int dst, vector<vector<int>> &ans, vector<int> &path, vector<bool> &visited){
         //base case
     visited[src] = true;
@@ -645,6 +650,7 @@ void MyAlgo::dfs(int src, int dst, vector<vector<int>> &ans, vector<int> &path, 
     path.pop_back();
 
 }
+
 vector<vector<int>> MyAlgo::allPathsSourceTarget(int src, int dst){
     vector<vector<int>> ans;
     vector<int> path;
@@ -701,6 +707,8 @@ void MyAlgo::path_assignment(){
             cout<<"     Qubits:"<<it.second<<endl;
         }
     }
+
+    
     for(unsigned int i = 0; i < path.size(); i++){
         for(auto p : path[i]){
             assign_resource(p.first, p.second, i);
