@@ -739,7 +739,10 @@ void MyAlgo::path_assignment(){
     
     for(unsigned int i = 0; i < path.size(); i++){
         for(auto p : path[i]){
-            assign_resource(p.first, p.second, i);
+            if(p.second!=0){
+                assign_resource(p.first, p.second, i);
+            }
+            
         }
     }
 }   
