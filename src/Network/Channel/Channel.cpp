@@ -60,6 +60,7 @@ bool Channel::is_assignable(){
 		return false;
 	}
 	if(!node2.is_assignable()){
+		cout << node1_ptr->get_id() <<" " <<node1_ptr->get_remain() << " " << node2_ptr->get_id() << " " << node2_ptr->get_remain() << endl;
 		return false;
 	}	
 	if(used){
