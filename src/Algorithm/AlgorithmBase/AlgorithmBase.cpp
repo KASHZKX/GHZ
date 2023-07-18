@@ -17,7 +17,7 @@ double AlgorithmBase::get_swap_prob(){
 
 void AlgorithmBase::base_next_time_slot(){
     graph.refresh();
-    // graph.release();
+    graph.release();
     for(auto &request: requests){
         request.next_timeslot();
     }
@@ -109,7 +109,7 @@ void AlgorithmBase::add_new_request(Request new_request){
     int src = new_request.get_source();
     if(graph.Node_id2ptr(src)->get_remain() >= 1) {
         requests.push_back(new_request);
-        (*graph.Node_id2ptr(src))--;
+        // (*graph.Node_id2ptr(src))--;
     }
 }
 
