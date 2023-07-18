@@ -26,7 +26,7 @@ Channel* Graph::assign_channel(Node &node1, Node &node2){
             if(channel.is_assignable()){
                 channel.assign();
                 cout << "build: " << node1.get_id() << " " << node2.get_id() << endl;
-                cout << "remain mem: node" << node1.get_id() <<node1.get_remain() <<" node" <<node2.get_id() << " " << node2.get_remain() << endl;
+                cout << "remain mem: node" << node1.get_id() << " " <<node1.get_remain() <<" node" <<node2.get_id() << " " << node2.get_remain() << endl;
                 return &channel;
             }
         }
@@ -35,7 +35,7 @@ Channel* Graph::assign_channel(Node &node1, Node &node2){
             if(channel.is_assignable()){
                 channel.assign();
                 cout << "build: " << node1.get_id() << " " << node2.get_id() << endl;
-                cout << "remain mem: node" << node1.get_id() <<node1.get_remain() <<" node" <<node2.get_id() << " " << node2.get_remain() << endl;
+                cout << "remain mem: node" << node1.get_id() << " " << node1.get_remain() <<" node" <<node2.get_id() << " " << node2.get_remain() << endl;
                 return &channel;
             }
         }
