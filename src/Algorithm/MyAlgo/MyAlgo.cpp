@@ -615,7 +615,7 @@ void MyAlgo::check_enough(vector<map<vector<int>, int>> &path){
                         associate_flag=true;
                         break;
                     }
-            
+                    cout<<"channel check:"<<j<<"/"<<j+1<<"||"<<over_channel[{it.first[j],it.first[j+1]}]<<endl;
                     iter = over_channel.find({it.first[j],it.first[j+1]});
                     if(iter!=over_channel.end() && over_channel[{it.first[j],it.first[j+1]}]>0){
                         associate_flag=true;
