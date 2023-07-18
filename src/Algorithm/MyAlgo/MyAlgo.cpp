@@ -622,8 +622,14 @@ void MyAlgo::check_enough(vector<map<vector<int>, int>> &path){
     cout<<"--------------Reduece finish-------------\n";
 }
 
-void readd(vector<map<vector<int>, int>> &path){
-    
+void MyAlgo::readd(vector<map<vector<int>, int>> &path){
+    for(unsigned int i = 0; i < requests.size(); i++){
+        for(auto it : path[i]){
+            vector<int> each_path = it.first;
+            
+        }
+    }
+
 }
 
 void MyAlgo::dfs(int src, int dst, vector<vector<int>> &ans, vector<int> &path, vector<bool> &visited){
