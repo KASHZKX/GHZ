@@ -599,6 +599,17 @@ void MyAlgo::check_enough(vector<map<vector<int>, int>> &path){
             }
         }
         if(flag == true){
+            cout << "before" << endl;
+            for(unsigned int i = 0; i < path.size(); i++){
+                for(auto it:path[i]){
+                    vector<int>Final_path =it.first;
+                    for(auto it2:Final_path){
+                        cout<<it2<<" ";
+                    }
+                    cout<<"     Qubits:"<<it.second<<endl;
+                    requests[i].add_cur(it.second);
+                }
+            }
             cout<<"--------------Reduece finish-------------\n";
             readd(path,over_memory,over_channel);  
             break;
