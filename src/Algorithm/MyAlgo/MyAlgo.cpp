@@ -665,8 +665,8 @@ void MyAlgo::check_enough(vector<map<vector<int>, int>> &path){
 void MyAlgo::readd(vector<map<vector<int>, int>> &path,vector<int> &over_memory,map<vector<int>,int> &over_channel){
     bool flag = true;
     while(flag){
+        flag = false;
         for(unsigned int i = 0; i < requests.size(); i++){
-            flag = false;
             if(requests[i].get_send_limit() < requests[i].get_cur_send()){
                 for(auto it : path[i]){
                     vector<int> each_path = it.first;
