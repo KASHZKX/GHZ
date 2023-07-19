@@ -685,38 +685,39 @@ void MyAlgo::readd(vector<map<vector<int>, int>> &path,vector<int> &over_memory,
     bool flag = true;
     while(flag){
         flag = false;
-        for(unsigned int i = 0; i < requests.size(); i++){
-            if(requests[i].get_send_limit() > requests[i].get_cur_send()){
-                for(auto it : path[i]){
-                    vector<int> each_path = it.first;
-                    bool assign = true;
-                    for(unsigned int j = 0; j < each_path.size() - 1; j++){
-                        if(j == 0){
-                            if(over_memory[each_path[j]] >= 0){
-                                assign = false;
-                            }
-                        }
-                        else{
-                            if(over_memory[each_path[j]] >= -1){
-                                assign = false;
-                            }
-                        }
-                        if(over_channel[{each_path[j],each_path[j+1]}] >= 0){
+        for(int i = 0; i < re.size(); i++){
+            if(requests[re[i].second].get_send_limit() > requests[re[i].second].get_cur_send()){
+                vector<int> each_path = re[i].first;
+                bool assign = true;
+                for(unsigned int j = 0; j < each_path.size() - 1; j++){
+                    if(j == 0){
+                        if(over_memory[each_path[j]] >= 0){
                             assign = false;
                         }
                     }
-                    if(over_memory[each_path[each_path.size()-1]] >= 0){
+                    else{
+                        if(over_memory[each_path[j]] >= -1){
+                            assign = false;
+                        }
+                    }
+                    if(over_channel[{each_path[j],each_path[j+1]}] >= 0){
                         assign = false;
                     }
-                    if(assign == true ){
-                        requests[i].add_cur(1);
-                        path[i][it.first] += 1;
-                        cout << "!!PATH +++" << endl;
-                        flag = true;
+                }
+                if(over_memory[each_path[each_path.size()-1]] >= 0){
+                    assign = false;
+                }
+                if(assign == true ){
+                    requests[re[i].second].add_cur(1);
+                    for(auto it:path[re[i].second]){
+                        if(it.first==re[i].first){
+                            path[i][it.first] += 1;
+                            cout << "!!PATH +++" << endl;
+                            flag = true;
+                            break;
+                        }
                     }
                 }
-            }else{
-                continue;
             }
         }
     }
