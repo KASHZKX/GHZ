@@ -600,6 +600,7 @@ void MyAlgo::check_enough(vector<map<vector<int>, int>> &path){
         }
         if(flag==true){
             cout<<"--------------Reduece finish-------------\n";
+            //readd(path,over_memory,over_channel);  
             break;
         }
         int long_len = 0;
@@ -647,23 +648,37 @@ void MyAlgo::check_enough(vector<map<vector<int>, int>> &path){
             over_channel[{long_path[i+1], long_path[i]}]--;
         }
         path[long_req][long_path]--;
-    }
+    }  
+}  
 
-    
-}
-
-void MyAlgo::readd(vector<map<vector<int>, int>> &path){
+void MyAlgo::readd(vector<map<vector<int>, int>> &path,vector<int> &over_memory,map<vector<int>,int> &over_channel){
     bool flag = true;
     while(flag){
         for(unsigned int i = 0; i < requests.size(); i++){
-            if(requests[i].get_send_limit() < requests[i].get_cur_send()){
+            if(requests[i].get_send_limit() < requests[i].get_cur_send() && over_memory[requests[i].get_source()]<0 && over_memory[requests[i].get_destination()]<0){
                 for(auto it : path[i]){
                     vector<int> each_path = it.first;
-                    bool assign = false;
+                    bool assign = true;
                     for(int j = 0; j < each_path.size() - 1; j++){
-                        if(j == 0 || j == each_path.size() - 1){
-
+                        if(j == 0){
+                            if(over_memory[each_path[j]] >= 0){
+                                assign = false;
+                            }
                         }
+                        else{
+                            if(over_memory[each_path[j]] >= -1){
+                                assign = false;
+                            }
+                        }
+                        if(over_channel[{each_path[j],each_path[j+1]}] >= 0){
+                            assign = false;
+                        }
+                    }
+                    if(over_memory[each_path[each_path.size()-1]] >= 0){
+                        assign = false;
+                    }
+                    if(assign == true ){
+                        path[i][it.first]+=1;
                     }
                 }
             }
