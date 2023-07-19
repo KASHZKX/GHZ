@@ -690,11 +690,14 @@ void MyAlgo::readd(vector<map<vector<int>, int>> &path,vector<int> &over_memory,
                         assign = false;
                     }
                     if(assign == true ){
-                        path[i][it.first]+=1;
+                        requests[i].add_cur(1);
+                        path[i][it.first] += 1;
                         cout << "!!PATH +++" << endl;
                         flag = true;
                     }
                 }
+            }else{
+                continue;
             }
         }
     }
