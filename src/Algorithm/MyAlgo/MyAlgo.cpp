@@ -655,7 +655,8 @@ void MyAlgo::readd(vector<map<vector<int>, int>> &path,vector<int> &over_memory,
     bool flag = true;
     while(flag){
         for(unsigned int i = 0; i < requests.size(); i++){
-            if(requests[i].get_send_limit() < requests[i].get_cur_send() && over_memory[requests[i].get_source()]<0 && over_memory[requests[i].get_destination()]<0){
+            flag = false;
+            if(requests[i].get_send_limit() < requests[i].get_cur_send()){
                 for(auto it : path[i]){
                     vector<int> each_path = it.first;
                     bool assign = true;
@@ -679,6 +680,7 @@ void MyAlgo::readd(vector<map<vector<int>, int>> &path,vector<int> &over_memory,
                     }
                     if(assign == true ){
                         path[i][it.first]+=1;
+                        flag = true;
                     }
                 }
             }
