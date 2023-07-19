@@ -560,7 +560,7 @@ void MyAlgo::check_enough(vector<map<vector<int>, int>> &path){
     for(int i = 0; i < graph.get_size(); i++){
         over_memory[i] = memory_used[i] - graph.Node_id2ptr(i)->get_memory_cnt();
         for(auto it : graph.get_neighbors_id(i)){
-            iter = over_channel.find({i,it});
+            iter = over_channel.find({i, it});
             if(iter != over_channel.end()){
                over_channel[{i, it}] -= graph.get_channel_size(i, it);
                over_channel[{it, i}] -= graph.get_channel_size(i, it);
