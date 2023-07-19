@@ -744,11 +744,11 @@ void MyAlgo::path_assignment(){
 
     initialize();
     
-    for(unsigned int i = 0; i < requests.size(); i++){
-        int src = requests[i].get_source();
-        int dst = requests[i].get_destination();
-        all_source_target_path.push_back(allPathsSourceTarget(src, dst));
-    }
+    // for(unsigned int i = 0; i < requests.size(); i++){
+    //     int src = requests[i].get_source();
+    //     int dst = requests[i].get_destination();
+    //     all_source_target_path.push_back(allPathsSourceTarget(src, dst));
+    // }
 
     
     double obj = M * delta;
