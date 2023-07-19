@@ -599,17 +599,17 @@ void MyAlgo::check_enough(vector<map<vector<int>, int>> &path){
             }
         }
         if(flag == true){
-            cout << "before" << endl;
-            for(unsigned int i = 0; i < path.size(); i++){
-                for(auto it:path[i]){
-                    vector<int>Final_path =it.first;
-                    for(auto it2:Final_path){
-                        cout<<it2<<" ";
-                    }
-                    cout<<"     Qubits:"<<it.second<<endl;
-                    requests[i].add_cur(it.second);
-                }
-            }
+            // cout << "before" << endl;
+            // for(unsigned int i = 0; i < path.size(); i++){
+            //     for(auto it:path[i]){
+            //         vector<int>Final_path =it.first;
+            //         for(auto it2:Final_path){
+            //             cout<<it2<<" ";
+            //         }
+            //         cout<<"     Qubits:"<<it.second<<endl;
+            //         requests[i].add_cur(it.second);
+            //     }
+            // }
             cout<<"--------------Reduece finish-------------\n";
             readd(path,over_memory,over_channel);  
             break;
@@ -671,7 +671,7 @@ void MyAlgo::readd(vector<map<vector<int>, int>> &path,vector<int> &over_memory,
                 for(auto it : path[i]){
                     vector<int> each_path = it.first;
                     bool assign = true;
-                    for(int j = 0; j < each_path.size() - 1; j++){
+                    for(unsigned int j = 0; j < each_path.size() - 1; j++){
                         if(j == 0){
                             if(over_memory[each_path[j]] >= 0){
                                 assign = false;
@@ -691,6 +691,7 @@ void MyAlgo::readd(vector<map<vector<int>, int>> &path,vector<int> &over_memory,
                     }
                     if(assign == true ){
                         path[i][it.first]+=1;
+                        cout << "!!PATH +++" << endl;
                         flag = true;
                     }
                 }
