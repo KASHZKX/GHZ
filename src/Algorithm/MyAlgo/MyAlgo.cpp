@@ -598,9 +598,9 @@ void MyAlgo::check_enough(vector<map<vector<int>, int>> &path){
                 flag = false;
             }
         }
-        if(flag==true){
+        if(flag == true){
             cout<<"--------------Reduece finish-------------\n";
-            //readd(path,over_memory,over_channel);  
+            readd(path,over_memory,over_channel);  
             break;
         }
         int long_len = 0;
