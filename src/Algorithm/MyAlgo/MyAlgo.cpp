@@ -693,6 +693,12 @@ void MyAlgo::readd(vector<map<vector<int>, int>> &path,vector<int> &over_memory,
                         requests[i].add_cur(1);
                         path[i][it.first] += 1;
                         cout << "!!PATH +++" << endl;
+                        for(int j = 0; j < (int)each_path.size() - 1; j++){
+                            over_memory[each_path[j]] ++;
+                            over_memory[each_path[j+1]] ++;
+                            over_channel[{each_path[j], each_path[j+1]}] ++;
+                            over_channel[{each_path[j+1], each_path[j]}] ++;
+                        }
                         flag = true;
                     }
                 }
