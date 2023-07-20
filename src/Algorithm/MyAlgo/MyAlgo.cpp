@@ -749,7 +749,7 @@ void MyAlgo::dfs(int src, int dst, vector<vector<int>> &ans, vector<int> &path, 
 
 }
 
-void calculate(){
+void MyAlgo::calculate(){
     double sum=0.0;
     for(auto it:x_i_p){
         double prob=1;
