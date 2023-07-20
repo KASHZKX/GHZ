@@ -42,7 +42,7 @@ int main(){
     default_setting["num_of_node"] = 30;
     default_setting["social_density"] = 0.5;
     default_setting["area_alpha"] = 0.1;
-    default_setting["memory_cnt_avg"] = 5;
+    default_setting["memory_cnt_avg"] = 4;
     default_setting["channel_cnt_avg"] = 2;
     default_setting["resource_ratio"] = 1;
     default_setting["min_fidelity"] = 0.7;
@@ -63,7 +63,7 @@ int main(){
     change_parameter["resource_ratio"] = {0.5, 1, 2, 10};
     change_parameter["area_alpha"] = {0.001, 0.01, 0.1}; 
     change_parameter["social_density"] = {0.25, 0.5, 0.75, 1}; 
-    change_parameter["new_request_cnt"] = {20};
+    change_parameter["new_request_cnt"] = {25};
     change_parameter["num_of_node"] = {5, 10, 15, 20, 25};
 
     vector<string> X_names = { "new_request_cnt"};//"num_of_node", "area_alpha", "resource_ratio", "entangle_alpha", "swap_prob"};
