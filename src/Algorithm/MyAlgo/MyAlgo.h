@@ -35,6 +35,7 @@ public:
     vector<int> separation_oracle(int req_no, double &U);
     vector<int> Dijkstra(int src, int dst, int req_no);
     void path_assignment();
+    void calculate();
     void entangle();
     void swap();
     void send();

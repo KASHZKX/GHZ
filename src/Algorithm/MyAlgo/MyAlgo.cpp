@@ -143,13 +143,7 @@ vector<int> MyAlgo::Dijkstra(int src, int dst, int req_no){
 */
     return parent;
 }       
-    //     3---4
-    //  /  |  /
-    // /   | / 
-    // 2---1/
-    //  \  |
-    //   \ |
-    //     0
+   
 
 vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){     
     vector<int> SPT;                  //nodes' parent in the spanning tree
@@ -755,6 +749,22 @@ void MyAlgo::dfs(int src, int dst, vector<vector<int>> &ans, vector<int> &path, 
 
 }
 
+void calculate(){
+    double sum=0.0;
+    for(auto it:x_i_p){
+        double prob=1;
+        vector<int>path=it.first;
+        for(int i=0;i<it.first.size()-1;i++){
+            prob*=exp(graph.Node_id2ptr(path[i])->distance(*graph.Node_id2ptr(path[i+1]))*(-graph.get_entangle_alpha()));
+        }
+        for(int i=1;i<it.first.size()-1;i++){
+            prob*=graph.Node_id2ptr(path[i]).get_swap_prob();  
+        }
+        sum+=it.second*prob;
+    }
+    cout<<"total prob:"<<sum<<"-------------"<<endl
+};
+
 vector<vector<int>> MyAlgo::allPathsSourceTarget(int src, int dst){
     vector<vector<int>> ans;
     vector<int> path;
@@ -816,6 +826,7 @@ void MyAlgo::path_assignment(){
         cout<<"changing_obj obj: " << obj << endl ;
     }
     find_violate();
+    calculate();
     vector<map<vector<int>, int>>path = rounding();
 
     check_enough(path);
