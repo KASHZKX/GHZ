@@ -758,12 +758,12 @@ void MyAlgo::calculate(){
             prob*=exp(graph.Node_id2ptr(path[i])->distance(*graph.Node_id2ptr(path[i+1]))*(-graph.get_entangle_alpha()));
         }
         for(int i=1;i<it.first.size()-1;i++){
-            prob*=graph.Node_id2ptr(path[i]).get_swap_prob();  
+            prob*=graph.Node_id2ptr(path[i])->get_swap_prob();  
         }
         sum+=it.second*prob;
     }
-    cout<<"total prob:"<<sum<<"-------------"<<endl
-};
+    cout<<"total prob:"<<sum<<"-------------"<<endl;
+}
 
 vector<vector<int>> MyAlgo::allPathsSourceTarget(int src, int dst){
     vector<vector<int>> ans;
