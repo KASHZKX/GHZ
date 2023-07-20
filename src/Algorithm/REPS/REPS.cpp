@@ -410,7 +410,7 @@ void REPS::path_assignment(){
 
                 
                 //2023 ALTER
-                if(requests[reqno].get_paths().size() < requests[0].get_send_limit()){
+                if(requests[req_no].get_paths().size() < requests[0].get_send_limit()){
                     requests[req_no] += graph.build_path(path_nodes);
                 }
                 //2023 ALTER END
