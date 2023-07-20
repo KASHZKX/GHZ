@@ -189,25 +189,8 @@ void QCAST::path_assignment(){
         if(mx_reqno == -1){//no path found
             break;
         }
-
-
-        //2023 ALTER 
-        int wi = find_width(candidate[mx_reqno].path);
-        if(requests[mx_reqno].get_paths().size() + wi > requests[0].get_send_limit()) {
-            int new_width = (requests[0].get_send_limit() - requests[mx_reqno].get_paths().size());
-            total += new_width;
-            //assign_resource(candidate[mx_reqno].path,(requests[0].get_send_limit() - requests[mx_reqno].get_paths().size()) ,mx_reqno);
-        }
-        else{
-            //cout << "req_no: " << requests[mx_reqno].get_paths().size() << endl;
-            total += find_width(candidate[mx_reqno].path);
-            // assign_resource(candidate[mx_reqno].path, mx_reqno);
-        }
-        //2023 ALTER END
-
-        //assign_resource(candidate[mx_reqno].path, ,mx_reqno);
-        cout <<" limit:"<< requests[0].get_send_limit()<<endl;
-        cout << "req_no: " << requests[mx_reqno].get_paths().size() << endl;
+        total += find_width(candidate[mx_reqno].path);
+        assign_resource(candidate[mx_reqno].path, mx_reqno);
     }
 
     find_recovery_path(3);
