@@ -317,7 +317,7 @@ void MyAlgo::find_bottleneck(vector<int> path, int req_no){
             min_s_uv = s_uv[i];
     }
 
-    int rate = 5;
+    int rate = 10;
     double s = min(min_s_u, min(min_s_uv, s_i));
     for(int i = 0; i < rate; i++){
         if(x_i_p.find(path) != x_i_p.end())                                         //add flow to path
