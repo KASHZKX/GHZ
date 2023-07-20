@@ -88,7 +88,7 @@ void QCAST::path_assignment(){
     const int maximum_path_length = 200;
     const int maximum_total_number_of_path = requests.size() * requests[0].get_send_limit();
     int total = 0;
-    while(total <= maximum_total_number_of_path){
+    while(total < maximum_total_number_of_path){
         vector<CandPath> candidate(requests.size());
         double dis[graph.get_size()];
         int parent[graph.get_size()];
@@ -194,14 +194,14 @@ void QCAST::path_assignment(){
         //2023 ALTER 
         int wi = find_width(candidate[mx_reqno].path);
         if(requests[mx_reqno].get_paths().size() + wi > requests[0].get_send_limit()) {
-             int new_width = (requests[0].get_send_limit() - requests[mx_reqno].get_paths().size());
-             total += new_width;
-             assign_resource(candidate[mx_reqno].path,(requests[0].get_send_limit() - requests[mx_reqno].get_paths().size()) ,mx_reqno);
+            int new_width = (requests[0].get_send_limit() - requests[mx_reqno].get_paths().size());
+            total += new_width;
+            //assign_resource(candidate[mx_reqno].path,(requests[0].get_send_limit() - requests[mx_reqno].get_paths().size()) ,mx_reqno);
         }
         else{
             //cout << "req_no: " << requests[mx_reqno].get_paths().size() << endl;
             total += find_width(candidate[mx_reqno].path);
-            assign_resource(candidate[mx_reqno].path, mx_reqno);
+            // assign_resource(candidate[mx_reqno].path, mx_reqno);
         }
         //2023 ALTER END
 
