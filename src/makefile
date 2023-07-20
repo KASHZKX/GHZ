@@ -49,7 +49,7 @@ Algorithm/Greedy/Greedy.o: Algorithm/Greedy/Greedy.h Algorithm/Greedy/Greedy.cpp
 	mv Greedy.o Algorithm/Greedy/Greedy.o
 
 Algorithm/MyAlgo/MyAlgo.o: Algorithm/MyAlgo/MyAlgo.h Algorithm/MyAlgo/MyAlgo.cpp config.h
-	g++ -std=c++17 -c -g -Wall -Wextra -O3 --static Algorithm/MyAlgo/MyAlgo.h Algorithm/MyAlgo/MyAlgo.cpp config.h
+	g++ -std=c++17 -fopenmp -c -g -Wall -Wextra -O3 --static Algorithm/MyAlgo/MyAlgo.h Algorithm/MyAlgo/MyAlgo.cpp config.h
 	mv MyAlgo.o Algorithm/MyAlgo/MyAlgo.o
 
 Algorithm/QCAST/QCAST.o: Algorithm/QCAST/QCAST.h Algorithm/QCAST/QCAST.cpp config.h
