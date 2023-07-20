@@ -727,6 +727,17 @@ void MyAlgo::readd(vector<map<vector<int>, int>> &path,vector<int> &over_memory,
             }
         }
     }
+    for(auto x : over_memory){
+        cout << "node: " << x << endl;
+    }
+    for(auto x : over_channel){
+        cout<< "EDGE: ";
+        for(auto a : x.first ){
+            cout<< a << " ";
+        }
+        cout << x.second << endl;
+    }
+
 }
 
 void MyAlgo::dfs(int src, int dst, vector<vector<int>> &ans, vector<int> &path, vector<bool> &visited){
@@ -759,10 +770,10 @@ void MyAlgo::calculate(){
     for(auto it:x_i_p){
         double prob=1;
         vector<int>path=it.first;
-        for(int i=0;i<it.first.size()-1;i++){
+        for(unsigned int i=0;i < it.first.size() - 1;i++){
             prob*=exp(graph.Node_id2ptr(path[i])->distance(*graph.Node_id2ptr(path[i+1]))*(-graph.get_entangle_alpha()));
         }
-        for(int i=1;i<it.first.size()-1;i++){
+        for(unsigned int i=1;i<it.first.size()-1;i++){
             prob*=graph.Node_id2ptr(path[i])->get_swap_prob();  
         }
         sum+=it.second*prob;
