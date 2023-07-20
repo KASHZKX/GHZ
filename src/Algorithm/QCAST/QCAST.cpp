@@ -86,7 +86,7 @@ void QCAST::path_assignment(){
     base_test_active();
     const int maximum_major_path_per_request = requests[0].get_send_limit();
     const int maximum_path_length = 200;
-    const int maximum_total_number_of_path = 200;
+    const int maximum_total_number_of_path = requests.size() * requests[0].get_send_limit();
     int total = 0;
     while(total < maximum_total_number_of_path){
         vector<CandPath> candidate(requests.size());
