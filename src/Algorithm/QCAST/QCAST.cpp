@@ -88,7 +88,7 @@ void QCAST::path_assignment(){
     const int maximum_path_length = 200;
     const int maximum_total_number_of_path = requests.size() * requests[0].get_send_limit();
     int total = 0;
-    while(total < maximum_total_number_of_path){
+    while(total <= maximum_total_number_of_path){
         vector<CandPath> candidate(requests.size());
         double dis[graph.get_size()];
         int parent[graph.get_size()];
