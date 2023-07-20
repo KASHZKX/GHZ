@@ -502,7 +502,7 @@ tuple<vector<int>, double, bool> REPS::DFS(int req_no, map<pair<int, int>, doubl
     bool set_flag = false;
     while(width--){
         set_flag = true;
-        if(requests[reqno].get_paths().size() < requests[0].get_send_limit()){
+        if(requests[req_no].get_paths().size() < requests[0].get_send_limit()){
             requests[req_no] += graph.build_path(path_nodes);
         }
         
