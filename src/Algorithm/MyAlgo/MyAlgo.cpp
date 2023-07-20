@@ -793,7 +793,7 @@ void MyAlgo::path_assignment(){
         //cout<<"\n------New round-------\n";
         #pragma omp parallel for
         for(unsigned int i = 0; i < requests.size(); i++){
-            all_path =  separation_oracle(i, U[i]);
+            all_path[i] =  separation_oracle(i, U[i]);
             //cout << "smallest_U: " << smallest_U << " U: " << U << "\n\n"; 
     
         }
