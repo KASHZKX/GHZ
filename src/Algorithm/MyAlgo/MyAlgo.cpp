@@ -143,13 +143,7 @@ vector<int> MyAlgo::Dijkstra(int src, int dst, int req_no){
 */
     return parent;
 }       
-    //     3---4
-    //  /  |  /
-    // /   | / 
-    // 2---1/
-    //  \  |
-    //   \ |
-    //     0
+   
 
 vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){     
     vector<int> SPT;                  //nodes' parent in the spanning tree
@@ -197,11 +191,13 @@ vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){
     best_path.push_back(dst);
     best_len = c * exp(r);
     req_Us = best_len;
+
     // cout << "origin path: ";
     // for(auto p : best_path){
     //         cout << p << "->";
     // }
     // cout << endl;
+
     map<pair<int, int>, bool> used_edge;
     vector<int> new_path;   
     pair<int,int> new_edge;
@@ -278,16 +274,19 @@ vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){
         
        
     }
-    // if(best_path != brute_path){                                           //checking brute && best
-    //     cout<<"DIFF!!!\n";
-    // }
-
     // cout << "Best path: ";
     // for(auto p : best_path){
     //     cout <<p << " ";
     // }
     // cout << endl;
     // cout << "U: " << best_len << endl;
+
+    // if(best_path != brute_path){                                           //checking brute && best
+    //     cout<<"DIFF!!!\n";
+    //     exit(1);
+    // }
+
+   
         
     return best_path;  
                                                     
@@ -317,23 +316,24 @@ void MyAlgo::find_bottleneck(vector<int> path, int req_no){
             min_s_uv = s_uv[i];
     }
 
+    int rate = 1;
     double s = min(min_s_u, min(min_s_uv, s_i));
-   
-    if(x_i_p.find(path) != x_i_p.end())                                         //add flow to path
-        x_i_p[path] += s;
-    else
-        x_i_p[path] = s;
-    
-    for(auto id : path){                                                        //alter alpha,beta,tau
-        alpha[id] = alpha[id] * (1 + epsilon * s / s_u[id]);
+    for(int i = 0; i < rate; i++){
+        if(x_i_p.find(path) != x_i_p.end())                                         //add flow to path
+            x_i_p[path] += s;
+        else
+            x_i_p[path] = s;
+
+        for(auto id : path){                                                        //alter alpha,beta,tau
+            alpha[id] = alpha[id] * (1 + epsilon * s / s_u[id]);
+        }
+
+        for(unsigned int i = 0; i < path.size() - 1; i++){
+            beta[{path[i], path[i+1]}] = beta[{path[i], path[i+1]}] * (1 + epsilon * s / s_uv[i]);
+        }
+
+        tau[req_no] = tau[req_no] * (1 + epsilon * s / s_i);    
     }
-
-    for(unsigned int i = 0; i < path.size() - 1; i++){
-        beta[{path[i], path[i+1]}] = beta[{path[i], path[i+1]}] * (1 + epsilon * s / s_uv[i]);
-    }
-
-    tau[req_no] = tau[req_no] * (1 + epsilon * s / s_i);    
-
     //now changing the X
     for(unsigned int i = 0; i < path.size() -1; i++){
         if(path[i]<path[i+1]){
@@ -727,6 +727,17 @@ void MyAlgo::readd(vector<map<vector<int>, int>> &path,vector<int> &over_memory,
             }
         }
     }
+    for(auto x : over_memory){
+        cout << "node: " << x << endl;
+    }
+    for(auto x : over_channel){
+        cout<< "EDGE: ";
+        for(auto a : x.first ){
+            cout<< a << " ";
+        }
+        cout << x.second << endl;
+    }
+
 }
 
 void MyAlgo::dfs(int src, int dst, vector<vector<int>> &ans, vector<int> &path, vector<bool> &visited){
@@ -735,11 +746,11 @@ void MyAlgo::dfs(int src, int dst, vector<vector<int>> &ans, vector<int> &path, 
     path.push_back(src);
     if(src == dst){
         ans.push_back(path);
-        cout << "allpath: ";
-        for(auto p : path){
-            cout << p << "->";
-        }
-        cout << endl;
+        // cout << "allpath: ";
+        // for(auto p : path){
+        //     cout << p << "->";
+        // }
+        // cout << endl;
 
     } 
     else{
@@ -752,6 +763,22 @@ void MyAlgo::dfs(int src, int dst, vector<vector<int>> &ans, vector<int> &path, 
     visited[src] = false;
     path.pop_back();
 
+}
+
+void MyAlgo::calculate(){
+    double sum=0.0;
+    for(auto it:x_i_p){
+        double prob=1;
+        vector<int>path=it.first;
+        for(unsigned int i=0;i < it.first.size() - 1;i++){
+            prob*=exp(graph.Node_id2ptr(path[i])->distance(*graph.Node_id2ptr(path[i+1]))*(-graph.get_entangle_alpha()));
+        }
+        for(unsigned int i=1;i<it.first.size()-1;i++){
+            prob*=graph.Node_id2ptr(path[i])->get_swap_prob();  
+        }
+        sum+=it.second*prob;
+    }
+    cout<<"total prob:"<<sum<<"-------------"<<endl;
 }
 
 vector<vector<int>> MyAlgo::allPathsSourceTarget(int src, int dst){
@@ -783,26 +810,39 @@ void MyAlgo::path_assignment(){
     double obj = M * delta;
     vector<int> best_path;
     vector<int> cur_path;
-    double U;
+    // double U;
     while(obj < 1){
         int req_no = 0;
         double smallest_U = numeric_limits<double>::infinity();
+        vector<double> U;
+        vector<vector<int>>all_path;
+        all_path.resize(requests.size());
+        U.resize(requests.size());
         //cout<<"\n------New round-------\n";
+        #pragma omp parallel for
         for(unsigned int i = 0; i < requests.size(); i++){
-            cur_path =  separation_oracle(i, U);
+            all_path[i] =  separation_oracle(i, U[i]);
             //cout << "smallest_U: " << smallest_U << " U: " << U << "\n\n"; 
-            if(U < smallest_U){
-                smallest_U  = U;
-                best_path = cur_path;
+    
+        }
+
+
+        for(unsigned int i = 0; i < requests.size(); i++){
+            //cout << "smallest_U: " << smallest_U << " U: " << U << "\n\n"; 
+            if(U[i] < smallest_U){
+                smallest_U  = U[i];
+                best_path = all_path[i];
                 req_no = i;
             }
-        }
+        } 
+
         find_bottleneck(best_path, req_no);
         //cout<<"End find_bottle\n";
         obj = changing_obj();
         cout<<"changing_obj obj: " << obj << endl ;
     }
     find_violate();
+    calculate();
     vector<map<vector<int>, int>>path = rounding();
 
     check_enough(path);

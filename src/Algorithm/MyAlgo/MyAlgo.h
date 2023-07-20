@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <algorithm>
+#include <omp.h>
 #include <queue>
 #include <limits>
 #include <string>
@@ -23,7 +24,7 @@ private:
     map<vector<int>, double> x_i_p;
     map<pair<int,int>, double> beta;
     vector<vector<vector<int>>> all_source_target_path;
-    double epsilon = 0.1;
+    double epsilon = 0.3;
     double delta;
     double M;
     vector<double> tau;                
@@ -34,6 +35,7 @@ public:
     vector<int> separation_oracle(int req_no, double &U);
     vector<int> Dijkstra(int src, int dst, int req_no);
     void path_assignment();
+    void calculate();
     void entangle();
     void swap();
     void send();
