@@ -189,7 +189,18 @@ void QCAST::path_assignment(){
         if(mx_reqno == -1){//no path found
             break;
         }
-        total += find_width(candidate[mx_reqno].path);
+
+
+        //2023 ALTER 
+        int wi = find_width(candidate[mx_reqno].path);
+        if(requests[mx_reqno].get_paths().size() + wi > requests[0].get_send_limit()) {
+             total += (requests[0].get_send_limit() - requests[mx_reqno].get_paths().size());
+        }
+        else{
+            total += find_width(candidate[mx_reqno].path);
+        }
+        //2023 ALTER END
+
         assign_resource(candidate[mx_reqno].path, mx_reqno);
     }
 
