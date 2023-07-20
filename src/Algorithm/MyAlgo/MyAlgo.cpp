@@ -317,23 +317,24 @@ void MyAlgo::find_bottleneck(vector<int> path, int req_no){
             min_s_uv = s_uv[i];
     }
 
+    int rate = 5;
     double s = min(min_s_u, min(min_s_uv, s_i));
-   
-    if(x_i_p.find(path) != x_i_p.end())                                         //add flow to path
-        x_i_p[path] += s;
-    else
-        x_i_p[path] = s;
-    
-    for(auto id : path){                                                        //alter alpha,beta,tau
-        alpha[id] = alpha[id] * (1 + epsilon * s / s_u[id]);
+    for(int i = 0; i < rate; i++){
+        if(x_i_p.find(path) != x_i_p.end())                                         //add flow to path
+            x_i_p[path] += s;
+        else
+            x_i_p[path] = s;
+
+        for(auto id : path){                                                        //alter alpha,beta,tau
+            alpha[id] = alpha[id] * (1 + epsilon * s / s_u[id]);
+        }
+
+        for(unsigned int i = 0; i < path.size() - 1; i++){
+            beta[{path[i], path[i+1]}] = beta[{path[i], path[i+1]}] * (1 + epsilon * s / s_uv[i]);
+        }
+
+        tau[req_no] = tau[req_no] * (1 + epsilon * s / s_i);    
     }
-
-    for(unsigned int i = 0; i < path.size() - 1; i++){
-        beta[{path[i], path[i+1]}] = beta[{path[i], path[i+1]}] * (1 + epsilon * s / s_uv[i]);
-    }
-
-    tau[req_no] = tau[req_no] * (1 + epsilon * s / s_i);    
-
     //now changing the X
     for(unsigned int i = 0; i < path.size() -1; i++){
         if(path[i]<path[i+1]){
