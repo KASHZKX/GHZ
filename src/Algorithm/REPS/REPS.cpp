@@ -410,9 +410,10 @@ void REPS::path_assignment(){
 
                 
                 //2023 ALTER
-                if(requests[req_no].get_paths().size() < requests[0].get_send_limit()){
-                    requests[req_no] += graph.build_path(path_nodes);
-                }
+                // if(requests[req_no].get_paths().size() < requests[0].get_send_limit()){
+                //     requests[req_no] += graph.build_path(path_nodes);
+                // }
+                requests[req_no] += graph.build_path(path_nodes);
                 //2023 ALTER END
 
                 
@@ -500,11 +501,12 @@ tuple<vector<int>, double, bool> REPS::DFS(int req_no, map<pair<int, int>, doubl
     }
     int width = min( (int)mn, find_width(path_nodes));
     bool set_flag = false;
-    while(width--){
+    while(width--){ // revise
         set_flag = true;
-        if(requests[req_no].get_paths().size() < requests[0].get_send_limit()){
-            requests[req_no] += graph.build_path(path_nodes);
-        }
+        // if(requests[req_no].get_paths().size() < requests[0].get_send_limit()){
+        //     requests[req_no] += graph.build_path(path_nodes);
+        // }
+        requests[req_no] += graph.build_path(path_nodes);
         
     }
     
