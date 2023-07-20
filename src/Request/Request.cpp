@@ -90,6 +90,7 @@ void Request::swap(){
     for(auto &path:paths){
         if(path == nullptr)continue;
         if(i < send_limit){
+            cout << "oh" << endl;
             if(path->get_entangle_succ()) {
                 i++;
                 if( path->swap()){
