@@ -18,7 +18,7 @@ class Request{
 protected:
     int source, destination;
     int time_limit;
-    int send_limit = 3;
+    int send_limit = 5;
     int cur_send = 0;
     int throughput = 0;
     int status;
