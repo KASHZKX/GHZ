@@ -152,25 +152,25 @@ vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){
     int src = requests[req_no].get_source();
     int dst =  requests[req_no].get_destination();
 
-    // double brute_min=numeric_limits<double>::infinity();
-    // vector<int>brute_path;
-    // for(auto it:all_source_target_path[req_no]){            //brute sort U_count
-    //     double c=0;
-    //     double r=0;
-    //     for(unsigned int i=0;i<it.size()-1;i++){
-    //         c += X[{it[i],it[i+1]}][req_no];               
-    //         r += Y[req_no][{it[i],it[i+1]}]; 
-    //     }
-    //     if(c * exp(r) < brute_min){
-    //         brute_min = c * exp(r);
-    //         brute_path = it;
-    //     }
-    // }
-    // cout<<"\n[BRUTE]req:"<<req_no<<" ";
-    // for(auto it:brute_path){
-    //     cout<<it<<"->";
-    // }
-    // cout<<":"<<brute_min<<endl;
+    double brute_min=numeric_limits<double>::infinity();
+    vector<int>brute_path;
+    for(auto it:all_source_target_path[req_no]){            //brute sort U_count
+        double c=0;
+        double r=0;
+        for(unsigned int i=0;i<it.size()-1;i++){
+            c += X[{it[i],it[i+1]}][req_no];               
+            r += Y[req_no][{it[i],it[i+1]}]; 
+        }
+        if(c * exp(r) < brute_min){
+            brute_min = c * exp(r);
+            brute_path = it;
+        }
+    }
+    cout<<"\n[BRUTE]req:"<<req_no<<" ";
+    for(auto it:brute_path){
+        cout<<it<<"->";
+    }
+    cout<<":"<<brute_min<<endl;
 
     SPT = Dijkstra(src, dst,req_no);                               //the first SPT is get by dijkstra
     int cur_node = src;                                     //counting the first path's U(X,Y)=c* e^r
@@ -272,16 +272,17 @@ vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){
         
        
     }
-    // if(best_path != brute_path){                                           //checking brute && best
-    //     cout<<"DIFF!!!\n";
-    // }
+    if(best_path != brute_path){                                           //checking brute && best
+        cout<<"DIFF!!!\n";
+        exit(1);
+    }
 
-    // cout << "Best path: ";
-    // for(auto p : best_path){
-    //     cout <<p << " ";
-    // }
-    // cout << endl;
-    // cout << "U: " << best_len << endl;
+    cout << "Best path: ";
+    for(auto p : best_path){
+        cout <<p << " ";
+    }
+    cout << endl;
+    cout << "U: " << best_len << endl;
         
     return best_path;  
                                                     
@@ -784,11 +785,11 @@ void MyAlgo::path_assignment(){
 
     initialize();
     
-    // for(unsigned int i = 0; i < requests.size(); i++){
-    //     int src = requests[i].get_source();
-    //     int dst = requests[i].get_destination();
-    //     all_source_target_path.push_back(allPathsSourceTarget(src, dst));
-    // }
+    for(unsigned int i = 0; i < requests.size(); i++){
+        int src = requests[i].get_source();
+        int dst = requests[i].get_destination();
+        all_source_target_path.push_back(allPathsSourceTarget(src, dst));
+    }
 
     
     double obj = M * delta;
