@@ -197,12 +197,13 @@ void QCAST::path_assignment(){
              total += (requests[0].get_send_limit() - requests[mx_reqno].get_paths().size());
         }
         else{
-            cout << "req_no: " << requests[mx_reqno].get_paths().size() << endl;
+            //cout << "req_no: " << requests[mx_reqno].get_paths().size() << endl;
             total += find_width(candidate[mx_reqno].path);
         }
         //2023 ALTER END
 
         assign_resource(candidate[mx_reqno].path, mx_reqno);
+        cout <<" limit:"<< requests[0].get_send_limit()<<endl;
         cout << "req_no: " << requests[mx_reqno].get_paths().size() << endl;
     }
 
