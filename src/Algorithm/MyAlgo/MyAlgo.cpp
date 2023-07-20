@@ -783,13 +783,14 @@ void MyAlgo::path_assignment(){
     double obj = M * delta;
     vector<int> best_path;
     vector<int> cur_path;
-    double U;
+    // double U;
     while(obj < 1){
         int req_no = 0;
         double smallest_U = numeric_limits<double>::infinity();
         vector<double> U;
         vector<vector<int>>all_path;
-
+        all_path.resize(requests.size());
+        U.resize(requests.size());
         //cout<<"\n------New round-------\n";
         #pragma omp parallel for
         for(unsigned int i = 0; i < requests.size(); i++){
