@@ -787,16 +787,27 @@ void MyAlgo::path_assignment(){
     while(obj < 1){
         int req_no = 0;
         double smallest_U = numeric_limits<double>::infinity();
+        vector<double> U;
+        vector<vector<int>>all_path;
+
         //cout<<"\n------New round-------\n";
+        #pragma omp parallel for
         for(unsigned int i = 0; i < requests.size(); i++){
-            cur_path =  separation_oracle(i, U);
+            all_path =  separation_oracle(i, U[i]);
             //cout << "smallest_U: " << smallest_U << " U: " << U << "\n\n"; 
-            if(U < smallest_U){
-                smallest_U  = U;
-                best_path = cur_path;
+    
+        }
+
+
+        for(unsigned int i = 0; i < requests.size(); i++){
+            //cout << "smallest_U: " << smallest_U << " U: " << U << "\n\n"; 
+            if(U[i] < smallest_U){
+                smallest_U  = U[i];
+                best_path = all_path[i];
                 req_no = i;
             }
-        }
+        } 
+
         find_bottleneck(best_path, req_no);
         //cout<<"End find_bottle\n";
         obj = changing_obj();

@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <algorithm>
+#include <omp.h>
 #include <queue>
 #include <limits>
 #include <string>
