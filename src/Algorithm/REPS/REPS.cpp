@@ -469,6 +469,7 @@ void REPS::swap(){
         }
     }
     for(int i = 0; i < (int)requests.size(); i++){
+        cout << "ELS_P[i]: " << ELS_P[i].size() << endl;
         for(auto path_nodes: ELS_P[i]){
             requests[i] += find_swap_path(path_nodes, remain_channels);
         }
