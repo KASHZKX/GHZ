@@ -424,7 +424,7 @@ void REPS::path_assignment(){
         // cout << "call PFT_LP in REPS::path_assignment()--end" << endl;
     }
 }
-
+//   this is shit...,pls don't use this;use base_entangle pls!!!
 void REPS::entangle(){
     // AlgorithmBase::base_entangle();
     for(auto &request: requests){
@@ -434,9 +434,12 @@ void REPS::entangle(){
             for(int path_id = 0;path_id < limit; path_id++){
                 path[path_id]->entangle();
             }
+            while(path.size>limit){
+                path.pop_back();
+            }
         }else{
             for(int path_id = 0; path_id < (int)path.size(); path_id++){
-                    path[path_id]->entangle();
+                path[path_id]->entangle();
             }
         }
     }
