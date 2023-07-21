@@ -727,16 +727,16 @@ void MyAlgo::readd(vector<map<vector<int>, int>> &path,vector<int> &over_memory,
             }
         }
     }
-    for(auto x : over_memory){
-        cout << "node: " << x << endl;
-    }
-    for(auto x : over_channel){
-        cout<< "EDGE: ";
-        for(auto a : x.first ){
-            cout<< a << " ";
-        }
-        cout << x.second << endl;
-    }
+    // for(auto x : over_memory){
+    //     cout << "node: " << x << endl;
+    // }
+    // for(auto x : over_channel){
+    //     cout<< "EDGE: ";
+    //     for(auto a : x.first ){
+    //         cout<< a << " ";
+    //     }
+    //     cout << x.second << endl;
+    // }
 
 }
 
