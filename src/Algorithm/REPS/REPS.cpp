@@ -427,24 +427,24 @@ void REPS::path_assignment(){
 }
 //   this is shit...,pls don't use this;use base_entangle pls!!!
 void REPS::entangle(){
-    // AlgorithmBase::base_entangle();
-    for(auto &request: requests){
-        vector<Path*> path = request.get_paths();
-        int limit = request.get_send_limit();
-        if(path.size() >= limit){
-            for(int path_id = 0;path_id < limit; path_id++){
-                path[path_id]->entangle();
-            }
-            while(path.size() > limit){
-                request.delete_path();
-                path.pop_back();
-            }
-        }else{
-            for(int path_id = 0; path_id < (int)path.size(); path_id++){
-                path[path_id]->entangle();
-            }
-        }
-    }
+    AlgorithmBase::base_entangle();
+    // for(auto &request: requests){
+    //     vector<Path*> path = request.get_paths();
+    //     int limit = request.get_send_limit();
+    //     if(path.size() >= limit){
+    //         for(int path_id = 0;path_id < limit; path_id++){
+    //             path[path_id]->entangle();
+    //         }
+    //         while(path.size() > limit){
+    //             request.delete_path();
+    //             path.pop_back();
+    //         }
+    //     }else{
+    //         for(int path_id = 0; path_id < (int)path.size(); path_id++){
+    //             path[path_id]->entangle();
+    //         }
+    //     }
+    // }
 }
 
 
