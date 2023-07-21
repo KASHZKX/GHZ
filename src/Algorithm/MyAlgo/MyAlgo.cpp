@@ -457,17 +457,6 @@ vector<map<vector<int>, int>> MyAlgo::rounding(){
         }
     }
 
-    for(unsigned int i = 0; i < each_request.size(); i++){
-        for(auto it:each_request[i]){
-            vector<int>undistri_path =it.first;
-            // cout<<"[undistri] ";
-            // for(auto it2:undistri_path){
-            //     cout<<it2<<" ";
-            // }
-            // cout<<"     Qubits:"<<it.second<<endl;
-        }
-    }
-
     for(unsigned int i = 0; i < requests.size(); i++){
         double total_prob = 0;
         double used_prob = 0;
@@ -792,6 +781,81 @@ vector<vector<int>> MyAlgo::allPathsSourceTarget(int src, int dst){
     return ans;
 }
 
+vector<map<vector<int>, int>> MyAlgo::Greedy_rounding(){
+
+    vector<map<vector<int>, double>> each_request(requests.size());
+    vector<map<vector<int>, int>> I_request(requests.size());
+    for(auto it : x_i_p){
+        vector<int> path = it.first;
+        int src = path[0];
+        int dst = path.back();
+        for(unsigned int i = 0; i < requests.size(); i++){
+            if(src == requests[i].get_source() && dst == requests[i].get_destination()){
+                each_request[i][path] = it.second;
+                break;
+            }
+        }
+    }
+
+    for(unsigned int i = 0; i < each_request.size(); i++){
+        for(auto it:each_request[i]){
+            vector<int>undistri_path =it.first;
+            // cout<<"[undistri] ";
+            // for(auto it2:undistri_path){
+            //     cout<<it2<<" ";
+            // }
+            // cout<<"     Qubits:"<<it.second<<endl;
+        }
+    }
+
+    for(unsigned int i = 0; i < requests.size(); i++){
+        double total_prob = 0;
+        double used_prob = 0;
+        int used_I=0;
+        int distri_I=0;
+        vector<vector<int>> req_path;
+        vector<double>every_prob;
+        vector<int>used;
+        for(auto it : each_request[i]){                    
+            double frac_prob;
+
+            int i_prob = it.second;                                             //每個path先取整數部分=>確定分配
+            I_request[i][it.first] = i_prob;
+            used_I+=i_prob;
+
+            frac_prob = it.second - i_prob;                                     //total_prob代表random區間,丟進accumulate
+            every_prob.push_back(frac_prob);
+            used.push_back(0);
+            used_prob += it.second;
+            req_path.push_back(it.first);
+        }
+        used_I += (int)(requests[i].get_send_limit()- used_prob);               //unused_I=取底[ri - sum(request.I) - (unused.I)]
+        distri_I=requests[i].get_send_limit()-used_I;
+
+        accumulate.push_back(0.0);
+        
+        
+        for(int j = 0; j < distri_I; j++){
+            double max = -100000000;
+            vector<int> choose_path;
+            int temp;
+            for(unsigned int k = 0; k < every_prob.size(); k++){
+                if(max < every_prob[k] && used[k] == 0){
+                    max = every_prob;
+                    choose_path = req_path[k];
+                    temp = k;
+                }
+            }
+            I_request[i][choose_path]++;
+            used[temp] = 1;
+        }
+    }
+
+
+    return I_request;
+
+}
+
 void MyAlgo::path_assignment(){
     for(int i = 0; i < graph.get_size(); i++){
         int mem = graph.Node_id2ptr(i)->get_memory_cnt();
@@ -843,7 +907,7 @@ void MyAlgo::path_assignment(){
     }
     find_violate();
     calculate();
-    vector<map<vector<int>, int>>path = rounding();
+    vector<map<vector<int>, int>>path = Greedy_rounding();
 
     check_enough(path);
     for(unsigned int i = 0; i < path.size(); i++){

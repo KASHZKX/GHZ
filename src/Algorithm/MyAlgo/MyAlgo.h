@@ -42,6 +42,7 @@ public:
     void dfs(int s, int t, vector<vector<int>> &ans, vector<int> &path, vector<bool> &visited);    
     vector<vector<int>> allPathsSourceTarget(int src, int dst);
     void next_time_slot();
+    vector<map<vector<int>, int>> Greedy_rounding();
     void find_bottleneck(vector<int>, int req_no);
     void initialize();
     void check_enough(vector<map<vector<int>, int>> &path);
