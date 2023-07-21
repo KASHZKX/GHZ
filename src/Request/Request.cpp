@@ -6,7 +6,7 @@ Request::Request(int source, int destination, const int& time_limit):source(sour
 }
 
 Request::Request(int source, int destination, const int& time_limit, int send_limit):source(source),
-    destination(destination), time_limit(time_limit), status(REQUEST_UNFINISHED), send_path_length(0), send_limit(send_limit){
+    destination(destination), time_limit(time_limit), send_limit(send_limit), status(REQUEST_UNFINISHED), send_path_length(0),{
     if(DEBUG)cerr<<"new Request"<<endl;
 }
 
