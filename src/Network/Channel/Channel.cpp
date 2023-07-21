@@ -99,6 +99,7 @@ bool Channel::entangle(){
         return true;
     }
 	entangled = CHANNEL_ENTANGLE_FAIL;
+	cout << "FAIL!!" << endl;
 	return false;
 }
 
