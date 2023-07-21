@@ -832,7 +832,6 @@ vector<map<vector<int>, int>> MyAlgo::Greedy_rounding(){
         used_I += (int)(requests[i].get_send_limit()- used_prob);               //unused_I=取底[ri - sum(request.I) - (unused.I)]
         distri_I=requests[i].get_send_limit()-used_I;
 
-        accumulate.push_back(0.0);
         
         
         for(int j = 0; j < distri_I; j++){
@@ -841,7 +840,7 @@ vector<map<vector<int>, int>> MyAlgo::Greedy_rounding(){
             int temp;
             for(unsigned int k = 0; k < every_prob.size(); k++){
                 if(max < every_prob[k] && used[k] == 0){
-                    max = every_prob;
+                    max = every_prob[k];
                     choose_path = req_path[k];
                     temp = k;
                 }
