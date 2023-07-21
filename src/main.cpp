@@ -42,7 +42,7 @@ int main(){
     default_setting["num_of_node"] = 40;
     default_setting["social_density"] = 0.5;
     default_setting["area_alpha"] = 0.1;
-    default_setting["memory_cnt_avg"] = 8;
+    default_setting["memory_cnt_avg"] = 5;
     default_setting["channel_cnt_avg"] = 3;
     default_setting["resource_ratio"] = 1;
     default_setting["min_fidelity"] = 0.7;
