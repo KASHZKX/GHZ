@@ -24,7 +24,7 @@ private:
     map<vector<int>, double> x_i_p;
     map<pair<int,int>, double> beta;
     vector<vector<vector<int>>> all_source_target_path;
-    double epsilon = 0.4;
+    double epsilon = 0.3;
     double delta;
     double M;
     vector<double> tau;                
