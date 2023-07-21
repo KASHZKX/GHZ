@@ -421,7 +421,7 @@ void MyAlgo::find_violate(){
 
     for(auto it : used_request){
         int src = it.first.first;
-        int dst = it.second.second;
+        int dst = it.first.second;
         int req_no;
         for(unsigned int i = 0; i < requests.size();i ++){
             if(requests[i].get_source() == src && requests[i].get_destination() == dst){
@@ -450,6 +450,7 @@ void MyAlgo::find_violate(){
     }
     */
 }
+
 
 vector<map<vector<int>, int>> MyAlgo::rounding(){
     vector<map<vector<int>, double>> each_request(requests.size());
@@ -661,6 +662,11 @@ void MyAlgo::check_enough(vector<map<vector<int>, int>> &path){
 }  
 
 void MyAlgo::readd(vector<map<vector<int>, int>> &path,vector<int> &over_memory,map<vector<int>,int> &over_channel){
+    for(unsigned int i = 0; i < path.size(); i++){
+        for(auto it : path[i]){
+            requests[i].add_cur(it.second);
+        }
+    }
     vector<pair<vector<int>, int>> re;
     int max = -1;
     for(unsigned int i = 0; i < requests.size(); i++){
@@ -791,11 +797,6 @@ vector<vector<int>> MyAlgo::allPathsSourceTarget(int src, int dst){
 }
 
 vector<map<vector<int>, int>> MyAlgo::Greedy_rounding(){
-    for(unsigned int i = 0; i < path.size(); i++){
-        for(auto it : path[i]){
-            requests[i].add_cur(it.second);
-        }
-    }
     vector<map<vector<int>, double>> each_request(requests.size());
     vector<map<vector<int>, int>> I_request(requests.size());
     for(auto it : x_i_p){
@@ -918,6 +919,7 @@ void MyAlgo::path_assignment(){
     find_violate();
     calculate();
     vector<map<vector<int>, int>>path = Greedy_rounding();
+    
 
     check_enough(path);
     for(unsigned int i = 0; i < path.size(); i++){
@@ -927,7 +929,6 @@ void MyAlgo::path_assignment(){
                 cout<<it2<<" ";
             }
             cout<<"     Qubits:"<<it.second<<endl;
-            requests[i].add_cur(it.second);
         }
     }
 
