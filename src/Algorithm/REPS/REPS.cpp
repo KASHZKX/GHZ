@@ -426,7 +426,23 @@ void REPS::path_assignment(){
 }
 
 void REPS::entangle(){
-    AlgorithmBase::base_entangle();
+    // AlgorithmBase::base_entangle();
+    for(auto &request: requests){
+        vector<Path*> path = request.get_paths();
+        int limit = request.get_send_limit();
+        if(path.size() >= limit){
+            for(int path_id = 0;path_id < limit; path_id++){
+                path[path_id]->entangle();
+            }
+        }else{
+            for(int path_id = 0; path_id < (int)path.size(); path_id++){
+                for(int path_id = 0;path_id < limit; path_id++){
+                    path[path_id]->entangle();
+            }
+            
+        }
+    }
+}
 }
 void REPS::send(){
     AlgorithmBase::base_send();
