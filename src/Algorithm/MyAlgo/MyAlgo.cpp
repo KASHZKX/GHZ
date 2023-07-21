@@ -914,7 +914,7 @@ void MyAlgo::path_assignment(){
 
         find_bottleneck(best_path, req_no);
         obj = changing_obj();
-        cout<<"changing_obj obj: " << obj << endl ;
+        // cout<<"changing_obj obj: " << obj << endl ;
     }
     find_violate();
     calculate();
