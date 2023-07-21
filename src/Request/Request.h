@@ -52,6 +52,7 @@ public:
     void next_timeslot();
     void operator+=(Path *path);
     void print();
+    void delete_path();
 };
 
 #endif

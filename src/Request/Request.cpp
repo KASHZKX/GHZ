@@ -162,4 +162,9 @@ void Request::operator+=(Path *path){
     paths.emplace_back(path);
 }
 
+void Request::delete_path(){
+    paths.pop_back();
+}
+
+
 

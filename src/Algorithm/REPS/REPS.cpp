@@ -434,7 +434,8 @@ void REPS::entangle(){
             for(int path_id = 0;path_id < limit; path_id++){
                 path[path_id]->entangle();
             }
-            while(path.size()>limit){
+            while(path.size() > limit){
+                request.delete_path();
                 path.pop_back();
             }
         }else{
