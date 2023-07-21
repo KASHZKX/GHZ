@@ -80,6 +80,7 @@ void Request::refresh_paths(){
 }
 
 void Request::entangle(){
+    cout << paths.size() << endl;
     for(auto &path:paths){
         path->entangle();
         
