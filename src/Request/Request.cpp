@@ -93,7 +93,8 @@ void Request::entangle(){
 
 void Request::swap(){
     int i = 0;
-    cout << paths.size() << endl;
+    cout<< "request limit: " << send_limit << endl;
+    cout<<"swapping path number: " << paths.size() << endl;
     for(auto &path:paths){
         if(path == nullptr)continue;
         if(i < send_limit){
