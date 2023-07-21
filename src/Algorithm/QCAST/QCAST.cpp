@@ -95,7 +95,7 @@ void QCAST::path_assignment(){
         vector<int> neighbors;
         for(int reqno = 0;reqno<(int)requests.size();reqno++){   //find the best path for every request
             Request &request = requests[reqno];
-            if(request.get_paths().size() > maximum_major_path_per_request){
+            if((int)request.get_paths().size() > maximum_major_path_per_request){
                 //force to find no path
                 candidate[reqno] = CandPath();
                 continue;

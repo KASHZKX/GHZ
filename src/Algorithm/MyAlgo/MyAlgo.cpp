@@ -754,6 +754,7 @@ void MyAlgo::dfs(int src, int dst, vector<vector<int>> &ans, vector<int> &path, 
 
 }
 
+
 void MyAlgo::calculate(){
     double sum=0.0;
     for(auto it:x_i_p){
@@ -807,34 +808,39 @@ vector<map<vector<int>, int>> MyAlgo::Greedy_rounding(){
             // cout<<"     Qubits:"<<it.second<<endl;
         }
     }
-
+	vector<int> used_I(requests.size());										//第 i 個 request 目前用了幾調 path
+	vector< tuple<double, int, vector<int>> > fractional_xip;	
     for(unsigned int i = 0; i < requests.size(); i++){
-        double total_prob = 0;
-        double used_prob = 0;
-        int used_I=0;
-        int distri_I=0;
+        //double total_prob = 0;
+        used_I[i] = 0;
+        /*double used_prob = 0;
         vector<vector<int>> req_path;
         vector<double>every_prob;
         vector<int>used;
-        for(auto it : each_request[i]){                    
+        */
+		for(auto it : each_request[i]){                    
             double frac_prob;
 
             int i_prob = it.second;                                             //每個path先取整數部分=>確定分配
             I_request[i][it.first] = i_prob;
-            used_I+=i_prob;
-
+            used_I[i] += i_prob;
+			assign_resource(it.first, i_prob, i);
             frac_prob = it.second - i_prob;                                     //total_prob代表random區間,丟進accumulate
-            every_prob.push_back(frac_prob);
+            /*
+			every_prob.push_back(frac_prob);
             used.push_back(0);
             used_prob += it.second;
             req_path.push_back(it.first);
+			*/
+			fractional_xip.emplace_back(frac_prob*graph.find_success_probability(it.first), i, it.first);
         }
-        used_I += (int)(requests[i].get_send_limit()- used_prob);               //unused_I=取底[ri - sum(request.I) - (unused.I)]
-        distri_I=requests[i].get_send_limit()-used_I;
+        //used_I[i] += (int)(requests[i].get_send_limit() - used_prob);               //unused_I=取底[ri - sum(request.I) - (unused.I)]
+        //distri_I = requests[i].get_send_limit()-used_I[i];
 
         
         
-        for(int j = 0; j < distri_I; j++){
+        /*
+		for(int j = 0; j < distri_I; j++){
             double max = -100000000;
             vector<int> choose_path;
             int temp;
@@ -847,9 +853,40 @@ vector<map<vector<int>, int>> MyAlgo::Greedy_rounding(){
             }
             I_request[i][choose_path]++;
             used[temp] = 1;
-        }
+        }*/
     }
 
+	// 對 x^i_p 由小到大排序
+	sort(fractional_xip.begin(), fractional_xip.end());
+	reverse(fractional_xip.begin(), fractional_xip.end());
+
+	// 如果資源足夠讓 x 變成 1 ，就直接讓 x 變成 1 
+	for(auto it:fractional_xip){
+		vector<int> extra_path;
+		double x_prob;
+		int request_id;
+		tie(x_prob, request_id, extra_path) = it;
+		if(find_width(extra_path) >= 1 && used_I[request_id] < requests[request_id].get_send_limit()){
+			assign_resource(extra_path, 1, request_id);
+			used_I[request_id] += 1;
+            I_request[request_id][extra_path]++;
+		}
+	}
+	// 如果還有剩下資源的話，盡量塞爆
+	for(auto it:fractional_xip){
+		vector<int> extra_path;
+		double x_prob;
+		int request_id;
+		tie(x_prob, request_id, extra_path) = it;
+		int width = 0;
+		int extra_send_limit = requests[request_id].get_send_limit() - used_I[request_id];
+		width = min(find_width(extra_path), extra_send_limit);
+		if(width >= 1){
+			assign_resource(extra_path, width, request_id);
+            used_I[request_id] += width;
+			I_request[request_id][extra_path]++;
+		}
+	}
 
     return I_request;
 
@@ -908,7 +945,8 @@ void MyAlgo::path_assignment(){
     calculate();
     vector<map<vector<int>, int>>path = Greedy_rounding();
 
-    check_enough(path);
+
+    //check_enough(path);
     for(unsigned int i = 0; i < path.size(); i++){
         for(auto it:path[i]){
             vector<int>Final_path =it.first;
@@ -916,18 +954,16 @@ void MyAlgo::path_assignment(){
                 cout<<it2<<" ";
             }
             cout<<"     Qubits:"<<it.second<<endl;
-            requests[i].add_cur(it.second);
         }
     }
 
-    
+    /*
     for(unsigned int i = 0; i < path.size(); i++){
         for(auto p : path[i]){
             if(p.second!=0){
                 assign_resource(p.first, p.second, i);
             }
-            
         }
-    }
+    }*/
 }   
 

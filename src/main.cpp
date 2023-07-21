@@ -39,7 +39,7 @@ int main(){
     string file_path = "../data/";
 
     map<string, double> default_setting;
-    default_setting["num_of_node"] = 30;
+    default_setting["num_of_node"] = 50;
     default_setting["social_density"] = 0.5;
     default_setting["area_alpha"] = 0.1;
     default_setting["memory_cnt_avg"] = 5;
@@ -51,7 +51,7 @@ int main(){
     default_setting["swap_prob"] = 0.9;
     default_setting["entangle_alpha"] = 0.0005;
     default_setting["node_time_limit"] = 1;
-    default_setting["new_request_cnt"] = 25;
+    default_setting["new_request_cnt"] = 15;
     default_setting["request_time_limit"] = 1;
     default_setting["total_time_slot"] = 1;
     default_setting["service_time"] = 100;
@@ -63,10 +63,10 @@ int main(){
     change_parameter["resource_ratio"] = {0.5, 1, 2, 10};
     change_parameter["area_alpha"] = {0.001, 0.01, 0.1}; 
     change_parameter["social_density"] = {0.25, 0.5, 0.75, 1}; 
-    change_parameter["new_request_cnt"] = {25};
+    change_parameter["new_request_cnt"] = {5, 10, 15, 20, 25};
     change_parameter["num_of_node"] = {5, 10, 15, 20, 25};
 
-    vector<string> X_names = { "new_request_cnt"};//"num_of_node", "area_alpha", "resource_ratio", "entangle_alpha", "swap_prob"};
+    vector<string> X_names = {"new_request_cnt"};//"num_of_node", "area_alpha", "resource_ratio", "entangle_alpha", "swap_prob"};
     vector<string> Y_names = {"waiting_time", "throughputs", "finished_throughputs", \
                             "succ-finished_ratio", "fail-finished_ratio", "active_timeslot", "path_length", "fidelity", \
                             "encode_cnt", "unencode_cnt", "encode_ratio", "use_memory", "total_memory", "use_memory_ratio",\
@@ -81,7 +81,7 @@ int main(){
     }
     
 
-    int round = 1;
+    int round = 20;
     for(string X_name : X_names) {
         map<string, double> input_parameter = default_setting;
 
@@ -128,7 +128,7 @@ int main(){
                 }
                 
                 vector<AlgorithmBase*> algorithms;
-                // algorithms.emplace_back(new Greedy(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha));
+                algorithms.emplace_back(new Greedy(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha));
                 algorithms.emplace_back(new QCAST(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha));
                 algorithms.emplace_back(new REPS(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha));
                 algorithms.emplace_back(new MyAlgo(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha));

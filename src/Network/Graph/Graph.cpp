@@ -179,6 +179,16 @@ void Graph::generate(string filename){
     if(DEBUG)cerr<<"new graph!"<<endl;
 }
 
+double Graph::find_success_probability(const vector<int> &path){
+	double prob = 1;
+	for(int i=0;i < (int)path.size() - 1;i++){
+        prob *= exp(Node_id2ptr(path[i])->distance(*Node_id2ptr(path[i+1]))*(-get_entangle_alpha()));
+    }
+    for(int i=1;i<(int)path.size()-1;i++){
+        prob *= Node_id2ptr(path[i])->get_swap_prob();
+    }
+	return prob;
+}
 
 
 void Graph::refresh(){ // refresh all channel entangle status
