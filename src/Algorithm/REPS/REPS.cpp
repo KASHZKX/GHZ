@@ -359,7 +359,7 @@ void REPS::EPS(){
                 p.push_back(tie(width, path_nodes));
                 sum.emplace_back(sum.back() + width);
             }
-            out << "after while" << endl;
+            cout << "after while" << endl;
             double choose_path_prob = dis(gen) * sum.back();
             int choose_path_id = 0;
             for(int i=1;i<(int)sum.size();i++){
