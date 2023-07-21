@@ -472,6 +472,8 @@ void REPS::swap(){
         for(auto path_nodes: ELS_P[i]){
             requests[i] += find_swap_path(path_nodes, remain_channels);
         }
+        vector<Path*> path = request[i].get_paths();
+        cout << path.size() << endl;
     }
     AlgorithmBase::base_swap();
 }
