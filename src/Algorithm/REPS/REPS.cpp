@@ -351,7 +351,7 @@ void REPS::EPS(){
             }
             vector<double> sum;
             sum.emplace_back(0);
-            cout << "before while" << endl;
+    
             while(true){
                 bool set_flag;
                 tie(path_nodes, width, set_flag) = DFS(i, f_bar[i][k], false);
@@ -359,7 +359,6 @@ void REPS::EPS(){
                 p.push_back(tie(width, path_nodes));
                 sum.emplace_back(sum.back() + width);
             }
-            cout << "after while" << endl;
             double choose_path_prob = dis(gen) * sum.back();
             int choose_path_id = 0;
             for(int i=1;i<(int)sum.size();i++){
