@@ -905,8 +905,13 @@ vector<map<vector<int>, int>> MyAlgo::Greedy_rounding(){
 		cerr<<"GG: It work?"<<endl;
 		while(requests[request_id].get_send_limit() - used_I[request_id] > 0){
 			vector<int> extra_path = BFS(requests[request_id].get_source(), requests[request_id].get_destination());
+			int width = 0;
 			if(extra_path.size() != 0){
-				assign_resource(extra_path, request_id);
+				width = min(find_width(extra_path), requests[request_id].get_send_limit() - used_I[request_id]);
+				assign_resource(extra_path, width, request_id);
+			}
+			if(width == 0){
+				break;
 			}
 		}
 	}
