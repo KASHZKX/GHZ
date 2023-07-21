@@ -445,7 +445,7 @@ void REPS::swap(){
         vector<Path*> path = request.get_paths();
         int limit = request.get_send_limit();
         if(path.size() >= limit){
-            for(int path_id = 0; path_id < (int)path.size(); path_id++){
+            for(int path_id = 0; limit; path_id++){
             vector<Channel*> channels = path[path_id]->get_channels();
             for(auto channel_ptr: channels){
                 if(channel_ptr->is_entangled()){
