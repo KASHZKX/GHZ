@@ -80,8 +80,12 @@ void Request::refresh_paths(){
 }
 
 void Request::entangle(){
+    int count = 0;
     for(auto &path:paths){
-        path->entangle();
+        if(count < send_limit){
+            path->entangle();
+            count++;
+        }
     }
 }
 
