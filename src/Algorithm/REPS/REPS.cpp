@@ -456,16 +456,16 @@ void REPS::swap(){
             }
             request.clear_paths();
         }else{
-        for(int path_id = 0; path_id < (int)path.size(); path_id++){
-            vector<Channel*> channels = path[path_id]->get_channels();
-            for(auto channel_ptr: channels){
-                if(channel_ptr->is_entangled()){
-                    Node *node1 = channel_ptr->get_node1_ptr(), *node2 = channel_ptr->get_node2_ptr();
-                    remain_channels[make_pair(node1->get_id(), node2->get_id())].emplace_back(channel_ptr);
+            for(int path_id = 0; path_id < (int)path.size(); path_id++){
+                vector<Channel*> channels = path[path_id]->get_channels();
+                for(auto channel_ptr: channels){
+                    if(channel_ptr->is_entangled()){
+                        Node *node1 = channel_ptr->get_node1_ptr(), *node2 = channel_ptr->get_node2_ptr();
+                        remain_channels[make_pair(node1->get_id(), node2->get_id())].emplace_back(channel_ptr);
+                    }
                 }
             }
-        }
-        request.clear_paths();
+            request.clear_paths();
         }
     }
     for(int i = 0; i < (int)requests.size(); i++){
