@@ -84,7 +84,7 @@ struct CandPath{
 void QCAST::path_assignment(){
     if(DEBUG) cerr<< "---------QCAST::path_assignment----------" << endl;
     base_test_active();
-    const int maximum_major_path_per_request = requests[0].get_send_limit();
+    const int maximum_major_path_per_request = 200;
     const int maximum_path_length = 200;
     const int maximum_total_number_of_path = 200;
     int total = 0;

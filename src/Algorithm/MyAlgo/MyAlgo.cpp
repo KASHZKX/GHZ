@@ -420,7 +420,16 @@ void MyAlgo::find_violate(){
     }
 
     for(auto it : used_request){
-        cur_magni = it.second / requests[0].get_send_limit();
+        int src = it.first.first;
+        int dst = it.second.second;
+        int req_no;
+        for(unsigned int i = 0; i < requests.size();i ++){
+            if(requests[i].get_source() == src && requests[i].get_destination() == dst){
+                req_no = i;
+                break;
+            }
+        }
+        cur_magni = it.second / requests[req_no].get_send_limit();
         if(cur_magni > max_magni){
             max_magni = cur_magni;
         }
@@ -782,7 +791,11 @@ vector<vector<int>> MyAlgo::allPathsSourceTarget(int src, int dst){
 }
 
 vector<map<vector<int>, int>> MyAlgo::Greedy_rounding(){
-
+    for(unsigned int i = 0; i < path.size(); i++){
+        for(auto it : path[i]){
+            requests[i].add_cur(it.second);
+        }
+    }
     vector<map<vector<int>, double>> each_request(requests.size());
     vector<map<vector<int>, int>> I_request(requests.size());
     for(auto it : x_i_p){
@@ -809,7 +822,6 @@ vector<map<vector<int>, int>> MyAlgo::Greedy_rounding(){
     }
 
     for(unsigned int i = 0; i < requests.size(); i++){
-        double total_prob = 0;
         double used_prob = 0;
         int used_I=0;
         int distri_I=0;
@@ -900,7 +912,6 @@ void MyAlgo::path_assignment(){
         } 
 
         find_bottleneck(best_path, req_no);
-        //cout<<"End find_bottle\n";
         obj = changing_obj();
         cout<<"changing_obj obj: " << obj << endl ;
     }

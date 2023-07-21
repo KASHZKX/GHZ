@@ -19,15 +19,17 @@ using namespace std;
 
 
 
-Request generate_new_request(int num_of_node, int time_limit){
+Request generate_new_request(int num_of_node, int time_limit, int min_request, int max_request){
     //亂數引擎 
     random_device rd;
     default_random_engine generator = default_random_engine(rd());
-    uniform_int_distribution<int> unif(0, num_of_node-1);
-    int node1 = unif(generator), node2 = unif(generator);
-    while(node1 == node2) node2 = unif(generator);
+    uniform_int_distribution<int> unif1(0, num_of_node-1);
+    int node1 = unif1(generator), node2 = unif1(generator);
+    while(node1 == node2) node2 = unif1(generator);
     
-    return Request(node1, node2, time_limit);
+    uniform_int_distribution<int> unif2(min_request, max_request);
+    int request = unif2(generator);
+    return Request(node1, node2, time_limit, request);
 }
 
 Request generate_new_request(int node1, int node2, int time_limit){//demo
@@ -55,6 +57,7 @@ int main(){
     default_setting["request_time_limit"] = 1;
     default_setting["total_time_slot"] = 1;
     default_setting["service_time"] = 100;
+    default_setting["request_avg"] = 3;
 
     map<string, vector<double>> change_parameter;
     // change_parameter["swap_prob"] = {0.3, 0.5, 0.7, 0.9, 1};
@@ -97,6 +100,8 @@ int main(){
             int max_memory_cnt = input_parameter["memory_cnt_avg"] * resource_ratio + 2;
             int min_channel_cnt = input_parameter["channel_cnt_avg"] * resource_ratio - 2;
             int max_channel_cnt = input_parameter["channel_cnt_avg"] * resource_ratio + 2;
+            int max_request = input_parameter["request_avg"] + 2;
+            int min_request = input_parameter["request_avg"] - 2;
             double min_fidelity = input_parameter["min_fidelity"];
             double max_fidelity = input_parameter["max_fidelity"];
 
@@ -144,7 +149,7 @@ int main(){
                         bool check_no_repeat;
                         do{
                             check_no_repeat=true;
-                            Request new_request = generate_new_request(num_of_node, request_time_limit);
+                            Request new_request = generate_new_request(num_of_node, request_time_limit, min_request, max_request);
                             for(auto it:algorithms[0]->get_requests()){
                                 if(it.get_source()==new_request.get_source() && it.get_destination()==new_request.get_destination()){
                                     check_no_repeat=false;
