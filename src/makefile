@@ -9,8 +9,8 @@ all: a.out
 encode_path.out: encode_path_ratio.cpp Network/Node/Node.o Network/Channel/Channel.o Path/Path.o Network/Graph/Graph.o Algorithm/AlgorithmBase/AlgorithmBase.o Request/Request.o config.o Algorithm/MyAlgo/MyAlgo.o Request/WholeRequest.o
 	g++ -std=c++17 -fopenmp -g -Wall -Wextra -O3 encode_path_ratio.cpp Network/Node/Node.o Network/Channel/Channel.o Path/Path.o Network/Graph/Graph.o Algorithm/AlgorithmBase/AlgorithmBase.o Request/Request.o config.o Algorithm/MyAlgo/MyAlgo.o Request/WholeRequest.o -o encode_path.out
 
-a.out: main.cpp $(dependency) Algorithm/Greedy/Greedy.o Request/Request.o Algorithm/MyAlgo/MyAlgo.o Algorithm/QCAST/QCAST.o Algorithm/REPS/REPS.o 
-	g++ -std=c++17 -fopenmp -g -Wall -Wextra -O3 main.cpp $(dependency) Algorithm/Greedy/Greedy.o Algorithm/MyAlgo/MyAlgo.o  Algorithm/QCAST/QCAST.o Algorithm/REPS/REPS.o -I$(gurobi_path)/include/ -L$(gurobi_path)/lib -lgurobi_c++ -lgurobi95 -lm 
+a.out: main.cpp $(dependency) Algorithm/Greedy/Greedy.o Request/Request.o Algorithm/MyAlgo/MyAlgo.o Algorithm/MyAlgo2/MyAlgo2.o Algorithm/QCAST/QCAST.o Algorithm/REPS/REPS.o 
+	g++ -std=c++17 -fopenmp -g -Wall -Wextra -O3 main.cpp $(dependency) Algorithm/Greedy/Greedy.o Algorithm/MyAlgo/MyAlgo.o  Algorithm/MyAlgo2/MyAlgo2.o Algorithm/QCAST/QCAST.o Algorithm/REPS/REPS.o -I$(gurobi_path)/include/ -L$(gurobi_path)/lib -lgurobi_c++ -lgurobi95 -lm 
 
 #fight_with_local_opt.out: fight_with_local_opt.cpp $(dependency) Request/WholeRequest.o 
 #	g++ -std=c++17 -fopenmp -g -Wall -Wextra -O3 fight_with_local_opt.cpp $(dependency) Algorithm/MyAlgo/MyAlgo.o  Algorithm/MyAlgo2/MyAlgo2.o Algorithm/MyGreedyAlgo/MyGreedyAlgo.o Request/WholeRequest.o -o fight_with_local_opt.out
@@ -52,6 +52,10 @@ Algorithm/MyAlgo/MyAlgo.o: Algorithm/MyAlgo/MyAlgo.h Algorithm/MyAlgo/MyAlgo.cpp
 	g++ -std=c++17 -fopenmp -c -g -Wall -Wextra -O3 --static Algorithm/MyAlgo/MyAlgo.h Algorithm/MyAlgo/MyAlgo.cpp config.h
 	mv MyAlgo.o Algorithm/MyAlgo/MyAlgo.o
 
+Algorithm/MyAlgo2/MyAlgo2.o: Algorithm/MyAlgo2/MyAlgo2.h Algorithm/MyAlgo2/MyAlgo2.cpp config.h
+	g++ -std=c++17 -fopenmp -c -g -Wall -Wextra -O3 --static Algorithm/MyAlgo2/MyAlgo2.h Algorithm/MyAlgo2/MyAlgo2.cpp config.h
+	mv MyAlgo2.o Algorithm/MyAlgo2/MyAlgo2.o
+
 Algorithm/QCAST/QCAST.o: Algorithm/QCAST/QCAST.h Algorithm/QCAST/QCAST.cpp config.h
 	g++ -std=c++17 -c -g -Wall -Wextra -O3 Algorithm/QCAST/QCAST.h Algorithm/QCAST/QCAST.cpp config.h
 	mv QCAST.o Algorithm/QCAST/QCAST.o
@@ -77,6 +81,7 @@ clean:
 	rm -f Network/Graph/Graph.o Network/Graph/Graph.h.gch
 	rm -f Request/Request.o Request/Request.h.gch
 	rm -f Algorithm/MyAlgo/MyAlgo.o Algorithm/MyAlgo/MyAlgo.h.gch
+	rm -f Algorithm/MyAlgo2/MyAlgo2.o Algorithm/MyAlgo2/MyAlgo2.h.gch
 	rm -f config.o config.h.gch
 	find . -type f -name '*.o' -delete
 	find . -type f -name '*.h.gch' -delete

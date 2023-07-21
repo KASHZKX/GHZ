@@ -10,7 +10,7 @@
 #include "Algorithm/QCAST/QCAST.h"
 #include "Algorithm/REPS/REPS.h"
 #include "Algorithm/MyAlgo/MyAlgo.h"
-// #include "Algorithm/MyAlgo2/MyAlgo2.h"
+#include "Algorithm/MyAlgo2/MyAlgo2.h"
 // #include "Algorithm/MyGreedyAlgo/MyGreedyAlgo.h"
 
 using namespace std;
@@ -53,11 +53,11 @@ int main(){
     default_setting["swap_prob"] = 0.9;
     default_setting["entangle_alpha"] = 0.0005;
     default_setting["node_time_limit"] = 1;
-    default_setting["new_request_cnt"] = 15;
+    default_setting["new_request_cnt"] = 25;
     default_setting["request_time_limit"] = 1;
     default_setting["total_time_slot"] = 1;
     default_setting["service_time"] = 100;
-    default_setting["request_avg"] = 3;
+    default_setting["request_avg"] = 6;
 
     map<string, vector<double>> change_parameter;
     // change_parameter["swap_prob"] = {0.3, 0.5, 0.7, 0.9, 1};
@@ -67,9 +67,10 @@ int main(){
     change_parameter["area_alpha"] = {0.001, 0.01, 0.1}; 
     change_parameter["social_density"] = {0.25, 0.5, 0.75, 1}; 
     change_parameter["new_request_cnt"] = {5, 10, 15, 20, 25};
-    change_parameter["num_of_node"] = {5, 10, 15, 20, 25};
+	change_parameter["request_avg"] = {3, 5, 10, 20, 30};
+    change_parameter["num_of_node"] = {20, 25, 30, 40, 50};
 
-    vector<string> X_names = {"new_request_cnt"};//"num_of_node", "area_alpha", "resource_ratio", "entangle_alpha", "swap_prob"};
+    vector<string> X_names = {"new_request_cnt", "request_avg"};//"num_of_node", "area_alpha", "resource_ratio", "entangle_alpha", "swap_prob"};
     vector<string> Y_names = {"waiting_time", "throughputs", "finished_throughputs", \
                             "succ-finished_ratio", "fail-finished_ratio", "active_timeslot", "path_length", "fidelity", \
                             "encode_cnt", "unencode_cnt", "encode_ratio", "use_memory", "total_memory", "use_memory_ratio",\
@@ -84,7 +85,7 @@ int main(){
     }
     
 
-    int round = 20;
+    int round = 100;
     for(string X_name : X_names) {
         map<string, double> input_parameter = default_setting;
 
@@ -138,7 +139,7 @@ int main(){
                 algorithms.emplace_back(new REPS(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha));
                 algorithms.emplace_back(new MyAlgo(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha));
                 //algorithms.emplace_back(new MyGreedyAlgo(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha));
-                //algorithms.emplace_back(new MyAlgo2(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha));
+                algorithms.emplace_back(new MyAlgo2(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha));
                 
                 ofs<<"---------------in round " <<T<<" -------------" <<endl;
                 for(int t = 0; t < total_time_slot; t++){
