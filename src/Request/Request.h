@@ -18,7 +18,7 @@ class Request{
 protected:
     int source, destination;
     int time_limit;
-    int send_limit = 10;
+    int send_limit;
     int cur_send = 0;
     int throughput = 0;
     int status;
@@ -27,6 +27,7 @@ protected:
     vector<Path *> paths;                                       //休學
 public:
     Request(int source, int destination, const int& time_limit);
+    Request(int source, int destination, const int& time_limit, int send_limit);
     ~Request(void);
     void set_path(int path_id, Path *p);                        //should delete old path before set new path
     int get_time_limit();

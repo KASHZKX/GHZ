@@ -464,7 +464,7 @@ void REPS::swap(){
     for(auto &request: requests){
         vector<Path*> path = request.get_paths();
         int limit = request.get_send_limit();
-        if((int)path.size() >= limit){
+        if(0){
             for(int path_id = 0;path_id < limit; path_id++){
                 vector<Channel*> channels = path[path_id]->get_channels();
                 for(auto channel_ptr: channels){
