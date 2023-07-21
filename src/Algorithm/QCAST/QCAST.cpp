@@ -84,7 +84,7 @@ struct CandPath{
 void QCAST::path_assignment(){
     if(DEBUG) cerr<< "---------QCAST::path_assignment----------" << endl;
     base_test_active();
-    const int maximum_major_path_per_request = 200;
+    int maximum_major_path_per_request = 200;
     const int maximum_path_length = 200;
     const int maximum_total_number_of_path = 200;
     int total = 0;
@@ -95,7 +95,7 @@ void QCAST::path_assignment(){
         vector<int> neighbors;
         for(int reqno = 0;reqno<(int)requests.size();reqno++){   //find the best path for every request
             Request &request = requests[reqno];
-            if(request.get_paths().size() > maximum_major_path_per_request){
+            if(request.get_paths().size() > request.get_send_limit()){ // revise major path select
                 //force to find no path
                 candidate[reqno] = CandPath();
                 continue;
@@ -193,7 +193,7 @@ void QCAST::path_assignment(){
         assign_resource(candidate[mx_reqno].path, mx_reqno);
     }
 
-    find_recovery_path(3);
+    find_recovery_path(0);
     if(DEBUG) cerr<< "---------QCAST::path_assignment----------end" << endl;
 }
 
