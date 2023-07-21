@@ -94,10 +94,10 @@ void Request::entangle(){
 
 void Request::swap(){
     int i = 0;
+    cout << paths.size() << endl;
     for(auto &path:paths){
         if(path == nullptr)continue;
         if(i < send_limit){
-            cout << "oh" << endl;
             if(path->get_entangle_succ()) {
                 i++;
                 if( path->swap()){
