@@ -433,6 +433,7 @@ void REPS::entangle(){
         if(path.size() >= limit){
             for(int path_id = 0;path_id < limit; path_id++){
                 path[path_id]->entangle();
+                
             }
         }else{
             for(int path_id = 0; path_id < (int)path.size(); path_id++){
@@ -443,6 +444,7 @@ void REPS::entangle(){
         }
     }
 }
+
 }
 void REPS::send(){
     AlgorithmBase::base_send();
@@ -452,6 +454,7 @@ void REPS::next_time_slot(){
 }
 
 void REPS::swap(){
+    cout <<"GG" << endl;
     //EPS based on Randomized Rounding
     EPS();
     //Entanglement Link Selection (ELS)
