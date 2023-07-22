@@ -86,7 +86,7 @@ int main(){
     }
     
 
-    int round = 1;
+    int round = 10;
     for(string X_name : X_names) {
         map<string, double> input_parameter = default_setting;
 
