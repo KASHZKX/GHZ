@@ -910,7 +910,7 @@ void MyAlgo::path_assignment(){
     find_violate();
     calculate();
     vector<map<vector<int>, int>>path = Greedy_rounding();
-    cout << "change_edge_num: " << change_edge_num << endl;
+    res["change_edge_num"] = change_edge_num;
     
 }   
 

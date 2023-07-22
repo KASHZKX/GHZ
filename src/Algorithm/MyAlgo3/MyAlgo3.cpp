@@ -152,20 +152,20 @@ vector<int> MyAlgo3::separation_oracle(int req_no, double &req_Us){
     int src = requests[req_no].get_source();
     int dst =  requests[req_no].get_destination();
 
-    // double brute_min=numeric_limits<double>::infinity();
-    // vector<int>brute_path;
-    // for(auto it:all_source_target_path[req_no]){            //brute sort U_count
-    //     double c=0;
-    //     double r=0;
-    //     for(unsigned int i=0;i<it.size()-1;i++){
-    //         c += X[{it[i],it[i+1]}][req_no];               
-    //         r += Y[req_no][{it[i],it[i+1]}]; 
-    //     }
-    //     if(c * exp(r) < brute_min){
-    //         brute_min = c * exp(r);
-    //         brute_path = it;
-    //     }
-    // }
+    double brute_min=numeric_limits<double>::infinity();
+    vector<int>brute_path;
+    for(auto it:all_source_target_path[req_no]){            //brute sort U_count
+        double c=0;
+        double r=0;
+        for(unsigned int i=0;i<it.size()-1;i++){
+            c += X[{it[i],it[i+1]}][req_no];               
+            r += Y[req_no][{it[i],it[i+1]}]; 
+        }
+        if(c * exp(r) < brute_min){
+            brute_min = c * exp(r);
+            brute_path = it;
+        }
+    }
     // cout<<"\n[BRUTE]req:"<<req_no<<" ";
     // for(auto it:brute_path){
     //     cout<<it<<"->";
@@ -306,10 +306,10 @@ vector<int> MyAlgo3::separation_oracle(int req_no, double &req_Us){
     // cout << endl;
     // cout << "U: " << best_len << endl;
 
-    // if(best_path != brute_path){                                           //checking brute && best
-    //     cout<<"DIFF!!!\n";
-    //     diff_num++;
-    // }
+    if(best_path != brute_path){                                           //checking brute && best
+        cout<<"DIFF!!!\n";
+        diff_num++;
+    }
         
     return best_path;  
                                                     
@@ -914,11 +914,11 @@ void MyAlgo3::path_assignment(){
 
     initialize();
     
-    // for(unsigned int i = 0; i < requests.size(); i++){
-    //     int src = requests[i].get_source();
-    //     int dst = requests[i].get_destination();
-    //     all_source_target_path.push_back(allPathsSourceTarget(src, dst));
-    // }
+    for(unsigned int i = 0; i < requests.size(); i++){
+        int src = requests[i].get_source();
+        int dst = requests[i].get_destination();
+        all_source_target_path.push_back(allPathsSourceTarget(src, dst));
+    }
 
     
     double obj = M * delta;
@@ -957,7 +957,7 @@ void MyAlgo3::path_assignment(){
     find_violate();
     calculate();
     vector<map<vector<int>, int>>path = Greedy_rounding();
-    cout << "change_edge_num: " << change_edge_num << endl;
-    cout << "diff_num: " << diff_num << endl;
+    res["change_edge_num"] = change_edge_num;
+    res["diff_edge_num"] = diff_num;
 }   
 
