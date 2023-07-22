@@ -299,12 +299,12 @@ vector<int> MyAlgo3::separation_oracle(int req_no, double &req_Us){
         
        
     }
-    // cout << "Best path: ";
-    // for(auto p : best_path){
-    //     cout <<p << " ";
-    // }
-    // cout << endl;
-    // cout << "U: " << best_len << endl;
+    cout << "Best path: ";
+    for(auto p : best_path){
+        cout <<p << " ";
+    }
+    cout << endl;
+    cout << "U: " << best_len << endl;
 
     if(best_path != brute_path){                                           //checking brute && best
         cout<<"DIFF!!!\n";
