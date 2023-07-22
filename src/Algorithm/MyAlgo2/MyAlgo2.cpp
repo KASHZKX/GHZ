@@ -909,6 +909,7 @@ vector<map<vector<int>, int>> MyAlgo2::Greedy_rounding(){
 			if(extra_path.size() != 0){
 				width = min(find_width(extra_path), requests[request_id].get_send_limit() - used_I[request_id]);
 				assign_resource(extra_path, width, request_id);
+				used_I[request_id] += width;
 			}
 			if(width == 0){
 				break;
