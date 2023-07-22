@@ -84,7 +84,6 @@ struct CandPath{
 void QCAST::path_assignment(){
     if(DEBUG) cerr<< "---------QCAST::path_assignment----------" << endl;
     base_test_active();
-    int maximum_major_path_per_request = 200;
     const int maximum_path_length = 200;
     const int maximum_total_number_of_path = 200;
     int total = 0;
@@ -95,7 +94,12 @@ void QCAST::path_assignment(){
         vector<int> neighbors;
         for(int reqno = 0;reqno<(int)requests.size();reqno++){   //find the best path for every request
             Request &request = requests[reqno];
+<<<<<<< HEAD
             if(request.get_paths().size() > request.get_send_limit()){ // revise major path select
+=======
+            // cout<<"REQUEST:"<<request.get_send_limit()<<endl;
+            if(request.get_paths().size() >= request.get_send_limit()){ // revise major path select
+>>>>>>> b3bb30041a7cc9d6ef0558e9f09296f2f305e425
                 //force to find no path
                 candidate[reqno] = CandPath();
                 continue;
@@ -179,6 +183,7 @@ void QCAST::path_assignment(){
         //find the best path in requests
         CandPath mx = CandPath();
         int mx_reqno = -1;
+
         for(int reqno=0;reqno<(int)requests.size();reqno++){
             if(mx < candidate[reqno]){
                 mx = candidate[reqno];
@@ -189,6 +194,7 @@ void QCAST::path_assignment(){
             break;
         }
         if(requests[mx_reqno].get_paths().size() + find_width(candidate[mx_reqno].path) > requests[mx_reqno].get_send_limit()){
+<<<<<<< HEAD
             assign_resource(candidate[mx_reqno].path,requests[mx_reqno].get_send_limit()-requests[mx_reqno].get_paths().size(),mx_reqno);
             total+=requests[mx_reqno].get_send_limit()-requests[mx_reqno].get_paths().size();
         }
@@ -197,6 +203,14 @@ void QCAST::path_assignment(){
             assign_resource(candidate[mx_reqno].path, mx_reqno);
         }
 
+=======
+            total += (requests[mx_reqno].get_send_limit() - requests[mx_reqno].get_paths().size());
+            assign_resource(candidate[mx_reqno].path,(requests[mx_reqno].get_send_limit() - requests[mx_reqno].get_paths().size()) ,mx_reqno);
+        }else{
+            total += find_width(candidate[mx_reqno].path);
+            assign_resource(candidate[mx_reqno].path, mx_reqno);
+        }
+>>>>>>> b3bb30041a7cc9d6ef0558e9f09296f2f305e425
     }
 
     find_recovery_path(0);

@@ -523,15 +523,15 @@ vector<map<vector<int>, int>> MyAlgo::rounding(){
 }
 
 void MyAlgo::check_enough(vector<map<vector<int>, int>> &path){
-    for(unsigned int i = 0; i < path.size(); i++){
-        for(auto it:path[i]){
-            vector<int>Final_path =it.first;
-            for(auto it2:Final_path){
-                cout<<it2<<" ";
-            }
-            cout<<"     Qubits:"<<it.second<<endl;
-        }
-    }
+    // for(unsigned int i = 0; i < path.size(); i++){
+    //     for(auto it:path[i]){
+    //         vector<int>Final_path =it.first;
+    //         for(auto it2:Final_path){
+    //             cout<<it2<<" ";
+    //         }
+    //         cout<<"     Qubits:"<<it.second<<endl;
+    //     }
+    // }
     vector<int> memory_used(graph.get_size());
     map<vector<int>,int> channel_used; 
     vector<int> over_memory(graph.get_size());
@@ -797,6 +797,41 @@ vector<vector<int>> MyAlgo::allPathsSourceTarget(int src, int dst){
     return ans;
 }
 
+vector<int> MyAlgo::Dijkstra_by_prob(int src, int dst){
+    const double INF = numeric_limits<double>::infinity();
+    int n = graph.get_size();
+    vector<pair<int,double>>adj[n]; //Creating adjacency list
+
+    for(int i = 0; i < graph.get_size(); i++){
+        vector<int> neighbors = graph.get_neighbors_id(i);
+        for(auto neighbor : neighbors){
+            double entangle_prob = exp(graph.Node_id2ptr(i)->distance(*graph.Node_id2ptr(it))*(-graph.get_entangle_alpha()));
+            adj[i].push_back({neighbor, entangle_prob});
+        }
+    }
+    
+    priority_queue<pair<double, int>>pq; //Use maxHeap for path with the maximum probability
+    pq.push({1.0, INF}); //{probability,node}
+    vector<double> dist(n, INF);
+    dist[src] = 1;
+    while(!pq.empty()){
+        auto itr = pq.top();
+        pq.pop();
+        double dis = itr.first;
+        int node = itr.second;
+        for(auto it : adj[node]){
+            int adjNode = it.first;
+            double edW = it.second;
+            if(dist[adjNode] < dis * edW){ //If greater probability is found then update probability of adjacent node & push adjacent node in maxHeap
+                dist[adjNode] = dis * edW;
+                pq.push({dist[adjNode], adjNode});
+            }
+        }
+    }        
+    if(dist[dst] == INF) return 0.00000; //If there is no path from start to end
+    else return dist[dst];
+}
+
 vector<map<vector<int>, int>> MyAlgo::Greedy_rounding(){
     vector<map<vector<int>, double>> each_request(requests.size());
     vector<map<vector<int>, int>> I_request(requests.size());
@@ -975,15 +1010,15 @@ void MyAlgo::path_assignment(){
 
 
     //check_enough(path);
-    for(unsigned int i = 0; i < path.size(); i++){
-        for(auto it:path[i]){
-            vector<int>Final_path =it.first;
-            for(auto it2:Final_path){
-                cout<<it2<<" ";
-            }
-            cout<<"     Qubits:"<<it.second<<endl;
-        }
-    }
+    // for(unsigned int i = 0; i < path.size(); i++){
+    //     for(auto it:path[i]){
+    //         vector<int>Final_path =it.first;
+    //         for(auto it2:Final_path){
+    //             cout<<it2<<" ";
+    //         }
+    //         cout<<"     Qubits:"<<it.second<<endl;
+    //     }
+    // }
 
     /*
     for(unsigned int i = 0; i < path.size(); i++){

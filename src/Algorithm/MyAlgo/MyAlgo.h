@@ -34,6 +34,7 @@ public:
     map<int, int> path_length_cnt;
     vector<int> separation_oracle(int req_no, double &U);
     vector<int> Dijkstra(int src, int dst, int req_no);
+    vector<int> Dijkstra_by_prob(int src, int dst);
     void path_assignment();
     void calculate();
     void entangle();

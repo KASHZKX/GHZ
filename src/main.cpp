@@ -41,7 +41,7 @@ int main(){
     string file_path = "../data/";
 
     map<string, double> default_setting;
-    default_setting["num_of_node"] = 50;
+    default_setting["num_of_node"] = 30;
     default_setting["social_density"] = 0.5;
     default_setting["area_alpha"] = 0.1;
     default_setting["memory_cnt_avg"] = 5;
@@ -66,7 +66,7 @@ int main(){
     change_parameter["resource_ratio"] = {0.5, 1, 2, 10};
     change_parameter["area_alpha"] = {0.001, 0.01, 0.1}; 
     change_parameter["social_density"] = {0.25, 0.5, 0.75, 1}; 
-    change_parameter["new_request_cnt"] = {5, 10, 15, 20, 25, 30, 40, 50};
+    change_parameter["new_request_cnt"] = {5, 10, 15, 20, 25, 30};
 	change_parameter["request_avg"] = {3, 5, 10, 20, 30};
     change_parameter["num_of_node"] = {20, 25, 30, 40, 50};
 
@@ -85,7 +85,7 @@ int main(){
     }
     
 
-    int round = 100;
+    int round = 1;
     for(string X_name : X_names) {
         map<string, double> input_parameter = default_setting;
 
@@ -141,6 +141,13 @@ int main(){
                 //algorithms.emplace_back(new MyGreedyAlgo(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha));
                 algorithms.emplace_back(new MyAlgo2(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha));
                 
+                // 建完圖，刪除 input 檔避免佔太多空間
+                command = "rm -f " + file_path + "input/round_" + round_str + ".input";
+                if(system((command).c_str()) != 0){
+                    cerr<<"error:\tsystem proccess delete input file error"<<endl;
+                    exit(1);
+                }
+
                 ofs<<"---------------in round " <<T<<" -------------" <<endl;
                 for(int t = 0; t < total_time_slot; t++){
                     ofs<<"---------------in timeslot " <<t<<" -------------" <<endl;
