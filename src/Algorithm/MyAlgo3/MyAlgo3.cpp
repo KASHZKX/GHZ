@@ -347,14 +347,16 @@ void MyAlgo3::find_bottleneck(vector<int> path, int req_no){
         else
             x_i_p[path] = s;
 
-        for(auto id : path){                                                        //alter alpha,beta,tau
+        for(auto id : path){
+            obj += (alpha[id] * (1 + epsilon * s / s_u[id]) - alpha[id]) * graph.Node_id2ptr(id)->get_memory_cnt();;            //alter alpha,beta,tau
             alpha[id] = alpha[id] * (1 + epsilon * s / s_u[id]);
         }
 
         for(unsigned int i = 0; i < path.size() - 1; i++){
+            obj += (beta[{path[i], path[i+1]}] * (1 + epsilon * s / s_uv[i]) -  beta[{path[i], path[i+1]}]) * graph.get_channel_size(path[i], path[i+1]);;
             beta[{path[i], path[i+1]}] = beta[{path[i], path[i+1]}] * (1 + epsilon * s / s_uv[i]);
         }
-
+        obj += (tau[req_no] * (1 + epsilon * s / s_i) - tau[req_no])* requests[req_no].get_send_limit();;    
         tau[req_no] = tau[req_no] * (1 + epsilon * s / s_i);    
     }
     //now changing the X
@@ -921,7 +923,7 @@ void MyAlgo3::path_assignment(){
     }
 
     
-    double obj = M * delta;
+    obj = M * delta;
     vector<int> best_path;
     vector<int> cur_path;
     // double U;
@@ -951,7 +953,7 @@ void MyAlgo3::path_assignment(){
         } 
 
         find_bottleneck(best_path, req_no);
-        obj = changing_obj();
+        // obj = changing_obj();
         // cout<<"changing_obj obj: " << obj << endl ;
     }
     find_violate();
