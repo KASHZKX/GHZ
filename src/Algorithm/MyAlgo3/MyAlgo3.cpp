@@ -308,7 +308,7 @@ vector<int> MyAlgo3::separation_oracle(int req_no, double &req_Us){
 
     if(best_path != brute_path){                                           //checking brute && best
         cout<<"DIFF!!!\n";
-        exit(1);
+        diff_num++;
     }
         
     return best_path;  
@@ -958,5 +958,6 @@ void MyAlgo3::path_assignment(){
     calculate();
     vector<map<vector<int>, int>>path = Greedy_rounding();
     cout << "change_edge_num: " << change_edge_num << endl;
+    cout << "diff_num: " << diff_num << endl;
 }   
 
