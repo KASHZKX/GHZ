@@ -68,10 +68,10 @@ int main(){
     change_parameter["area_alpha"] = {0.001, 0.01, 0.1}; 
     change_parameter["social_density"] = {0.25, 0.5, 0.75, 1}; 
     change_parameter["new_request_cnt"] = {5, 10, 15, 20};
-	change_parameter["request_avg"] = {3, 5, 10};
+	change_parameter["request_avg"] = {5};
     change_parameter["num_of_node"] = {20, 25, 30, 40, 50};
 
-    vector<string> X_names = {"new_request_cnt", "request_avg"};//"num_of_node", "area_alpha", "resource_ratio", "entangle_alpha", "swap_prob"};
+    vector<string> X_names = {"new_request_cnt"};//"request_avg", "num_of_node", "area_alpha", "resource_ratio", "entangle_alpha", "swap_prob"};
     vector<string> Y_names = {"waiting_time", "throughputs", "finished_throughputs", \
                             "succ-finished_ratio", "fail-finished_ratio", "active_timeslot", "path_length", "fidelity", \
                             "encode_cnt", "unencode_cnt", "encode_ratio", "use_memory", "total_memory", "use_memory_ratio",\
@@ -135,11 +135,11 @@ int main(){
                 }
                 
                 vector<AlgorithmBase*> algorithms;
-                algorithms.emplace_back(new Greedy(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha));
-                algorithms.emplace_back(new QCAST(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha));
-                algorithms.emplace_back(new REPS(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha));
-                algorithms.emplace_back(new MyAlgo(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha));
-                algorithms.emplace_back(new MyAlgo2(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha));
+                // algorithms.emplace_back(new Greedy(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha));
+                // algorithms.emplace_back(new QCAST(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha));
+                // algorithms.emplace_back(new REPS(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha));
+                // algorithms.emplace_back(new MyAlgo(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha));
+                // algorithms.emplace_back(new MyAlgo2(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha));
                 algorithms.emplace_back(new MyAlgo3(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha));
                 
                 // 建完圖，刪除 input 檔避免佔太多空間
