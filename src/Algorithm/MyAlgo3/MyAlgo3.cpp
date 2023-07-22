@@ -243,7 +243,7 @@ vector<int> MyAlgo3::separation_oracle(int req_no, double &req_Us){
         }
         
         used_edge[new_edge] = true;
-        change_num++;
+        change_edge_num++;
         SPT[new_edge.second]=new_edge.first;
 
         cur_node = src;                                   
@@ -288,8 +288,6 @@ vector<int> MyAlgo3::separation_oracle(int req_no, double &req_Us){
     //     cout<<"DIFF!!!\n";
     //     exit(1);
     // }
-
-    cout << "change_num: " << change_num << endl;
         
     return best_path;  
                                                     
@@ -974,27 +972,6 @@ void MyAlgo3::path_assignment(){
     find_violate();
     calculate();
     vector<map<vector<int>, int>>path = Greedy_rounding();
-    
-
-
-    //check_enough(path);
-    // for(unsigned int i = 0; i < path.size(); i++){
-    //     for(auto it:path[i]){
-    //         vector<int>Final_path =it.first;
-    //         for(auto it2:Final_path){
-    //             cout<<it2<<" ";
-    //         }
-    //         cout<<"     Qubits:"<<it.second<<endl;
-    //     }
-    // }
-
-    /*
-    for(unsigned int i = 0; i < path.size(); i++){
-        for(auto p : path[i]){
-            if(p.second!=0){
-                assign_resource(p.first, p.second, i);
-            }
-        }
-    }*/
+    cout << "change_edge_num: " << change_edge_num << endl;
 }   
 

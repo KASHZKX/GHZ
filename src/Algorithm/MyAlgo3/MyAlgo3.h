@@ -24,6 +24,7 @@ private:
     map<vector<int>, double> x_i_p;
     map<pair<int,int>, double> beta;
     vector<vector<vector<int>>> all_source_target_path;
+    int change_edge_num = 0; 
     double epsilon = 0.2;
     double delta;
     double M;

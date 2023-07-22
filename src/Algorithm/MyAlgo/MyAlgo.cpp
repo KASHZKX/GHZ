@@ -235,7 +235,7 @@ vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){
         }else{
             new_path.clear();
         }
-        change_num++;
+        change_edge_num++;
         
         SPT[new_edge.second]=new_edge.first;
         cur_node = src;                                   
@@ -281,7 +281,6 @@ vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){
     //     exit(1);
     // }
 
-    cout << "change_edge_num: " << change_num << endl;
         
     return best_path;  
                                                     
@@ -911,6 +910,7 @@ void MyAlgo::path_assignment(){
     find_violate();
     calculate();
     vector<map<vector<int>, int>>path = Greedy_rounding();
+    cout << "change_edge_num: " << change_num << endl;
     
 }   
 
