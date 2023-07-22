@@ -27,6 +27,7 @@ private:
     int change_edge_num = 0; 
     int diff_num = 0;
     double epsilon = 0.2;
+    double obj = 0;
     double delta;
     double M;
     vector<double> tau;                
