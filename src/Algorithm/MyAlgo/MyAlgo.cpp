@@ -523,15 +523,15 @@ vector<map<vector<int>, int>> MyAlgo::rounding(){
 }
 
 void MyAlgo::check_enough(vector<map<vector<int>, int>> &path){
-    for(unsigned int i = 0; i < path.size(); i++){
-        for(auto it:path[i]){
-            vector<int>Final_path =it.first;
-            for(auto it2:Final_path){
-                cout<<it2<<" ";
-            }
-            cout<<"     Qubits:"<<it.second<<endl;
-        }
-    }
+    // for(unsigned int i = 0; i < path.size(); i++){
+    //     for(auto it:path[i]){
+    //         vector<int>Final_path =it.first;
+    //         for(auto it2:Final_path){
+    //             cout<<it2<<" ";
+    //         }
+    //         cout<<"     Qubits:"<<it.second<<endl;
+    //     }
+    // }
     vector<int> memory_used(graph.get_size());
     map<vector<int>,int> channel_used; 
     vector<int> over_memory(graph.get_size());
@@ -975,15 +975,15 @@ void MyAlgo::path_assignment(){
 
 
     //check_enough(path);
-    for(unsigned int i = 0; i < path.size(); i++){
-        for(auto it:path[i]){
-            vector<int>Final_path =it.first;
-            for(auto it2:Final_path){
-                cout<<it2<<" ";
-            }
-            cout<<"     Qubits:"<<it.second<<endl;
-        }
-    }
+    // for(unsigned int i = 0; i < path.size(); i++){
+    //     for(auto it:path[i]){
+    //         vector<int>Final_path =it.first;
+    //         for(auto it2:Final_path){
+    //             cout<<it2<<" ";
+    //         }
+    //         cout<<"     Qubits:"<<it.second<<endl;
+    //     }
+    // }
 
     /*
     for(unsigned int i = 0; i < path.size(); i++){
