@@ -11,6 +11,7 @@
 #include "Algorithm/REPS/REPS.h"
 #include "Algorithm/MyAlgo/MyAlgo.h"
 #include "Algorithm/MyAlgo2/MyAlgo2.h"
+#include "Algorithm/MyAlgo3/MyAlgo3.h"
 // #include "Algorithm/MyGreedyAlgo/MyGreedyAlgo.h"
 
 using namespace std;
@@ -138,8 +139,8 @@ int main(){
                 algorithms.emplace_back(new QCAST(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha));
                 algorithms.emplace_back(new REPS(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha));
                 algorithms.emplace_back(new MyAlgo(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha));
-                //algorithms.emplace_back(new MyGreedyAlgo(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha));
                 algorithms.emplace_back(new MyAlgo2(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha));
+                algorithms.emplace_back(new MyAlgo3(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha));
                 
                 // 建完圖，刪除 input 檔避免佔太多空間
                 command = "rm -f " + file_path + "input/round_" + round_str + ".input";
