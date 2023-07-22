@@ -67,8 +67,8 @@ int main(){
     change_parameter["resource_ratio"] = {0.5, 1, 2, 10};
     change_parameter["area_alpha"] = {0.001, 0.01, 0.1}; 
     change_parameter["social_density"] = {0.25, 0.5, 0.75, 1}; 
-    change_parameter["new_request_cnt"] = {5, 10, 15, 20, 25, 30};
-	change_parameter["request_avg"] = {3, 5, 10, 20, 30};
+    change_parameter["new_request_cnt"] = {10};
+	change_parameter["request_avg"] = {5};
     change_parameter["num_of_node"] = {20, 25, 30, 40, 50};
 
     vector<string> X_names = {"new_request_cnt", "request_avg"};//"num_of_node", "area_alpha", "resource_ratio", "entangle_alpha", "swap_prob"};
