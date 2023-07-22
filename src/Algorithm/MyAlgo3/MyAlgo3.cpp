@@ -820,7 +820,7 @@ vector<vector<int>> MyAlgo3::allPathsSourceTarget(int src, int dst){
     return ans;
 }
 
-vector<map<vector<int>, int>> MyAlgo::Greedy_rounding(){
+vector<map<vector<int>, int>> MyAlgo3::Greedy_rounding(){
     vector<map<vector<int>, double>> each_request(requests.size());
     vector<map<vector<int>, int>> I_request(requests.size());
     for(auto it : x_i_p){
