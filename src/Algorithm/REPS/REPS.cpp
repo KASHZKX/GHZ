@@ -489,12 +489,12 @@ void REPS::swap(){
         }
     }
     for(int i = 0; i < (int)requests.size(); i++){
-        cout << "ELS_P[i]: " << ELS_P[i].size() << endl;
+        // cout << "ELS_P[i]: " << ELS_P[i].size() << endl;
         for(auto path_nodes: ELS_P[i]){
             requests[i] += find_swap_path(path_nodes, remain_channels);
         }
         vector<Path*> path = requests[i].get_paths();
-        cout << "req_no: "<< i << " "<< path.size() << endl;
+        // cout << "req_no: "<< i << " "<< path.size() << endl;
     }
     AlgorithmBase::base_swap();
 }
