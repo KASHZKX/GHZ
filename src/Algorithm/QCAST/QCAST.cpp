@@ -95,7 +95,6 @@ void QCAST::path_assignment(){
         vector<int> neighbors;
         for(int reqno = 0;reqno<(int)requests.size();reqno++){   //find the best path for every request
             Request &request = requests[reqno];
-            cout<<"REQUEST:"<<request.get_send_limit()<<endl;
             if(request.get_paths().size() > request.get_send_limit()){ // revise major path select
                 //force to find no path
                 candidate[reqno] = CandPath();
@@ -189,8 +188,15 @@ void QCAST::path_assignment(){
         if(mx_reqno == -1){//no path found
             break;
         }
-        total += find_width(candidate[mx_reqno].path);
-        assign_resource(candidate[mx_reqno].path, mx_reqno);
+        if(requests[mx_reqno].get_paths().size() + find_width(candidate[mx_reqno].path) > requests[mx_reqno].get_send_limit()){
+            assign_resource(candidate[mx_reqno].path,requests[mx_reqno].get_send_limit()-requests[mx_reqno].get_paths().size(),mx_reqno);
+            total+=requests[mx_reqno].get_send_limit()-requests[mx_reqno].get_paths().size();
+        }
+        else{
+            total += find_width(candidate[mx_reqno].path);
+            assign_resource(candidate[mx_reqno].path, mx_reqno);
+        }
+
     }
 
     find_recovery_path(0);
