@@ -1,5 +1,5 @@
-#ifndef __MYALGO_H
-#define __MYALGO_H
+#ifndef __MYALGO3_H
+#define __MYALGO3_H
 
 #include <iostream>
 #include <algorithm>
@@ -15,7 +15,7 @@
 
 using namespace std;
 
-class MyAlgo:public AlgorithmBase {
+class MyAlgo3:public AlgorithmBase {
 
 private:
     map<pair<int,int>, vector<double>> X;
@@ -35,7 +35,6 @@ public:
     map<int, int> path_length_cnt;
     vector<int> separation_oracle(int req_no, double &U);
     vector<int> Dijkstra(int src, int dst, int req_no);
-    vector<int> Dijkstra_by_prob(int src, int dst);
     void path_assignment();
     void calculate();
     void entangle();
@@ -52,8 +51,8 @@ public:
     double changing_obj();
     void find_violate();
     vector<map<vector<int>, int>> rounding();
-    MyAlgo(string filename, int request_time_limit, int node_time_limit, double swap_prob, double entangle_alpha);
-    ~MyAlgo();
+    MyAlgo3(string filename, int request_time_limit, int node_time_limit, double swap_prob, double entangle_alpha);
+    ~MyAlgo3();
 };
 
 #endif

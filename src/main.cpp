@@ -11,6 +11,7 @@
 #include "Algorithm/REPS/REPS.h"
 #include "Algorithm/MyAlgo/MyAlgo.h"
 #include "Algorithm/MyAlgo2/MyAlgo2.h"
+#include "Algorithm/MyAlgo3/MyAlgo3.h"
 // #include "Algorithm/MyGreedyAlgo/MyGreedyAlgo.h"
 
 using namespace std;
@@ -66,8 +67,8 @@ int main(){
     change_parameter["resource_ratio"] = {0.5, 1, 2, 10};
     change_parameter["area_alpha"] = {0.001, 0.01, 0.1}; 
     change_parameter["social_density"] = {0.25, 0.5, 0.75, 1}; 
-    change_parameter["new_request_cnt"] = {5, 10, 15, 20, 25, 30};
-	change_parameter["request_avg"] = {3, 5, 10, 20, 30};
+    change_parameter["new_request_cnt"] = {10};
+	change_parameter["request_avg"] = {5};
     change_parameter["num_of_node"] = {20, 25, 30, 40, 50};
 
     vector<string> X_names = {"new_request_cnt", "request_avg"};//"num_of_node", "area_alpha", "resource_ratio", "entangle_alpha", "swap_prob"};
@@ -75,7 +76,7 @@ int main(){
                             "succ-finished_ratio", "fail-finished_ratio", "active_timeslot", "path_length", "fidelity", \
                             "encode_cnt", "unencode_cnt", "encode_ratio", "use_memory", "total_memory", "use_memory_ratio",\
                             "use_channel", "total_channel", "use_channel_ratio", "runtime", "divide_cnt"};
-    vector<string> algo_names = {"Greedy", "QCAST", "REPS", "MyAlgo", "MyGreedyAlgo", "MyAlgo2"};
+    vector<string> algo_names = {"Greedy", "QCAST", "REPS", "MyAlgo", "MyGreedyAlgo", "MyAlgo2", "MyAlgo3"};
     // init result
     for(string X_name : X_names) {
         for(string Y_name : Y_names){
@@ -138,8 +139,8 @@ int main(){
                 algorithms.emplace_back(new QCAST(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha));
                 algorithms.emplace_back(new REPS(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha));
                 algorithms.emplace_back(new MyAlgo(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha));
-                //algorithms.emplace_back(new MyGreedyAlgo(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha));
                 algorithms.emplace_back(new MyAlgo2(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha));
+                algorithms.emplace_back(new MyAlgo3(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha));
                 
                 // 建完圖，刪除 input 檔避免佔太多空間
                 command = "rm -f " + file_path + "input/round_" + round_str + ".input";
