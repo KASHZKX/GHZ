@@ -228,7 +228,7 @@ int main(){
             // }
             for(int T = 0; T < round; T++){
                 result[T]["MyAlgo3"]["diff_rate"] = result[T]["MyAlgo3"]["change_edge_num"] / result[T]["MyAlgo3"]["diff_edge_num"];
-                result[T]["MyAlgo"]["edge_difference"] = result[T]["MyAlgo"]["change_edge_num"] - result[T]["MyAlgo3"]["change_edge_num"]
+                result[T]["MyAlgo"]["edge_difference"] = result[T]["MyAlgo"]["change_edge_num"] - result[T]["MyAlgo3"]["change_edge_num"];
             }
 
             for(string Y_name : Y_names) {
