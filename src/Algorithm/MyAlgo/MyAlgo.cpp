@@ -801,18 +801,18 @@ vector<int> MyAlgo::Dijkstra_by_prob(int src, int dst){
     const double INF = numeric_limits<double>::infinity();
     int n = graph.get_size();
     vector<pair<int,double>>adj[n]; //Creating adjacency list
-
+    vector<int> parent(graph.get_size(), -1);
     for(int i = 0; i < graph.get_size(); i++){
         vector<int> neighbors = graph.get_neighbors_id(i);
         for(auto neighbor : neighbors){
-            double entangle_prob = exp(graph.Node_id2ptr(i)->distance(*graph.Node_id2ptr(it))*(-graph.get_entangle_alpha()));
+            double entangle_prob = exp(graph.Node_id2ptr(i)->distance(*graph.Node_id2ptr(neighbor))*(-graph.get_entangle_alpha()));
             adj[i].push_back({neighbor, entangle_prob});
         }
     }
     
     priority_queue<pair<double, int>>pq; //Use maxHeap for path with the maximum probability
-    pq.push({1.0, INF}); //{probability,node}
-    vector<double> dist(n, INF);
+    pq.push({1, src}); //{probability,node}         
+    vector<double> dist(n,0);
     dist[src] = 1;
     while(!pq.empty()){
         auto itr = pq.top();
@@ -822,14 +822,33 @@ vector<int> MyAlgo::Dijkstra_by_prob(int src, int dst){
         for(auto it : adj[node]){
             int adjNode = it.first;
             double edW = it.second;
-            if(dist[adjNode] < dis * edW){ //If greater probability is found then update probability of adjacent node & push adjacent node in maxHeap
-                dist[adjNode] = dis * edW;
-                pq.push({dist[adjNode], adjNode});
+            if(dist[adjNode]!=0){
+                if(adjNode==dst){
+                    if(dist[adjNode] < dis * edW){ //If greater probability is found then update probability of adjacent node & push adjacent node in maxHeap
+                        dist[adjNode] = dis * edW;
+                        pq.push({dist[adjNode], adjNode});
+                    }
+                }
+                else{
+                    if(dist[adjNode] < dis * edW * graph.Node_id2ptr(adjNode)->get_swap_prob()){ //If greater probability is found then update probability of adjacent node & push adjacent node in maxHeap
+                        dist[adjNode] = dis * edW * graph.Node_id2ptr(adjNode)->get_swap_prob();
+                        pq.push({dist[adjNode], adjNode});
+                    }
+                }
             }
         }
-    }        
-    if(dist[dst] == INF) return 0.00000; //If there is no path from start to end
-    else return dist[dst];
+    } 
+    vector<int> answer_path;
+    answer_path.clear();
+    if(dist[dst] == 0) return answer_path; //If there is no path from start to end
+    
+    int now=dst;
+    while( now != -1){
+        answer_path.push_back(now); 
+        now = parent[now];
+    }
+    reverse(answer_path.begin(), answer_path.end());
+    return answer_path;
 }
 
 vector<map<vector<int>, int>> MyAlgo::Greedy_rounding(){
@@ -968,7 +987,6 @@ void MyAlgo::path_assignment(){
     //     int dst = requests[i].get_destination();
     //     all_source_target_path.push_back(allPathsSourceTarget(src, dst));
     // }
-
     
     double obj = M * delta;
     vector<int> best_path;
