@@ -142,7 +142,7 @@ int main(){
                 algorithms.emplace_back(new MyAlgo2(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha));
                 
                 // 建完圖，刪除 input 檔避免佔太多空間
-                command = "rm -f ../data/input/*";
+                command = "rm -f " + file_path + "input/round_" + round_str + ".input";
                 if(system((command).c_str()) != 0){
                     cerr<<"error:\tsystem proccess delete input file error"<<endl;
                     exit(1);
