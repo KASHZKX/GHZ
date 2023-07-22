@@ -152,20 +152,20 @@ vector<int> MyAlgo3::separation_oracle(int req_no, double &req_Us){
     int src = requests[req_no].get_source();
     int dst =  requests[req_no].get_destination();
 
-    // double brute_min=numeric_limits<double>::infinity();
-    // vector<int>brute_path;
-    // for(auto it:all_source_target_path[req_no]){            //brute sort U_count
-    //     double c=0;
-    //     double r=0;
-    //     for(unsigned int i=0;i<it.size()-1;i++){
-    //         c += X[{it[i],it[i+1]}][req_no];               
-    //         r += Y[req_no][{it[i],it[i+1]}]; 
-    //     }
-    //     if(c * exp(r) < brute_min){
-    //         brute_min = c * exp(r);
-    //         brute_path = it;
-    //     }
-    // }
+    double brute_min=numeric_limits<double>::infinity();
+    vector<int>brute_path;
+    for(auto it:all_source_target_path[req_no]){            //brute sort U_count
+        double c=0;
+        double r=0;
+        for(unsigned int i=0;i<it.size()-1;i++){
+            c += X[{it[i],it[i+1]}][req_no];               
+            r += Y[req_no][{it[i],it[i+1]}]; 
+        }
+        if(c * exp(r) < brute_min){
+            brute_min = c * exp(r);
+            brute_path = it;
+        }
+    }
     // cout<<"\n[BRUTE]req:"<<req_no<<" ";
     // for(auto it:brute_path){
     //     cout<<it<<"->";
@@ -201,7 +201,19 @@ vector<int> MyAlgo3::separation_oracle(int req_no, double &req_Us){
     map<pair<int, int>, bool> used_edge;
     vector<int> new_path;   
     pair<int,int> new_edge;
-    int change_num = 0;
+
+    for(unsigned int i = 0; i < SPT.size(); i++){
+        int cur_node=i;
+        while(cur_node!=dst){
+            if(used_edge.find({cur_node,SPT[cur_node]})!=used_edge.end()){
+                break;
+            }
+            used_edge[{cur_node,SPT[cur_node]}] = true;
+            used_edge[{SPT[cur_node],cur_node}] = true;
+            cur_node=SPT[cur_node];
+        }
+    }
+
     while(1){
         double minimum = numeric_limits<double>::infinity();
         for(int i = 0; i < graph.get_size(); i++){                 //creating many new SPT
@@ -226,7 +238,17 @@ vector<int> MyAlgo3::separation_oracle(int req_no, double &req_Us){
                         temp2 -= Y[req_no][{cur_node, SPT[cur_node]}];
                         cur_node = SPT[cur_node];
                     }       
-                    if(temp2 < 0 && temp1 > 0 && used_edge.find({i, neighbor}) == used_edge.end()) {               // we need the smallest edge to change the SPT
+                    if(temp2 < 0 && temp1 > 0 ) {               // we need the smallest edge to change the SPT
+                        if(i<neighbor){
+                            if(used_edge.find({i, neighbor}) != used_edge.end()){
+                                continue;
+                            }
+                        }
+                        else{
+                            if(used_edge.find({neighbor ,i}) != used_edge.end()){
+                                continue;
+                            }
+                        }
                         if(minimum > - temp1 / temp2){
                             new_edge = {i, neighbor};
                             minimum = - temp1 / temp2;
@@ -241,9 +263,9 @@ vector<int> MyAlgo3::separation_oracle(int req_no, double &req_Us){
         }else{
             new_path.clear();
         }
-        
         used_edge[new_edge] = true;
-        change_num++;
+        used_edge[{new_edge.second,new_edge.first}] = true;
+        change_edge_num++;
         SPT[new_edge.second]=new_edge.first;
 
         cur_node = src;                                   
@@ -284,12 +306,10 @@ vector<int> MyAlgo3::separation_oracle(int req_no, double &req_Us){
     // cout << endl;
     // cout << "U: " << best_len << endl;
 
-    // if(best_path != brute_path){                                           //checking brute && best
-    //     cout<<"DIFF!!!\n";
-    //     exit(1);
-    // }
-
-    cout << "change_num: " << change_num << endl;
+    if(best_path != brute_path){                                           //checking brute && best
+        cout<<"DIFF!!!\n";
+        diff_num++;
+    }
         
     return best_path;  
                                                     
@@ -425,7 +445,7 @@ void MyAlgo3::find_violate(){
     for(auto it : used_request){
         int src = it.first.first;
         int dst = it.first.second;
-        int req_no;
+        int req_no = -1;
         for(unsigned int i = 0; i < requests.size();i ++){
             if(requests[i].get_source() == src && requests[i].get_destination() == dst){
                 req_no = i;
@@ -818,23 +838,12 @@ vector<map<vector<int>, int>> MyAlgo3::Greedy_rounding(){
     for(unsigned int i = 0; i < each_request.size(); i++){
         for(auto it:each_request[i]){
             vector<int>undistri_path =it.first;
-            // cout<<"[undistri] ";
-            // for(auto it2:undistri_path){
-            //     cout<<it2<<" ";
-            // }
-            // cout<<"     Qubits:"<<it.second<<endl;
         }
     }
 	vector<int> used_I(requests.size());										//第 i 個 request 目前用了幾調 path
 	vector< tuple<double, int, vector<int>> > fractional_xip;	
     for(unsigned int i = 0; i < requests.size(); i++){
-        //double total_prob = 0;
         used_I[i] = 0;
-        /*double used_prob = 0;
-        vector<vector<int>> req_path;
-        vector<double>every_prob;
-        vector<int>used;
-        */
 		for(auto it : each_request[i]){                    
             double frac_prob;
 
@@ -843,34 +852,8 @@ vector<map<vector<int>, int>> MyAlgo3::Greedy_rounding(){
             used_I[i] += i_prob;
 			assign_resource(it.first, i_prob, i);
             frac_prob = it.second - i_prob;                                     //total_prob代表random區間,丟進accumulate
-            /*
-			every_prob.push_back(frac_prob);
-            used.push_back(0);
-            used_prob += it.second;
-            req_path.push_back(it.first);
-			*/
-			fractional_xip.emplace_back(frac_prob, i, it.first);
-        }
-        //used_I[i] += (int)(requests[i].get_send_limit() - used_prob);               //unused_I=取底[ri - sum(request.I) - (unused.I)]
-        //distri_I = requests[i].get_send_limit()-used_I[i];
-
-        
-        
-        /*
-		for(int j = 0; j < distri_I; j++){
-            double max = -100000000;
-            vector<int> choose_path;
-            int temp;
-            for(unsigned int k = 0; k < every_prob.size(); k++){
-                if(max < every_prob[k] && used[k] == 0){
-                    max = every_prob[k];
-                    choose_path = req_path[k];
-                    temp = k;
-                }
-            }
-            I_request[i][choose_path]++;
-            used[temp] = 1;
-        }*/
+			fractional_xip.emplace_back(frac_prob*graph.find_success_probability(it.first), i, it.first);
+        }                                                   //unused_I=取底[ri - sum(request.I) - (unused.I)]
     }
 
 	// 對 x^i_p 由小到大排序
@@ -931,11 +914,11 @@ void MyAlgo3::path_assignment(){
 
     initialize();
     
-    // for(unsigned int i = 0; i < requests.size(); i++){
-    //     int src = requests[i].get_source();
-    //     int dst = requests[i].get_destination();
-    //     all_source_target_path.push_back(allPathsSourceTarget(src, dst));
-    // }
+    for(unsigned int i = 0; i < requests.size(); i++){
+        int src = requests[i].get_source();
+        int dst = requests[i].get_destination();
+        all_source_target_path.push_back(allPathsSourceTarget(src, dst));
+    }
 
     
     double obj = M * delta;
@@ -974,27 +957,7 @@ void MyAlgo3::path_assignment(){
     find_violate();
     calculate();
     vector<map<vector<int>, int>>path = Greedy_rounding();
-    
-
-
-    //check_enough(path);
-    // for(unsigned int i = 0; i < path.size(); i++){
-    //     for(auto it:path[i]){
-    //         vector<int>Final_path =it.first;
-    //         for(auto it2:Final_path){
-    //             cout<<it2<<" ";
-    //         }
-    //         cout<<"     Qubits:"<<it.second<<endl;
-    //     }
-    // }
-
-    /*
-    for(unsigned int i = 0; i < path.size(); i++){
-        for(auto p : path[i]){
-            if(p.second!=0){
-                assign_resource(p.first, p.second, i);
-            }
-        }
-    }*/
+    res["change_edge_num"] = change_edge_num;
+    res["diff_edge_num"] = diff_num;
 }   
 

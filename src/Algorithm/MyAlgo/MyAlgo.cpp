@@ -195,7 +195,6 @@ vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){
     map<pair<int, int>, bool> used_edge;
     vector<int> new_path;   
     pair<int,int> new_edge;
-    int change_num = 0;
     while(1){
         double minimum = numeric_limits<double>::infinity();
         for(int i = 0; i < graph.get_size(); i++){                 //creating many new SPT
@@ -235,7 +234,7 @@ vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){
         }else{
             new_path.clear();
         }
-        change_num++;
+        change_edge_num++;
         
         SPT[new_edge.second]=new_edge.first;
         cur_node = src;                                   
@@ -281,7 +280,6 @@ vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){
     //     exit(1);
     // }
 
-    cout << "change_edge_num: " << change_num << endl;
         
     return best_path;  
                                                     
@@ -417,7 +415,7 @@ void MyAlgo::find_violate(){
     for(auto it : used_request){
         int src = it.first.first;
         int dst = it.first.second;
-        int req_no;
+        int req_no = -1;
         for(unsigned int i = 0; i < requests.size();i ++){
             if(requests[i].get_source() == src && requests[i].get_destination() == dst){
                 req_no = i;
@@ -724,6 +722,7 @@ vector<vector<int>> MyAlgo::allPathsSourceTarget(int src, int dst){
     return ans;
 }
 
+
 // vector<int> MyAlgo::Dijkstra_by_prob(int src, int dst){
 //     const double INF = numeric_limits<double>::infinity();
 //     int n = graph.get_size();
@@ -777,6 +776,7 @@ vector<vector<int>> MyAlgo::allPathsSourceTarget(int src, int dst){
 //     reverse(answer_path.begin(), answer_path.end());
 //     return answer_path;
 // }
+
 
 vector<map<vector<int>, int>> MyAlgo::Greedy_rounding(){
     vector<map<vector<int>, double>> each_request(requests.size());
@@ -877,7 +877,6 @@ void MyAlgo::path_assignment(){
     //     int dst = requests[i].get_destination();
     //     all_source_target_path.push_back(allPathsSourceTarget(src, dst));
     // }
-
     
     double obj = M * delta;
     vector<int> best_path;
@@ -911,6 +910,7 @@ void MyAlgo::path_assignment(){
     find_violate();
     calculate();
     vector<map<vector<int>, int>>path = Greedy_rounding();
+    res["change_edge_num"] = change_edge_num;
     
 }   
 
