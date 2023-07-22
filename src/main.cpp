@@ -76,7 +76,7 @@ int main(){
                             "succ-finished_ratio", "fail-finished_ratio", "active_timeslot", "path_length", "fidelity", \
                             "encode_cnt", "unencode_cnt", "encode_ratio", "use_memory", "total_memory", "use_memory_ratio",\
                             "use_channel", "total_channel", "use_channel_ratio", "runtime", "divide_cnt"};
-    vector<string> algo_names = {"Greedy", "QCAST", "REPS", "MyAlgo", "MyGreedyAlgo", "MyAlgo2"};
+    vector<string> algo_names = {"Greedy", "QCAST", "REPS", "MyAlgo", "MyGreedyAlgo", "MyAlgo2", "MyAlgo3"};
     // init result
     for(string X_name : X_names) {
         for(string Y_name : Y_names){

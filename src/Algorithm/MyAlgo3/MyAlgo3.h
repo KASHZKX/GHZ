@@ -1,5 +1,5 @@
-#ifndef __MYALGO2_H
-#define __MYALGO2_H
+#ifndef __MYALGO3_H
+#define __MYALGO3_H
 
 #include <iostream>
 #include <algorithm>
