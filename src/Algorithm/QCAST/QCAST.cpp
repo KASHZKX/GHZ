@@ -84,7 +84,6 @@ struct CandPath{
 void QCAST::path_assignment(){
     if(DEBUG) cerr<< "---------QCAST::path_assignment----------" << endl;
     base_test_active();
-    int maximum_major_path_per_request = 200;
     const int maximum_path_length = 200;
     const int maximum_total_number_of_path = 200;
     int total = 0;
@@ -95,7 +94,8 @@ void QCAST::path_assignment(){
         vector<int> neighbors;
         for(int reqno = 0;reqno<(int)requests.size();reqno++){   //find the best path for every request
             Request &request = requests[reqno];
-            if(request.get_paths().size() > request.get_send_limit()){ // revise major path select
+            // cout<<"REQUEST:"<<request.get_send_limit()<<endl;
+            if(request.get_paths().size() >= request.get_send_limit()){ // revise major path select
                 //force to find no path
                 candidate[reqno] = CandPath();
                 continue;
@@ -179,18 +179,23 @@ void QCAST::path_assignment(){
         //find the best path in requests
         CandPath mx = CandPath();
         int mx_reqno = -1;
+
         for(int reqno=0;reqno<(int)requests.size();reqno++){
             if(mx < candidate[reqno]){
                 mx = candidate[reqno];
                 mx_reqno = reqno;
             }
         }
-
         if(mx_reqno == -1){//no path found
             break;
         }
-        total += find_width(candidate[mx_reqno].path);
-        assign_resource(candidate[mx_reqno].path, mx_reqno);
+        if(requests[mx_reqno].get_paths().size() + find_width(candidate[mx_reqno].path) > requests[mx_reqno].get_send_limit()){
+            total += (requests[mx_reqno].get_send_limit() - requests[mx_reqno].get_paths().size());
+            assign_resource(candidate[mx_reqno].path,(requests[mx_reqno].get_send_limit() - requests[mx_reqno].get_paths().size()) ,mx_reqno);
+        }else{
+            total += find_width(candidate[mx_reqno].path);
+            assign_resource(candidate[mx_reqno].path, mx_reqno);
+        }
     }
 
     find_recovery_path(0);
@@ -276,7 +281,7 @@ void QCAST::p4(){
                 }
             }
             
-            for(auto &rec:recovery_paths[make_pair(&request, path)]){
+            for(auto &rec:recovery_paths[make_pair(&request, path)]){                                          
                 for(auto channel: rec->get_channels()){
                     Node *node1 = channel->get_node1_ptr(), *node2 = channel->get_node2_ptr();
                     adj[node1->get_id()].emplace_back(node2->get_id());
