@@ -276,7 +276,7 @@ void QCAST::p4(){
                 }
             }
             
-            for(auto &rec:recovery_paths[make_pair(&request, path)]){
+            for(auto &rec:recovery_paths[make_pair(&request, path)]){                                          
                 for(auto channel: rec->get_channels()){
                     Node *node1 = channel->get_node1_ptr(), *node2 = channel->get_node2_ptr();
                     adj[node1->get_id()].emplace_back(node2->get_id());
