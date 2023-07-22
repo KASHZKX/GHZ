@@ -202,7 +202,7 @@ vector<int> MyAlgo3::separation_oracle(int req_no, double &req_Us){
     vector<int> new_path;   
     pair<int,int> new_edge;
 
-    for(int i = 0; i < SPT.size(); i++){
+    for(unsigned int i = 0; i < SPT.size(); i++){
         int cur_node=i;
         while(cur_node!=dst){
             if(used_edge.find({cur_node,SPT[cur_node]})!=used_edge.end()){
@@ -445,7 +445,7 @@ void MyAlgo3::find_violate(){
     for(auto it : used_request){
         int src = it.first.first;
         int dst = it.first.second;
-        int req_no;
+        int req_no = -1;
         for(unsigned int i = 0; i < requests.size();i ++){
             if(requests[i].get_source() == src && requests[i].get_destination() == dst){
                 req_no = i;
@@ -820,7 +820,7 @@ vector<vector<int>> MyAlgo3::allPathsSourceTarget(int src, int dst){
     return ans;
 }
 
-vector<map<vector<int>, int>> MyAlgo3::Greedy_rounding(){
+vector<map<vector<int>, int>> MyAlgo::Greedy_rounding(){
     vector<map<vector<int>, double>> each_request(requests.size());
     vector<map<vector<int>, int>> I_request(requests.size());
     for(auto it : x_i_p){
@@ -838,23 +838,12 @@ vector<map<vector<int>, int>> MyAlgo3::Greedy_rounding(){
     for(unsigned int i = 0; i < each_request.size(); i++){
         for(auto it:each_request[i]){
             vector<int>undistri_path =it.first;
-            // cout<<"[undistri] ";
-            // for(auto it2:undistri_path){
-            //     cout<<it2<<" ";
-            // }
-            // cout<<"     Qubits:"<<it.second<<endl;
         }
     }
 	vector<int> used_I(requests.size());										//第 i 個 request 目前用了幾調 path
 	vector< tuple<double, int, vector<int>> > fractional_xip;	
     for(unsigned int i = 0; i < requests.size(); i++){
-        //double total_prob = 0;
         used_I[i] = 0;
-        /*double used_prob = 0;
-        vector<vector<int>> req_path;
-        vector<double>every_prob;
-        vector<int>used;
-        */
 		for(auto it : each_request[i]){                    
             double frac_prob;
 
@@ -863,34 +852,8 @@ vector<map<vector<int>, int>> MyAlgo3::Greedy_rounding(){
             used_I[i] += i_prob;
 			assign_resource(it.first, i_prob, i);
             frac_prob = it.second - i_prob;                                     //total_prob代表random區間,丟進accumulate
-            /*
-			every_prob.push_back(frac_prob);
-            used.push_back(0);
-            used_prob += it.second;
-            req_path.push_back(it.first);
-			*/
-			fractional_xip.emplace_back(frac_prob, i, it.first);
-        }
-        //used_I[i] += (int)(requests[i].get_send_limit() - used_prob);               //unused_I=取底[ri - sum(request.I) - (unused.I)]
-        //distri_I = requests[i].get_send_limit()-used_I[i];
-
-        
-        
-        /*
-		for(int j = 0; j < distri_I; j++){
-            double max = -100000000;
-            vector<int> choose_path;
-            int temp;
-            for(unsigned int k = 0; k < every_prob.size(); k++){
-                if(max < every_prob[k] && used[k] == 0){
-                    max = every_prob[k];
-                    choose_path = req_path[k];
-                    temp = k;
-                }
-            }
-            I_request[i][choose_path]++;
-            used[temp] = 1;
-        }*/
+			fractional_xip.emplace_back(frac_prob*graph.find_success_probability(it.first), i, it.first);
+        }                                                   //unused_I=取底[ri - sum(request.I) - (unused.I)]
     }
 
 	// 對 x^i_p 由小到大排序

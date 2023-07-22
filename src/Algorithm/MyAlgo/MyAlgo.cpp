@@ -415,7 +415,7 @@ void MyAlgo::find_violate(){
     for(auto it : used_request){
         int src = it.first.first;
         int dst = it.first.second;
-        int req_no;
+        int req_no = -1;
         for(unsigned int i = 0; i < requests.size();i ++){
             if(requests[i].get_source() == src && requests[i].get_destination() == dst){
                 req_no = i;
