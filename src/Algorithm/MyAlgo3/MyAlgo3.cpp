@@ -958,6 +958,6 @@ void MyAlgo3::path_assignment(){
     calculate();
     vector<map<vector<int>, int>>path = Greedy_rounding();
     cout << "change_edge_num: " << change_edge_num << endl;
-    // cout << "diff_num: " << diff_num << endl;
+    cout << "diff_num: " << diff_num << endl;
 }   
 
