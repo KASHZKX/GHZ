@@ -179,6 +179,7 @@ void QCAST::path_assignment(){
         //find the best path in requests
         CandPath mx = CandPath();
         int mx_reqno = -1;
+        cout << mx_reqno << endl;
         for(int reqno=0;reqno<(int)requests.size();reqno++){
             if(mx < candidate[reqno]){
                 mx = candidate[reqno];
