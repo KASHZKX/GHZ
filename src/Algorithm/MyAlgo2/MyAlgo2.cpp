@@ -1,31 +1,31 @@
-#include "MyAlgo.h"
+#include "MyAlgo2.h"
 
-MyAlgo::MyAlgo(string filename, int request_time_limit, int node_time_limit, double swap_prob, double entangle_alpha)
-    :AlgorithmBase(filename, "MyAlgo", request_time_limit, node_time_limit, swap_prob, entangle_alpha){
-    if(DEBUG) cerr<<"new MyAlgo"<<endl;
+MyAlgo2::MyAlgo2(string filename, int request_time_limit, int node_time_limit, double swap_prob, double entangle_alpha)
+    :AlgorithmBase(filename, "MyAlgo2", request_time_limit, node_time_limit, swap_prob, entangle_alpha){
+    if(DEBUG) cerr<<"new MyAlgo2"<<endl;
 }
 
-MyAlgo::~MyAlgo(){
-    if(DEBUG) cerr << "delete MyAlgo" << endl;
+MyAlgo2::~MyAlgo2(){
+    if(DEBUG) cerr << "delete MyAlgo2" << endl;
 }
 
-void MyAlgo::entangle(){
+void MyAlgo2::entangle(){
     AlgorithmBase::base_entangle();
 }
 
-void MyAlgo::swap(){
+void MyAlgo2::swap(){
      AlgorithmBase::base_swap();
 }
 
-void MyAlgo::send(){
+void MyAlgo2::send(){
      AlgorithmBase::base_send();
 }
 
-void MyAlgo::next_time_slot(){
+void MyAlgo2::next_time_slot(){
      AlgorithmBase::base_next_time_slot();
 }
 
-void MyAlgo::initialize(){
+void MyAlgo2::initialize(){
     M = graph.get_size() + graph.get_num_of_edge() + requests.size();              //M=V+E+I
     delta = (1 + epsilon) * pow(((1 + epsilon) * M), (-1 / epsilon));         
 
@@ -106,7 +106,7 @@ void MyAlgo::initialize(){
     }
 }
 
-vector<int> MyAlgo::Dijkstra(int src, int dst, int req_no){ 
+vector<int> MyAlgo2::Dijkstra(int src, int dst, int req_no){ 
     const double INF = numeric_limits<double>::infinity();
     int n = graph.get_size();
     vector<double> distance(n, INF);
@@ -145,7 +145,7 @@ vector<int> MyAlgo::Dijkstra(int src, int dst, int req_no){
 }       
    
 
-vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){     
+vector<int> MyAlgo2::separation_oracle(int req_no, double &req_Us){     
     vector<int> SPT;                  //nodes' parent in the spanning tree
     vector<int> best_path;
     double best_len; 
@@ -292,7 +292,7 @@ vector<int> MyAlgo::separation_oracle(int req_no, double &req_Us){
                                                     
 }
 
-void MyAlgo::find_bottleneck(vector<int> path, int req_no){
+void MyAlgo2::find_bottleneck(vector<int> path, int req_no){
     
     double min_s_u = numeric_limits<double>::infinity();
     double min_s_uv = numeric_limits<double>::infinity();
@@ -348,7 +348,7 @@ void MyAlgo::find_bottleneck(vector<int> path, int req_no){
     }
 }
 
-double MyAlgo::changing_obj(){
+double MyAlgo2::changing_obj(){
     double temp_obj = 0.0;
     for(unsigned int i = 0; i < alpha.size(); i++){
         temp_obj += alpha[i] * graph.Node_id2ptr(i)->get_memory_cnt();
@@ -364,7 +364,7 @@ double MyAlgo::changing_obj(){
     return temp_obj;
 }
 
-void MyAlgo::find_violate(){
+void MyAlgo2::find_violate(){
     vector<int> used_memory(graph.get_size());
     map<vector<int>, double> used_channel;
     map<pair<int, int>, int> used_request;
@@ -452,7 +452,7 @@ void MyAlgo::find_violate(){
 }
 
 
-vector<map<vector<int>, int>> MyAlgo::rounding(){
+vector<map<vector<int>, int>> MyAlgo2::rounding(){
     vector<map<vector<int>, double>> each_request(requests.size());
     vector<map<vector<int>, int>> I_request(requests.size());
     for(auto it : x_i_p){
@@ -522,7 +522,7 @@ vector<map<vector<int>, int>> MyAlgo::rounding(){
     return I_request;
 }
 
-void MyAlgo::check_enough(vector<map<vector<int>, int>> &path){
+void MyAlgo2::check_enough(vector<map<vector<int>, int>> &path){
     for(unsigned int i = 0; i < path.size(); i++){
         for(auto it:path[i]){
             vector<int>Final_path =it.first;
@@ -661,7 +661,7 @@ void MyAlgo::check_enough(vector<map<vector<int>, int>> &path){
     }  
 }  
 
-void MyAlgo::readd(vector<map<vector<int>, int>> &path,vector<int> &over_memory,map<vector<int>,int> &over_channel){
+void MyAlgo2::readd(vector<map<vector<int>, int>> &path,vector<int> &over_memory,map<vector<int>,int> &over_channel){
     for(unsigned int i = 0; i < path.size(); i++){
         for(auto it : path[i]){
             requests[i].add_cur(it.second);
@@ -744,7 +744,7 @@ void MyAlgo::readd(vector<map<vector<int>, int>> &path,vector<int> &over_memory,
 
 }
 
-void MyAlgo::dfs(int src, int dst, vector<vector<int>> &ans, vector<int> &path, vector<bool> &visited){
+void MyAlgo2::dfs(int src, int dst, vector<vector<int>> &ans, vector<int> &path, vector<bool> &visited){
         //base case
     visited[src] = true;
     path.push_back(src);
@@ -770,7 +770,7 @@ void MyAlgo::dfs(int src, int dst, vector<vector<int>> &ans, vector<int> &path, 
 }
 
 
-void MyAlgo::calculate(){
+void MyAlgo2::calculate(){
     double sum=0.0;
     for(auto it:x_i_p){
         double prob=1;
@@ -786,7 +786,7 @@ void MyAlgo::calculate(){
     cout<<"total prob:"<<sum<<"-------------"<<endl;
 }
 
-vector<vector<int>> MyAlgo::allPathsSourceTarget(int src, int dst){
+vector<vector<int>> MyAlgo2::allPathsSourceTarget(int src, int dst){
     vector<vector<int>> ans;
     vector<int> path;
     vector<bool> visited(graph.get_size());
@@ -797,7 +797,7 @@ vector<vector<int>> MyAlgo::allPathsSourceTarget(int src, int dst){
     return ans;
 }
 
-vector<map<vector<int>, int>> MyAlgo::Greedy_rounding(){
+vector<map<vector<int>, int>> MyAlgo2::Greedy_rounding(){
     vector<map<vector<int>, double>> each_request(requests.size());
     vector<map<vector<int>, int>> I_request(requests.size());
     for(auto it : x_i_p){
@@ -846,7 +846,7 @@ vector<map<vector<int>, int>> MyAlgo::Greedy_rounding(){
             used_prob += it.second;
             req_path.push_back(it.first);
 			*/
-			fractional_xip.emplace_back(frac_prob*graph.find_success_probability(it.first), i, it.first);
+			fractional_xip.emplace_back(frac_prob, i, it.first);
         }
         //used_I[i] += (int)(requests[i].get_send_limit() - used_prob);               //unused_I=取底[ri - sum(request.I) - (unused.I)]
         //distri_I = requests[i].get_send_limit()-used_I[i];
@@ -920,7 +920,7 @@ vector<map<vector<int>, int>> MyAlgo::Greedy_rounding(){
 
 }
 
-void MyAlgo::path_assignment(){
+void MyAlgo2::path_assignment(){
     for(int i = 0; i < graph.get_size(); i++){
         int mem = graph.Node_id2ptr(i)->get_memory_cnt();
         graph.Node_id2ptr(i)->revise(mem);

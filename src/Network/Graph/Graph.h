@@ -40,6 +40,7 @@ public:
     bool is_trusted(int node1_id, int node2_id);
     Node *Node_id2ptr(int id);
 
+	double find_success_probability(const vector<int> &path);
     void generate(string);
     void refresh();
     void release();
