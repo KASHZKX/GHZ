@@ -42,7 +42,7 @@ int main(){
     string file_path = "../data/";
 
     map<string, double> default_setting;
-    default_setting["num_of_node"] = 30;
+    default_setting["num_of_node"] = 50;
     default_setting["social_density"] = 0.5;
     default_setting["area_alpha"] = 0.1;
     default_setting["memory_cnt_avg"] = 5;
@@ -72,9 +72,7 @@ int main(){
     change_parameter["num_of_node"] = {20, 25, 30, 40, 50};
 
     vector<string> X_names = {"new_request_cnt"};//"request_avg", "num_of_node", "area_alpha", "resource_ratio", "entangle_alpha", "swap_prob"};
-    vector<string> Y_names = {"waiting_time", "throughputs", "finished_throughputs", \
-                            "succ-finished_ratio", "fail-finished_ratio", "active_timeslot", "path_length", "fidelity", \
-                            "encode_cnt", "unencode_cnt", "encode_ratio", "use_memory", "total_memory", "use_memory_ratio",\
+    vector<string> Y_names = { "throughputs", "use_memory", "total_memory", "use_memory_ratio",\
                             "use_channel", "total_channel", "use_channel_ratio", "runtime", "divide_cnt"};
     vector<string> algo_names = {"Greedy", "QCAST", "REPS", "MyAlgo", "MyGreedyAlgo", "MyAlgo2", "MyAlgo3"};
     // init result
@@ -86,7 +84,7 @@ int main(){
     }
     
 
-    int round = 10;
+    int round = 20;
     for(string X_name : X_names) {
         map<string, double> input_parameter = default_setting;
 
@@ -216,18 +214,18 @@ int main(){
             }
             
             map<string, map<string, double>> sum_res;
-            for(string algo_name : algo_names){
-                for(int T = 0; T < round; T++){
-                    result[T][algo_name]["waiting_time"] /= result[T][algo_name]["total_request"];
-                    result[T][algo_name]["encode_ratio"] = result[T][algo_name]["encode_cnt"] / (result[T][algo_name]["encode_cnt"] + result[T][algo_name]["unencode_cnt"]);
-                    result[T][algo_name]["succ-finished_ratio"] = result[T][algo_name]["throughputs"] / result[T][algo_name]["finished_throughputs"];
-                    result[T][algo_name]["fail-finished_ratio"] = 1 - result[T][algo_name]["succ-finished_ratio"];
-                    result[T][algo_name]["path_length"] = result[T][algo_name]["path_length"] / result[T][algo_name]["finished_throughputs"];
-                    result[T][algo_name]["divide_cnt"] = result[T][algo_name]["divide_cnt"] / result[T][algo_name]["finished_throughputs"];
-                    result[T][algo_name]["use_memory_ratio"] = result[T][algo_name]["use_memory"] / result[T][algo_name]["total_memory"];
-                    result[T][algo_name]["use_channel_ratio"] = result[T][algo_name]["use_channel"] / result[T][algo_name]["total_channel"];
-                }
-            }
+            // for(string algo_name : algo_names){
+            //     for(int T = 0; T < round; T++){
+            //         result[T][algo_name]["waiting_time"] /= result[T][algo_name]["total_request"];
+            //         result[T][algo_name]["encode_ratio"] = result[T][algo_name]["encode_cnt"] / (result[T][algo_name]["encode_cnt"] + result[T][algo_name]["unencode_cnt"]);
+            //         result[T][algo_name]["succ-finished_ratio"] = result[T][algo_name]["throughputs"] / result[T][algo_name]["finished_throughputs"];
+            //         result[T][algo_name]["fail-finished_ratio"] = 1 - result[T][algo_name]["succ-finished_ratio"];
+            //         result[T][algo_name]["path_length"] = result[T][algo_name]["path_length"] / result[T][algo_name]["finished_throughputs"];
+            //         result[T][algo_name]["divide_cnt"] = result[T][algo_name]["divide_cnt"] / result[T][algo_name]["finished_throughputs"];
+            //         result[T][algo_name]["use_memory_ratio"] = result[T][algo_name]["use_memory"] / result[T][algo_name]["total_memory"];
+            //         result[T][algo_name]["use_channel_ratio"] = result[T][algo_name]["use_channel"] / result[T][algo_name]["total_channel"];
+            //     }
+            // }
 
             for(string Y_name : Y_names) {
                 string filename = "ans/" + X_name + "_" + Y_name + ".ans";
