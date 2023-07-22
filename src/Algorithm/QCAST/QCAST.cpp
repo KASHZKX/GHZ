@@ -95,6 +95,7 @@ void QCAST::path_assignment(){
         vector<int> neighbors;
         for(int reqno = 0;reqno<(int)requests.size();reqno++){   //find the best path for every request
             Request &request = requests[reqno];
+            cout<<"REQUEST:"<<request.get_send_limit()<<endl;
             if(request.get_paths().size() > request.get_send_limit()){ // revise major path select
                 //force to find no path
                 candidate[reqno] = CandPath();
@@ -185,7 +186,6 @@ void QCAST::path_assignment(){
                 mx_reqno = reqno;
             }
         }
-
         if(mx_reqno == -1){//no path found
             break;
         }
