@@ -166,6 +166,11 @@ vector<int> MyAlgo3::separation_oracle(int req_no, double &req_Us){
             brute_path = it;
         }
     }
+    cout<<"\n[BRUTE]req:"<<req_no<<" ";
+    for(auto it:brute_path){
+        cout<<it<<"->";
+    }
+    cout<<":"<<brute_min<<endl;
 
     SPT = Dijkstra(src, dst,req_no);                               //the first SPT is get by dijkstra
     int cur_node = src;                                     //counting the first path's U(X,Y)=c* e^r
