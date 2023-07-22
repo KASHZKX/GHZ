@@ -201,6 +201,11 @@ vector<int> MyAlgo3::separation_oracle(int req_no, double &req_Us){
     map<pair<int, int>, bool> used_edge;
     vector<int> new_path;   
     pair<int,int> new_edge;
+
+    for(int i = 0; i < SPT.size(); i++){
+        while()
+    }
+
     while(1){
         double minimum = numeric_limits<double>::infinity();
         for(int i = 0; i < graph.get_size(); i++){                 //creating many new SPT
@@ -971,6 +976,6 @@ void MyAlgo3::path_assignment(){
     find_violate();
     calculate();
     vector<map<vector<int>, int>>path = Greedy_rounding();
-    cout << "change_edge_num: " << change_edge_num << endl;
+    
 }   
 
