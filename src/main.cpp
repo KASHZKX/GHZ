@@ -67,13 +67,13 @@ int main(){
     change_parameter["resource_ratio"] = {0.5, 1, 2, 10};
     change_parameter["area_alpha"] = {0.001, 0.01, 0.1}; 
     change_parameter["social_density"] = {0.25, 0.5, 0.75, 1}; 
-    change_parameter["new_request_cnt"] = {5, 10};
+    change_parameter["new_request_cnt"] = {5, 10 , 15 , 20 , 25};
 	change_parameter["request_avg"] = {5};
     //change_parameter["num_of_node"] = {20, 25, 30, 40, 50};
 
     vector<string> X_names = { "new_request_cnt"};//"new_request_cnt", "request_avg", "num_of_node", "area_alpha", "resource_ratio", "entangle_alpha", "swap_prob"};
-    vector<string> Y_names = { "throughputs", "use_memory", "total_memory", "use_memory_ratio",\
-                            "use_channel", "total_channel", "use_channel_ratio", "runtime", "divide_cnt", "change_edge_num", "diff_edge_num", "diff_rate","edge_difference"};
+    vector<string> Y_names = { "throughputs",  "use_memory_ratio",\
+                             "use_channel_ratio", "runtime"}; //"use_memory", "total_memory","use_channel", "total_channel", "divide_cnt", "change_edge_num", "diff_edge_num", "diff_rate","edge_difference"
     vector<string> algo_names = {"Greedy", "QCAST", "REPS", "MyAlgo", "MyGreedyAlgo", "MyAlgo2", "MyAlgo3"};
     // init result
     for(string X_name : X_names) {
@@ -84,7 +84,7 @@ int main(){
     }
     
 
-    int round = 5;
+    int round = 10;
     for(string X_name : X_names) {
         map<string, double> input_parameter = default_setting;
 
