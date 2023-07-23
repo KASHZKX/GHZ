@@ -56,8 +56,6 @@ int main(int argc, char *argv[]){
     string file_path = "../data/";
     if(argc > 1){
 	cout<<argv[1]<<endl;
-	int g;
-	cin>>g;
 	file_path = string(argv[1]) + '/';
     	cerr<<"the data is store in "<<file_path<<endl;
 	create_dir_if_not_exists(file_path);
