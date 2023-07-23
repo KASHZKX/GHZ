@@ -4,6 +4,11 @@
 #include <fstream>
 #include <sstream>
 #include <omp.h>
+#include <bits/stdc++.h>
+#include <iostream>
+#include <sys/stat.h>
+#include <sys/types.h>
+
 #include "Network/Graph/Graph.h"
 #include "Algorithm/AlgorithmBase/AlgorithmBase.h"
 #include "Algorithm/Greedy/Greedy.h"
@@ -15,7 +20,6 @@
 // #include "Algorithm/MyGreedyAlgo/MyGreedyAlgo.h"
 
 using namespace std;
-
 
 
 
@@ -37,28 +41,52 @@ Request generate_new_request(int node1, int node2, int time_limit){//demo
     return Request(node1, node2, time_limit);
 }
 
+void create_dir_if_not_exists(const std::string &path) {
+	struct stat info;
+	if (stat(path.c_str(), &info) == 0 && info.st_mode & S_IFDIR) {
+		return;
+	}
+	mkdir(path.c_str(), 0777);
+	return;
+}
 
-int main(){
+
+
+int main(int argc, char *argv[]){
     string file_path = "../data/";
+    if(argc > 1){
+	cout<<argv[1]<<endl;
+	int g;
+	cin>>g;
+	file_path = string(argv[1]) + '/';
+    	cerr<<"the data is store in "<<file_path<<endl;
+	create_dir_if_not_exists(file_path);
+	create_dir_if_not_exists(file_path+"ans");
+	create_dir_if_not_exists(file_path+"input");
+	create_dir_if_not_exists(file_path+"log");
 
+    }
     map<string, double> default_setting;
     default_setting["num_of_node"] = 50;
-    default_setting["social_density"] = 0.5;
     default_setting["area_alpha"] = 0.1;
     default_setting["memory_cnt_avg"] = 5;
     default_setting["channel_cnt_avg"] = 3;
     default_setting["resource_ratio"] = 1;
-    default_setting["min_fidelity"] = 0.7;
-    default_setting["max_fidelity"] = 0.95;
 
     default_setting["swap_prob"] = 0.9;
-    default_setting["entangle_alpha"] = 0.0005;
-    default_setting["node_time_limit"] = 1;
-    default_setting["new_request_cnt"] = 25;
-    default_setting["request_time_limit"] = 1;
+    default_setting["entangle_alpha"] = 0.002;
+    default_setting["new_request_cnt"] = 50;
     default_setting["total_time_slot"] = 1;
+    default_setting["request_avg"] = 3;
+    
+    // not used in this paper
+    default_setting["node_time_limit"] = 1;
+    default_setting["social_density"] = 0.5;
+    default_setting["min_fidelity"] = 0.7;
+    default_setting["max_fidelity"] = 0.95;
+    default_setting["request_time_limit"] = 1;
     default_setting["service_time"] = 100;
-    default_setting["request_avg"] = 6;
+
 
     map<string, vector<double>> change_parameter;
     change_parameter["swap_prob"] = {0.3, 0.5, 0.7, 0.9, 1};
@@ -67,14 +95,15 @@ int main(){
     change_parameter["resource_ratio"] = {0.5, 1, 2, 10};
     change_parameter["area_alpha"] = {0.001, 0.01, 0.1}; 
     change_parameter["social_density"] = {0.25, 0.5, 0.75, 1}; 
-    //change_parameter["new_request_cnt"] = {5, 10 , 15 , 20 , 25};
-	change_parameter["request_avg"] = {5};
+    change_parameter["new_request_cnt"] = {5, 10, 30, 40, 50, 60, 70};
+    change_parameter["request_avg"] = {3, 5, 7, 9, 11};
     //change_parameter["num_of_node"] = {20, 25, 30, 40, 50};
 
-    vector<string> X_names = {"entangle_alpha"};//"new_request_cnt", "request_avg", "num_of_node", "area_alpha", "resource_ratio", "entangle_alpha", };
+    vector<string> X_names = {"entangle_alpha"};//, "request_avg", "new_request_cnt" };//"new_request_cnt", "request_avg", "num_of_node", "area_alpha", "resource_ratio", "entangle_alpha", };
     vector<string> Y_names = { "throughputs",  "use_memory_ratio",\
-                             "use_channel_ratio", "runtime"}; //"use_memory", "total_memory","use_channel", "total_channel", "divide_cnt", "change_edge_num", "diff_edge_num", "diff_rate","edge_difference"
-    vector<string> algo_names = {"Greedy", "QCAST", "REPS", "MyAlgo", "MyGreedyAlgo", "MyAlgo2", "MyAlgo3"};
+                             "use_channel_ratio", "runtime", "use_memory", "total_memory","use_channel", "total_channel"};
+			     //, "divide_cnt", "change_edge_num", "diff_edge_num", "diff_rate","edge_difference"
+    vector<string> algo_names = {"Greedy", "QCAST", "REPS", "MyAlgo3"}; //"MyAlgo", "MyGreedyAlgo", "MyAlgo2", 
     // init result
     for(string X_name : X_names) {
         for(string Y_name : Y_names){
@@ -84,7 +113,7 @@ int main(){
     }
     
 
-    int round = 10;
+    int round = 30;
     for(string X_name : X_names) {
         map<string, double> input_parameter = default_setting;
 
@@ -136,8 +165,8 @@ int main(){
                 algorithms.emplace_back(new Greedy(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha));
                 algorithms.emplace_back(new QCAST(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha));
                 algorithms.emplace_back(new REPS(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha));
-                algorithms.emplace_back(new MyAlgo(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha));
-                algorithms.emplace_back(new MyAlgo2(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha));
+                //algorithms.emplace_back(new MyAlgo(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha));
+                //algorithms.emplace_back(new MyAlgo2(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha));
                 algorithms.emplace_back(new MyAlgo3(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha));
                 
                 // 建完圖，刪除 input 檔避免佔太多空間
