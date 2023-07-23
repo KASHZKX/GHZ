@@ -56,8 +56,6 @@ int main(int argc, char *argv[]){
     string file_path = "../data/";
     if(argc > 1){
 	cout<<argv[1]<<endl;
-	int g;
-	cin>>g;
 	file_path = string(argv[1]) + '/';
     	cerr<<"the data is store in "<<file_path<<endl;
 	create_dir_if_not_exists(file_path);
@@ -75,7 +73,7 @@ int main(int argc, char *argv[]){
 
     default_setting["swap_prob"] = 0.9;
     default_setting["entangle_alpha"] = 0.002;
-    default_setting["new_request_cnt"] = 50;
+    default_setting["new_request_cnt"] = 30;
     default_setting["total_time_slot"] = 1;
     default_setting["request_avg"] = 3;
     
@@ -97,10 +95,11 @@ int main(int argc, char *argv[]){
     change_parameter["social_density"] = {0.25, 0.5, 0.75, 1}; 
     change_parameter["new_request_cnt"] = {30, 40, 50, 60, 70};
     change_parameter["request_avg"] = {3, 5, 7, 9, 11};
-    change_parameter["request_avg"] = {5};
+    change_parameter["memory_cnt_avg"] = {5, 7, 9, 11, 13, 15};
+
     //change_parameter["num_of_node"] = {20, 25, 30, 40, 50};
 
-    vector<string> X_names = { "new_request_cnt", "swap_prob" };//"new_request_cnt", "request_avg", "num_of_node", "area_alpha", "resource_ratio", "entangle_alpha","swap_prob" };
+    vector<string> X_names = { "memory_cnt_avg", "swap_prob" };//"new_request_cnt", "request_avg", "num_of_node", "area_alpha", "resource_ratio", "entangle_alpha","swap_prob" };
     vector<string> Y_names = { "throughputs",  "use_memory_ratio",\
                              "use_channel_ratio", "runtime", "use_memory", "total_memory","use_channel", "total_channel"};
 			     //, "divide_cnt", "change_edge_num", "diff_edge_num", "diff_rate","edge_difference"
