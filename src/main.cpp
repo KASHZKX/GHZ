@@ -42,7 +42,7 @@ int main(){
     string file_path = "../data/";
 
     map<string, double> default_setting;
-    default_setting["num_of_node"] = 30;
+    default_setting["num_of_node"] = 50;
     default_setting["social_density"] = 0.5;
     default_setting["area_alpha"] = 0.1;
     default_setting["memory_cnt_avg"] = 5;
@@ -61,17 +61,17 @@ int main(){
     default_setting["request_avg"] = 6;
 
     map<string, vector<double>> change_parameter;
-    // change_parameter["swap_prob"] = {0.3, 0.5, 0.7, 0.9, 1};
-    // change_parameter["entangle_alpha"] = {0.02, 0.002, 0.0002, 0};
+    change_parameter["swap_prob"] = {0.3, 0.5, 0.7, 0.9, 1};
+    change_parameter["entangle_alpha"] = {0.02, 0.002, 0.0002, 0};
     change_parameter["min_fidelity"] = {0.5, 0.7, 0.75, 0.85, 0.95};
     change_parameter["resource_ratio"] = {0.5, 1, 2, 10};
     change_parameter["area_alpha"] = {0.001, 0.01, 0.1}; 
     change_parameter["social_density"] = {0.25, 0.5, 0.75, 1}; 
     change_parameter["new_request_cnt"] = {5, 10};
 	change_parameter["request_avg"] = {5};
-    change_parameter["num_of_node"] = {20, 25, 30, 40, 50};
+    //change_parameter["num_of_node"] = {20, 25, 30, 40, 50};
 
-    vector<string> X_names = {"new_request_cnt"};//"request_avg", "num_of_node", "area_alpha", "resource_ratio", "entangle_alpha", "swap_prob"};
+    vector<string> X_names = { "swap_prob"};//"new_request_cnt", "request_avg", "num_of_node", "area_alpha", "resource_ratio", "entangle_alpha", "swap_prob"};
     vector<string> Y_names = { "throughputs", "use_memory", "total_memory", "use_memory_ratio",\
                             "use_channel", "total_channel", "use_channel_ratio", "runtime", "divide_cnt", "change_edge_num", "diff_edge_num", "diff_rate","edge_difference"};
     vector<string> algo_names = {"Greedy", "QCAST", "REPS", "MyAlgo", "MyGreedyAlgo", "MyAlgo2", "MyAlgo3"};
