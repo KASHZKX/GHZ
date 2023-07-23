@@ -131,14 +131,10 @@ void Graph::generate(string filename){
     neighbor.resize(num_of_node);
     // social.resize(num_of_node);
     // input of nodes
-    double pos_x, pos_y;
+    double pos_x, pos_y, new_swap_prob;
     int memory_cnt;
     for(int i = 0; i < num_of_node; i++){
-        random_device rd;
-        default_random_engine generator = default_random_engine(rd());
-        uniform_int_distribution<double> dis(-0.1, 0.1);
-        double new_swap_prob = swap_prob + dis(generator);
-		graph_input >> pos_x >> pos_y >> memory_cnt;
+		graph_input >> pos_x >> pos_y >> memory_cnt >> new_swap_prob;
         nodes.emplace_back(i, memory_cnt, time_limit, pos_x, pos_y, new_swap_prob);
 	}
     
