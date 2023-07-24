@@ -547,15 +547,6 @@ vector<map<vector<int>, int>> MyAlgo3::rounding(){
 }
 
 void MyAlgo3::check_enough(vector<map<vector<int>, int>> &path){
-    // for(unsigned int i = 0; i < path.size(); i++){
-    //     for(auto it:path[i]){
-    //         vector<int>Final_path =it.first;
-    //         for(auto it2:Final_path){
-    //             cout<<it2<<" ";
-    //         }
-    //         cout<<"     Qubits:"<<it.second<<endl;
-    //     }
-    // }
     vector<int> memory_used(graph.get_size());
     map<vector<int>,int> channel_used; 
     vector<int> over_memory(graph.get_size());
@@ -607,17 +598,11 @@ void MyAlgo3::check_enough(vector<map<vector<int>, int>> &path){
         flag = true;
         for(int i = 0; i < (int)over_memory.size(); i++){
             if(over_memory[i] > 0){
-                // cout<<"OVER MEMORY:"<<i<<":"<<over_memory[i]<<endl;
                 flag = false;
             }
         }
         for(auto it : over_channel){
             if(it.second > 0){
-                // cout<<"OVER CHANNEL:";
-                // for(auto it2 : it.first){
-                //     cout << it2 << " ";
-                // }
-                // cout <<" over" << it.second <<endl;
                 flag = false;
             }
         }
