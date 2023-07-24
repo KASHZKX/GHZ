@@ -225,9 +225,9 @@ vector<int> MyAlgo3::separation_oracle(int req_no, double &req_Us){
             vector<int> neighbors = graph.get_neighbors_id(i);  
             for(auto neighbor : neighbors){
                 double temp1 = 0, temp2 = 0;
-                // if(SPT[i] == neighbor || SPT[neighbor] == i){      // checking used edge or unused
-                //     continue;   
-                // }else{                                             // if unused
+                if(SPT[i] == neighbor || SPT[neighbor] == i){      // checking used edge or unused
+                    continue;   
+                }else{                                             // if unused
                     temp1 = X(i, neighbor, req_no);
                     temp2 = Y[req_no][{i, neighbor}];
                     int cur_node = i;
@@ -244,22 +244,22 @@ vector<int> MyAlgo3::separation_oracle(int req_no, double &req_Us){
                         cur_node = SPT[cur_node];
                     }       
                     if(temp2 < 0 && temp1 > 0 ) {               // we need the smallest edge to change the SPT
-                        // if(i<neighbor){
-                        //     if(used_edge.find({i, neighbor}) != used_edge.end()){
-                        //         continue;
-                        //     }
-                        // }
-                        // else{
-                        //     if(used_edge.find({neighbor ,i}) != used_edge.end()){
-                        //         continue;
-                        //     }
-                        // }
+                        if(i<neighbor){
+                            if(used_edge.find({i, neighbor}) != used_edge.end()){
+                                continue;
+                            }
+                        }
+                        else{
+                            if(used_edge.find({neighbor ,i}) != used_edge.end()){
+                                continue;
+                            }
+                        }
                         if(minimum > - temp1 / temp2){
                             new_edge = {i, neighbor};
                             minimum = - temp1 / temp2;
                         }
                     }
-                // }
+                }
             }
         }        // 找到最小的 edge 
 
@@ -343,7 +343,7 @@ void MyAlgo3::find_bottleneck(vector<int> path, int req_no){
             min_s_uv = s_uv[i];
     }
 
-    int rate = 1;
+    int rate = 10;
     double s = min(min_s_u, min(min_s_uv, s_i));
     for(int i = 0; i < rate; i++){
         if(x_i_p.find(path) != x_i_p.end())                                         //add flow to path
@@ -918,7 +918,7 @@ void MyAlgo3::path_assignment(){
         int mem = graph.Node_id2ptr(i)->get_memory_cnt();
         graph.Node_id2ptr(i)->revise(mem);
     }
-
+    
     initialize();
 
     // for(unsigned int i = 0; i < requests.size(); i++){
@@ -932,7 +932,6 @@ void MyAlgo3::path_assignment(){
     vector<int> best_path;
     vector<int> cur_path;
     // double U;
-    cout << "here2" << endl;
     while(obj < 1){
         int req_no = 0;
         double smallest_U = numeric_limits<double>::infinity();
@@ -976,10 +975,11 @@ void MyAlgo3::path_assignment(){
                 req_no = i;
             }
         } 
-        cout << smallest_U << endl;
+        // cout << smallest_U << endl;
 
         find_bottleneck(best_path, req_no);
         
+        cout << obj << endl;
         // obj = changing_obj();
         // cout<<"changing_obj obj: " << obj << endl ;
     }

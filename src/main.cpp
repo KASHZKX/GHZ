@@ -71,7 +71,7 @@ int main(int argc, char *argv[]){
 
     default_setting["swap_prob"] = 0.9;
     default_setting["entangle_alpha"] = 0.0002;
-    default_setting["new_request_cnt"] = 70;
+    default_setting["new_request_cnt"] = 30;
     default_setting["total_time_slot"] = 1;
     default_setting["request_avg"] = 3;
     default_setting["epsilon"] = 0.2;    
@@ -91,12 +91,11 @@ int main(int argc, char *argv[]){
     change_parameter["resource_ratio"] = {0.5, 1, 2, 10};
     change_parameter["area_alpha"] = {0.001, 0.01, 0.1}; 
     change_parameter["social_density"] = {0.25, 0.5, 0.75, 1}; 
-    change_parameter["new_request_cnt"] = {40, 50, 60, 70, 80};
+    change_parameter["new_request_cnt"] = {10, 20, 30, 40, 50};
     change_parameter["request_avg"] = {3, 5, 7, 9, 11};
-    // change_parameter["num_of_node"] = {20, 30, 40, 50};
-    change_parameter["num_of_node"] = {50};
-
-    vector<string> X_names = { "swap_prob", /*"new_request_cnt",*/ "num_of_node" /*,"swap_prob", "entangle_alpha", "request_avg" , "area_alpha" ,  "resource_ratio"*/};
+    change_parameter["num_of_node"] = {20, 30, 40, 50};
+    
+    vector<string> X_names = { "new_request_cnt", "swap_prob", "num_of_node", "entangle_alpha", "request_avg" , "area_alpha" ,  "resource_ratio"};
     vector<string> Y_names = { "throughputs", "use_channel_ratio",  "use_memory_ratio", "runtime"}; //"use_memory", "total_memory","use_channel", "total_channel"
 			     //, "divide_cnt", "change_edge_num", "diff_edge_num", "diff_rate","edge_difference"
     vector<string> algo_names = {"Greedy", "QCAST", "REPS", "MyAlgo3"}; //"MyAlgo", "MyGreedyAlgo", "MyAlgo2", 
@@ -161,9 +160,9 @@ int main(int argc, char *argv[]){
 
                 
                 vector<AlgorithmBase*> algorithms;
-                // algorithms.emplace_back(new Greedy(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha));
+                algorithms.emplace_back(new Greedy(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha));
                 algorithms.emplace_back(new QCAST(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha));
-                // algorithms.emplace_back(new REPS(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha));
+                algorithms.emplace_back(new REPS(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha));
                 //algorithms.emplace_back(new MyAlgo(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha));
                 //algorithms.emplace_back(new MyAlgo2(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha));
                 algorithms.emplace_back(new MyAlgo3(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha));
