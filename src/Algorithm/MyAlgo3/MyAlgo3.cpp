@@ -34,12 +34,15 @@ void MyAlgo3::initialize(){
 
         vector<int> temp = graph.get_neighbors_id(i);                             //beta=delta/Cuv
         for(auto it: temp){
-            if(i < it){
-                beta[make_pair(i,it)] = delta / (graph.get_channel_size(i, it));
-            }
-            else{
-                beta[make_pair(it,i)] = delta / (graph.get_channel_size(i, it));
-            }
+            // if(i < it){
+            //     beta[make_pair(i,it)] = delta / (graph.get_channel_size(i, it));
+            // }
+            // else{
+            //     beta[make_pair(it,i)] = delta / (graph.get_channel_size(i, it));
+            // }
+            beta[make_pair(i,it)] = delta / (graph.get_channel_size(i, it));
+            beta[make_pair(it,i)] = delta / (graph.get_channel_size(i, it));
+
         }
     }
 
@@ -324,7 +327,7 @@ void MyAlgo3::find_bottleneck(vector<int> path, int req_no){
 
    
     for(unsigned int i = 0; i < path.size(); i++){
-        if(i == 0 || path.size() - 1)
+        if(i == 0 || i == path.size() - 1)
             s_u[path[i]] = graph.Node_id2ptr(path[i])->get_memory_cnt();        //if src or dst,then only cost 1
         else
             s_u[path[i]] = graph.Node_id2ptr(path[i])->get_memory_cnt() / 2;    //else cost 2
@@ -334,11 +337,11 @@ void MyAlgo3::find_bottleneck(vector<int> path, int req_no){
 
     for(unsigned int i = 0; i < path.size() - 1; i++){
         s_uv[i] = graph.get_channel_size(path[i], path[i+1]);                   //channel min
-        if(s_u[i] < min_s_uv)
+        if(s_uv[i] < min_s_uv)
             min_s_uv = s_uv[i];
     }
 
-    int rate = 7;
+    int rate = 10;
     double s = min(min_s_u, min(min_s_uv, s_i));
     for(int i = 0; i < rate; i++){
         if(x_i_p.find(path) != x_i_p.end())                                         //add flow to path
@@ -354,6 +357,7 @@ void MyAlgo3::find_bottleneck(vector<int> path, int req_no){
         for(unsigned int i = 0; i < path.size() - 1; i++){
             obj += (beta[{path[i], path[i+1]}] * (1 + epsilon * s / s_uv[i]) -  beta[{path[i], path[i+1]}]) * graph.get_channel_size(path[i], path[i+1]);;
             beta[{path[i], path[i+1]}] = beta[{path[i], path[i+1]}] * (1 + epsilon * s / s_uv[i]);
+            beta[{path[i+1], path[i]}] = beta[{path[i+1], path[i]}] * (1 + epsilon * s / s_uv[i]);
         }
         obj += (tau[req_no] * (1 + epsilon * s / s_i) - tau[req_no])* requests[req_no].get_send_limit();;    
         tau[req_no] = tau[req_no] * (1 + epsilon * s / s_i);    
@@ -367,6 +371,11 @@ void MyAlgo3::find_bottleneck(vector<int> path, int req_no){
         else{
             X[{path[i],path[i+1]}][req_no] = alpha[path[i]] + alpha[path[i+1]] + beta[{path[i+1], path[i]}];
             X[{path[i+1],path[i]}][req_no] = alpha[path[i]] + alpha[path[i+1]] + beta[{path[i+1], path[i]}];   
+        }
+
+        if(path[i] == requests[req_no].get_source() || path[i+1] == requests[req_no].get_destination()){
+            X[{path[i],path[i+1]}][req_no] += tau[req_no];
+            X[{path[i+1],path[i]}][req_no] += tau[req_no];
         }
 
     }
@@ -389,9 +398,9 @@ double MyAlgo3::changing_obj(){
 }
 
 void MyAlgo3::find_violate(){
-    vector<int> used_memory(graph.get_size());
+    vector<double> used_memory(graph.get_size());
     map<vector<int>, double> used_channel;
-    map<pair<int, int>, int> used_request;
+    map<pair<int, int>, double> used_request;
 
     for(auto &it : x_i_p){
         vector<int> path = it.first;
@@ -430,18 +439,22 @@ void MyAlgo3::find_violate(){
 
     double max_magni = 0.0;
     double cur_magni;
-    for(int i = 0; i < graph.get_size(); i++){
-        cur_magni = used_memory[i] / graph.Node_id2ptr(i)->get_memory_cnt();
-        if(cur_magni > max_magni){
-            max_magni = cur_magni;
-        }
-    }
     for(auto it : used_channel){
         cur_magni = it.second / graph.get_channel_size(it.first[0],it.first[1]);
         if(cur_magni > max_magni){
             max_magni = cur_magni;
         }
     }
+   cerr << "max: " << max_magni << endl;
+
+    for(int i = 0; i < graph.get_size(); i++){
+        cur_magni = used_memory[i] / graph.Node_id2ptr(i)->get_memory_cnt();
+        if(cur_magni > max_magni){
+            max_magni = cur_magni;
+        }
+    }
+   cerr << "max: " << max_magni << endl;
+
 
     for(auto it : used_request){
         int src = it.first.first;
@@ -458,6 +471,8 @@ void MyAlgo3::find_violate(){
             max_magni = cur_magni;
         }
     }
+   cerr << "max: " << max_magni << endl;
+
     //cout << "Magnification:" << max_magni << endl;
 
     for(auto &x : x_i_p){
@@ -473,6 +488,16 @@ void MyAlgo3::find_violate(){
         cout<<"["<<it.first[0]<<","<<it.first[1]<<"]:"<<it.second<<endl;
     }
     */
+//    double max_memory = 0;
+//    for(int i = 0; i < graph.get_size(); i++){
+//         max_memory = max(max_memory, used_memory[i]);
+//    }
+//    cerr << "max memory: " << max_memory << endl;
+
+//     double max_memory = 0;
+//    for(int i = 0; i < graph.get_size(); i++){
+//         max_memory = max(max_memory, used_channel[i]);
+//    }
 }
 
 
@@ -775,6 +800,9 @@ void MyAlgo3::dfs(int src, int dst, vector<vector<int>> &ans, vector<int> &path,
 
 void MyAlgo3::calculate(){
     double sum=0.0;
+
+    int t = 1;
+
     for(auto it:x_i_p){
         double prob=1;
         vector<int>path=it.first;
@@ -785,7 +813,10 @@ void MyAlgo3::calculate(){
             prob*=graph.Node_id2ptr(path[i])->get_swap_prob();  
         }
         sum+=it.second*prob;
+        cerr << "t" << t << " : " << it.second << " * " << prob << endl;
+        t++;
     }
+    cerr << "sum = " << sum << endl;
     res["primal"] = sum;
 }
 
@@ -868,7 +899,7 @@ vector<map<vector<int>, int>> MyAlgo3::Greedy_rounding(){
 		}
 	}
 	for(int request_id=0;request_id<(int)requests.size();request_id++){
-		cerr<<"GG: It work?"<<endl;
+		// cerr<<"GG: It work?"<<endl;
 		while(requests[request_id].get_send_limit() - used_I[request_id] > 0){
 			vector<int> extra_path = BFS(requests[request_id].get_source(), requests[request_id].get_destination());
 			int width = 0;
@@ -934,8 +965,8 @@ void MyAlgo3::path_assignment(){
         // obj = changing_obj();
         // cout<<"changing_obj obj: " << obj << endl ;
     }
-    calculate();
     find_violate();
+    calculate();
     vector<map<vector<int>, int>>path = Greedy_rounding();
     res["change_edge_num"] = change_edge_num;
     res["diff_edge_num"] = diff_num;
