@@ -65,7 +65,7 @@ int main(int argc, char *argv[]){
     map<string, double> default_setting;
     default_setting["num_of_node"] = 50;
     default_setting["area_alpha"] = 0.1;
-    default_setting["memory_cnt_avg"] = 5;
+    default_setting["memory_cnt_avg"] = 12;
     default_setting["channel_cnt_avg"] = 3;
     default_setting["resource_ratio"] = 1;
 
@@ -108,7 +108,7 @@ int main(int argc, char *argv[]){
     }
     
 
-    int round = 1;
+    int round = 30;
     for(string X_name : X_names) {
         map<string, double> input_parameter = default_setting;
         for(double change_value : change_parameter[X_name]) {         
