@@ -72,7 +72,7 @@ int main(int argc, char *argv[]){
     default_setting["resource_ratio"] = 1;
 
     default_setting["swap_prob"] = 0.9;
-    default_setting["entangle_alpha"] = 0.002;
+    default_setting["entangle_alpha"] = 0.0002;
     default_setting["new_request_cnt"] = 70;
     default_setting["total_time_slot"] = 1;
     default_setting["request_avg"] = 3;
@@ -98,7 +98,7 @@ int main(int argc, char *argv[]){
     change_parameter["request_avg"] = {5};
     //change_parameter["num_of_node"] = {20, 25, 30, 40, 50};
 
-    vector<string> X_names = { "new_request_cnt", "swap_prob" };//"new_request_cnt", "request_avg", "num_of_node", "area_alpha", "resource_ratio", "entangle_alpha","swap_prob" };
+    vector<string> X_names = { "new_request_cnt"};//"new_request_cnt", "request_avg", "num_of_node", "area_alpha", "resource_ratio", "entangle_alpha","swap_prob" };
     vector<string> Y_names = { "throughputs",  "use_memory_ratio",\
                              "use_channel_ratio", "runtime", "use_memory", "total_memory","use_channel", "total_channel"};
 			     //, "divide_cnt", "change_edge_num", "diff_edge_num", "diff_rate","edge_difference"

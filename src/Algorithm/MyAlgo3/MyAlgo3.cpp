@@ -807,6 +807,7 @@ void MyAlgo3::calculate(){
         }
         sum+=it.second*prob;
     }
+    cout << "total prpb: " <<sum << endl;
     res["primal"] = sum;
 }
 
