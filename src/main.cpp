@@ -228,6 +228,8 @@ int main(int argc, char *argv[]){
                 for(auto &algo:algorithms){
                     for(string Y_name : Y_names) {
                         result[T][algo->get_name()][Y_name] = algo->get_res(Y_name);
+                        if(Y_name == "throughputs" && algo->get_name() == "MyAlgo3") 
+                            result[T][algo->get_name()]["primal"] = algo->get_res("primal");
                     }
                 }
                 now = time(0);
@@ -263,7 +265,6 @@ int main(int argc, char *argv[]){
 
             
             for(int T = 0; T < round; T++){
-                cout << "primal throughputs" << result[T]["MyAlgo3"]["primal"] << endl;
                 sum_res["MyAlgo3"]["primal"] += result[T]["MyAlgo3"]["primal"];
             }
             
