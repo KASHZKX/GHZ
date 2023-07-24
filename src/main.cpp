@@ -263,7 +263,7 @@ int main(int argc, char *argv[]){
 
             
             for(int T = 0; T < round; T++){
-                cout << "primal throughputs" << endl;
+                cout << "primal throughputs" << result[T]["MyAlgo3"]["primal"] << endl;
                 sum_res["MyAlgo3"]["primal"] += result[T]["MyAlgo3"]["primal"];
             }
             
