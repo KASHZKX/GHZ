@@ -27,7 +27,8 @@ void MyAlgo3::next_time_slot(){
 
 void MyAlgo3::initialize(){
     M = graph.get_size() + graph.get_num_of_edge() + requests.size();              //M=V+E+I
-    delta = (1 + epsilon) * pow(((1 + epsilon) * M), (-1 / epsilon));         
+    // delta = (1 + epsilon) * pow(((1 + epsilon) * M), (-1 / epsilon));         
+    delta = (1 + epsilon) * (1.0 / pow((1 + epsilon) * M, 1.0 / epsilon));
 
     for(int i = 0; i < graph.get_size(); i++){
         alpha.emplace_back(delta / graph.Node_id2ptr(i)->get_memory_cnt());       //alpha=delta/Mu
@@ -930,6 +931,7 @@ void MyAlgo3::path_assignment(){
     }
 
     initialize();
+    cout << "here1" << endl;
     
     for(int i = 0; i < (int)graph.get_size(); i++){
         cerr << "alpha " << i << " : " << alpha[i] << endl;
@@ -943,17 +945,18 @@ void MyAlgo3::path_assignment(){
         cerr << "tau " << i << " : " << tau[i] << endl;
     }
 
-    for(unsigned int i = 0; i < requests.size(); i++){
-        int src = requests[i].get_source();
-        int dst = requests[i].get_destination();
-        all_source_target_path.push_back(allPathsSourceTarget(src, dst));
-    }
+    // for(unsigned int i = 0; i < requests.size(); i++){
+    //     int src = requests[i].get_source();
+    //     int dst = requests[i].get_destination();
+    //     all_source_target_path.push_back(allPathsSourceTarget(src, dst));
+    // }
 
     
     obj = M * delta;
     vector<int> best_path;
     vector<int> cur_path;
     // double U;
+    cout << "here2" << endl;
     while(obj < 1){
         int req_no = 0;
         double smallest_U = numeric_limits<double>::infinity();
@@ -962,18 +965,32 @@ void MyAlgo3::path_assignment(){
         all_path.resize(requests.size());
         U.resize(requests.size());
         //cout<<"\n------New round-------\n";
-        #pragma omp parallel for
-        for(unsigned int i = 0; i < requests.size(); i++){
-            all_path[i] =  separation_oracle(i, U[i]);
-            //cout << "smallest_U: " << smallest_U << " U: " << U << "\n\n"; 
-        }
-        // cout << "Dijkstra" << endl;
-        // for(int i = 0; i < requests.size(); i++){
-        //     all_path[i] = Dijkstra(requests[i].get_source(), requests[i].get_destination(), i);
-        //     for(int j = )
+        // #pragma omp parallel for
+        // for(unsigned int i = 0; i < requests.size(); i++){
+        //     all_path[i] =  separation_oracle(i, U[i]);
+        //     //cout << "smallest_U: " << smallest_U << " U: " << U << "\n\n"; 
         // }
-        // cout << "Dijkstra end" << endl;
 
+        cout << "Dijkstra start" << endl;
+        vector<int> SPT;
+        #pragma omp parallel for
+        for(int i = 0; i < (int)requests.size(); i++){
+            SPT = Dijkstra(requests[i].get_source(), requests[i].get_destination(), i);
+            int cur_node = requests[i].get_source();
+            while(cur_node != requests[i].get_destination()){
+                all_path[i].push_back(cur_node);
+                cur_node = SPT[cur_node];
+            } 
+            all_path[i].push_back(requests[i].get_destination());
+             
+            U[i] = 0;
+            for(int j = 0; j < (int)all_path[i].size(); j++){
+                U[i] += alpha[all_path[i][j]];
+                if(j < all_path[i].size()-1) U[i] += beta[{all_path[i][j], all_path[i][j+1]}];
+            }
+            U[i] += tau[i];
+        }
+        cout << "Dijkstra end" << endl;
 
         for(unsigned int i = 0; i < requests.size(); i++){
             //cout << "smallest_U: " << smallest_U << " U: " << U << "\n\n"; 
@@ -983,8 +1000,10 @@ void MyAlgo3::path_assignment(){
                 req_no = i;
             }
         } 
+        cout << smallest_U << endl;
 
         find_bottleneck(best_path, req_no);
+        
         cerr << "best path : " << endl;
         for(int i = 0; i < (int)best_path.size(); i++){
             cerr << best_path[i] << "->";
@@ -1005,6 +1024,7 @@ void MyAlgo3::path_assignment(){
         // obj = changing_obj();
         // cout<<"changing_obj obj: " << obj << endl ;
     }
+
     calculate();
     find_violate();
     calculate();

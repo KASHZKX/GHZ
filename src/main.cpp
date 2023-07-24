@@ -152,17 +152,17 @@ int main(int argc, char *argv[]){
                 ofs  << "時間 " << dt << endl << endl; 
 
                 string filename = file_path + "input/round_" + round_str + ".input";
-                // string command = "python3 main.py ";
-                // string parameter = to_string(num_of_node) + " " + to_string(min_channel_cnt) + " " + to_string(max_channel_cnt) + " " + to_string(min_memory_cnt) + " " + to_string(max_memory_cnt) + " " + to_string(min_fidelity) + " " + to_string(max_fidelity) + " " + to_string(area_alpha) + " " + to_string(min_swap_prob) + " " +  to_string(max_swap_prob);
-                // if(system((command + filename + " " + parameter).c_str()) != 0){
-                //     cerr<<"error:\tsystem proccess python error"<<endl;
-                //     exit(1);
-                // }
+                string command = "python3 main.py ";
+                string parameter = to_string(num_of_node) + " " + to_string(min_channel_cnt) + " " + to_string(max_channel_cnt) + " " + to_string(min_memory_cnt) + " " + to_string(max_memory_cnt) + " " + to_string(min_fidelity) + " " + to_string(max_fidelity) + " " + to_string(area_alpha) + " " + to_string(min_swap_prob) + " " +  to_string(max_swap_prob);
+                if(system((command + filename + " " + parameter).c_str()) != 0){
+                    cerr<<"error:\tsystem proccess python error"<<endl;
+                    exit(1);
+                }
 
                 
                 vector<AlgorithmBase*> algorithms;
                 // algorithms.emplace_back(new Greedy(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha));
-                // algorithms.emplace_back(new QCAST(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha));
+                algorithms.emplace_back(new QCAST(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha));
                 // algorithms.emplace_back(new REPS(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha));
                 //algorithms.emplace_back(new MyAlgo(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha));
                 //algorithms.emplace_back(new MyAlgo2(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha));
@@ -180,35 +180,36 @@ int main(int argc, char *argv[]){
                     ofs<<"---------------in timeslot " <<t<<" -------------" <<endl;
                     cout<< "---------generating requests in main.cpp----------" << endl;
 
-                    // for(int q = 0; q < new_request_cnt && t < service_time; q++){
-                    //     bool check_no_repeat;
-                    //     do{
-                    //         check_no_repeat=true;
-                    //         Request new_request = generate_new_request(num_of_node, request_time_limit, min_request, max_request);
-                    //         for(auto it:algorithms[0]->get_requests()){
-                    //             if(it.get_source()==new_request.get_source() && it.get_destination()==new_request.get_destination()){
-                    //                 check_no_repeat=false;
-                    //             }
-                    //         }
-                    //         if(check_no_repeat==true){
-                    //             cout<<q << ". source: " << new_request.get_source()<<", destination: "<<new_request.get_destination()<<endl;
-                    //             for(auto &algo:algorithms){
-                    //                 result[T][algo->get_name()]["total_request"]++; 
-                    //                 algo->add_new_request(new_request);
-                    //             }
-                    //         }
-                    //     }while(check_no_repeat==false);
+                    for(int q = 0; q < new_request_cnt && t < service_time; q++){
+                        bool check_no_repeat;
+                        do{
+                            check_no_repeat=true;
+                            Request new_request = generate_new_request(num_of_node, request_time_limit, min_request, max_request);
+                            for(auto it:algorithms[0]->get_requests()){
+                                if(it.get_source()==new_request.get_source() && it.get_destination()==new_request.get_destination()){
+                                    check_no_repeat=false;
+                                }
+                            }
+                            if(check_no_repeat==true){
+                                cout<<q << ". source: " << new_request.get_source()<<", destination: "<<new_request.get_destination()<<endl;
+                                for(auto &algo:algorithms){
+                                    result[T][algo->get_name()]["total_request"]++; 
+                                    algo->add_new_request(new_request);
+                                }
+                            }
+                        }while(check_no_repeat==false);
+                    }
+                    
+                    // Request new_request = generate_fix_request(0, 3, request_time_limit, 4);
+                    // for(auto &algo:algorithms){
+                    //     result[T][algo->get_name()]["total_request"]++; 
+                    //     algo->add_new_request(new_request);
                     // }
-                    Request new_request = generate_fix_request(0, 3, request_time_limit, 4);
-                    for(auto &algo:algorithms){
-                        result[T][algo->get_name()]["total_request"]++; 
-                        algo->add_new_request(new_request);
-                    }
-                    new_request = generate_fix_request(0, 2, request_time_limit, 2);
-                    for(auto &algo:algorithms){
-                        result[T][algo->get_name()]["total_request"]++; 
-                        algo->add_new_request(new_request);
-                    }
+                    // new_request = generate_fix_request(0, 2, request_time_limit, 2);
+                    // for(auto &algo:algorithms){
+                    //     result[T][algo->get_name()]["total_request"]++; 
+                    //     algo->add_new_request(new_request);
+                    // }
 
                     cout<< "---------generating requests in main.cpp----------end" << endl;
                     
