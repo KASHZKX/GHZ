@@ -984,8 +984,8 @@ void MyAlgo3::path_assignment(){
             all_path[i].push_back(requests[i].get_destination());
              
             U[i] = 0;
-            for(int j = 0; j < (int)all_path[i].size(); j++){
-                U[i] += alpha[all_path[i][j]];
+            for(int j = 0; j < (int)all_path[i].size()-1; j++){
+                U[i] += alpha[all_path[i][j]] + alpha[all_path[i][j+1]] ;
                 if(j < all_path[i].size()-1) U[i] += beta[{all_path[i][j], all_path[i][j+1]}];
             }
             U[i] += tau[i];
