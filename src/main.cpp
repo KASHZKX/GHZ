@@ -65,7 +65,7 @@ int main(int argc, char *argv[]){
 
     }
     map<string, double> default_setting;
-    default_setting["num_of_node"] = 70;
+    default_setting["num_of_node"] = 50;
     default_setting["area_alpha"] = 0.1;
     default_setting["memory_cnt_avg"] = 5;
     default_setting["channel_cnt_avg"] = 3;
@@ -263,6 +263,7 @@ int main(int argc, char *argv[]){
 
             
             for(int T = 0; T < round; T++){
+                cout << "primal throughputs" << endl;
                 sum_res["MyAlgo3"]["primal"] += result[T]["MyAlgo3"]["primal"];
             }
             
@@ -280,7 +281,7 @@ int main(int argc, char *argv[]){
                     }
                     ofs << sum_res[algo_name][Y_name] / round << ' ';
                     if(algo_name == "MyAlgo3" && Y_name == "throughputs"){
-                        ofs << sum_res["MyAlgo3"]["primal"] << " ";
+                        ofs << sum_res["MyAlgo3"]["primal"] / round << " ";
                     }
                 }
                 ofs << endl;
