@@ -65,18 +65,19 @@ int main(int argc, char *argv[]){
 
     }
     map<string, double> default_setting;
-    default_setting["num_of_node"] = 50;
+    default_setting["num_of_node"] = 70;
     default_setting["area_alpha"] = 0.1;
     default_setting["memory_cnt_avg"] = 5;
     default_setting["channel_cnt_avg"] = 3;
     default_setting["resource_ratio"] = 1;
 
     default_setting["swap_prob"] = 0.9;
-    default_setting["entangle_alpha"] = 0.0002;
-    default_setting["new_request_cnt"] = 50;
+    default_setting["entangle_alpha"] = 0.002;
+    default_setting["new_request_cnt"] = 70;
     default_setting["total_time_slot"] = 1;
     default_setting["request_avg"] = 3;
-    
+    default_setting["epsilon"] = 0.2;    
+
     // not used in this paper
     default_setting["node_time_limit"] = 1;
     default_setting["social_density"] = 0.5;
@@ -84,7 +85,6 @@ int main(int argc, char *argv[]){
     default_setting["max_fidelity"] = 0.95;
     default_setting["request_time_limit"] = 1;
     default_setting["service_time"] = 100;
-
 
     map<string, vector<double>> change_parameter;
     change_parameter["swap_prob"] = {0.5 ,0.6, 0.7, 0.8, 0.9, 1};
