@@ -1,8 +1,7 @@
 #!/bin/bash
-index_array=("min_fidelity_throughputs" "min_fidelity_fail-finished_ratio" "new_request_cnt_throughputs" \
+index_array=("new_request_cnt_throughputs" \
              "num_of_node_throughputs" "new_request_cnt_use_memory_ratio" "new_request_cnt_use_channel_ratio" \
-             "new_request_cnt_runtime" "min_fidelity_encode_rate" "path_length_encode_cnt" "encode_path_ratio" \
-             "new_request_cnt_waiting_time" "min_fidelity_waiting_time" "encode_math")
+             "new_request_cnt_runtime"  \)
 #index_array=("min_fidelity_encode_ratio") 
 
 

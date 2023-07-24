@@ -8,7 +8,7 @@ import matplotlib.transforms
 import matplotlib
 from matplotlib.offsetbox import AnchoredOffsetbox, TextArea, HPacker, VPacker
 
-directory_path = "11031737/"
+directory_path = "20230724/"
 
 class ChartGenerator:
     # data檔名 Y軸名稱 X軸名稱 Y軸要除多少(10的多少次方) Y軸起始座標 Y軸終止座標 Y軸座標間的間隔
@@ -203,11 +203,8 @@ class ChartGenerator:
 if __name__ == "__main__":
     # data檔名 Y軸名稱 X軸名稱 Y軸要除多少(10的多少次方) Y軸起始座標 Y軸終止座標 Y軸座標間的間隔
     # ChartGenerator("numOfnodes_waitingTime.txt", "need #round", "#Request of a round", 0, 0, 25, 5)
-    Xlabels = ["num_of_node", "min_fidelity", "new_request_cnt", "social_density"]
-    Ylabels = ["waiting_time", "throughputs", "finished_throughputs", \
-                "succ-finished_ratio", "fail-finished_ratio", "active_timeslot", "path_length", "fidelity", \
-                "encode_cnt", "unencode_cnt", "encode_ratio", "use_memory", "total_memory", "use_memory_ratio",\
-                "use_channel", "total_channel", "use_channel_ratio", "runtime", "divide_cnt"]
+    Xlabels = ["new_request_cnt",  "num_of_node", "request_avg", "swap_prob",  "entangle_alpha", "request_avg", "area_alpha"]
+    Ylabels = ["throughputs",  "use_memory_ratio","use_channel_ratio", "runtime",]
     for Xlabel in Xlabels:
         for Ylabel in Ylabels:
             dataFileName = Xlabel + '_' + Ylabel + '.ans'

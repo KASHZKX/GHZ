@@ -14,8 +14,6 @@
 #include "Algorithm/Greedy/Greedy.h"
 #include "Algorithm/QCAST/QCAST.h"
 #include "Algorithm/REPS/REPS.h"
-#include "Algorithm/MyAlgo/MyAlgo.h"
-#include "Algorithm/MyAlgo2/MyAlgo2.h"
 #include "Algorithm/MyAlgo3/MyAlgo3.h"
 // #include "Algorithm/MyGreedyAlgo/MyGreedyAlgo.h"
 
@@ -87,7 +85,7 @@ int main(int argc, char *argv[]){
     default_setting["service_time"] = 100;
 
     map<string, vector<double>> change_parameter;
-    change_parameter["swap_prob"] = {0.5 ,0.6, 0.7, 0.8, 0.9, 1};
+    change_parameter["swap_prob"] = {0.6, 0.7, 0.8, 0.9, 1};
     change_parameter["entangle_alpha"] = {0.02, 0.002, 0.0002, 0};
     change_parameter["min_fidelity"] = {0.5, 0.7, 0.75, 0.85, 0.95};
     change_parameter["resource_ratio"] = {0.5, 1, 2, 10};
@@ -95,7 +93,7 @@ int main(int argc, char *argv[]){
     change_parameter["social_density"] = {0.25, 0.5, 0.75, 1}; 
     change_parameter["new_request_cnt"] = {40, 50, 60, 70, 80};
     change_parameter["request_avg"] = {3, 5, 7, 9, 11};
-    //change_parameter["num_of_node"] = {20, 25, 30, 40, 50};
+    change_parameter["num_of_node"] = {20, 30, 40, 50};
 
     vector<string> X_names = { "request_avg"};//"new_request_cnt", "request_avg", "num_of_node", "area_alpha", "resource_ratio", "entangle_alpha","swap_prob" };
     vector<string> Y_names = { "throughputs",  "use_memory_ratio",\
