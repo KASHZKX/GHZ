@@ -72,7 +72,7 @@ int main(int argc, char *argv[]){
     default_setting["resource_ratio"] = 1;
 
     default_setting["swap_prob"] = 0.9;
-    default_setting["entangle_alpha"] = 0.002;
+    default_setting["entangle_alpha"] = 0.0002;
     default_setting["new_request_cnt"] = 50;
     default_setting["total_time_slot"] = 1;
     default_setting["request_avg"] = 3;
