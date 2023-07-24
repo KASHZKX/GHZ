@@ -774,12 +774,6 @@ void MyAlgo3::dfs(int src, int dst, vector<vector<int>> &ans, vector<int> &path,
     path.push_back(src);
     if(src == dst){
         ans.push_back(path);
-        // cout << "allpath: ";
-        // for(auto p : path){
-        //     cout << p << "->";
-        // }
-        // cout << endl;
-
     } 
     else{
         for(auto i : graph.get_neighbors_id(src)){ 
@@ -807,7 +801,6 @@ void MyAlgo3::calculate(){
         }
         sum+=it.second*prob;
     }
-    cout << "total prpb: " <<sum << endl;
     res["primal"] = sum;
 }
 
