@@ -5,3 +5,8 @@ make.cpp
 makefileold.txt
 mktest.txt
 separation_oracle.cpp
+*.ans
+*.log
+*.gch
+*.o
+*.out

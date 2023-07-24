@@ -14,8 +14,6 @@
 #include "Algorithm/Greedy/Greedy.h"
 #include "Algorithm/QCAST/QCAST.h"
 #include "Algorithm/REPS/REPS.h"
-#include "Algorithm/MyAlgo/MyAlgo.h"
-#include "Algorithm/MyAlgo2/MyAlgo2.h"
 #include "Algorithm/MyAlgo3/MyAlgo3.h"
 // #include "Algorithm/MyGreedyAlgo/MyGreedyAlgo.h"
 
@@ -37,8 +35,8 @@ Request generate_new_request(int num_of_node, int time_limit, int min_request, i
     return Request(node1, node2, time_limit, request);
 }
 
-Request generate_new_request(int node1, int node2, int time_limit){//demo
-    return Request(node1, node2, time_limit);
+Request generate_fix_request(int node1, int node2, int time_limit, int request){//demo
+    return Request(node1, node2, time_limit, request);
 }
 
 void create_dir_if_not_exists(const std::string &path) {
@@ -67,16 +65,17 @@ int main(int argc, char *argv[]){
     map<string, double> default_setting;
     default_setting["num_of_node"] = 50;
     default_setting["area_alpha"] = 0.1;
-    default_setting["memory_cnt_avg"] = 5;
+    default_setting["memory_cnt_avg"] = 7;
     default_setting["channel_cnt_avg"] = 3;
     default_setting["resource_ratio"] = 1;
 
     default_setting["swap_prob"] = 0.9;
-    default_setting["entangle_alpha"] = 0.002;
-    default_setting["new_request_cnt"] = 30;
+    default_setting["entangle_alpha"] = 0;
+    default_setting["new_request_cnt"] = 70;
     default_setting["total_time_slot"] = 1;
     default_setting["request_avg"] = 3;
-    
+    default_setting["epsilon"] = 0.2;    
+
     // not used in this paper
     default_setting["node_time_limit"] = 1;
     default_setting["social_density"] = 0.5;
@@ -85,23 +84,20 @@ int main(int argc, char *argv[]){
     default_setting["request_time_limit"] = 1;
     default_setting["service_time"] = 100;
 
-
     map<string, vector<double>> change_parameter;
-    change_parameter["swap_prob"] = {0.5 ,0.6, 0.7, 0.8, 0.9, 1};
+    change_parameter["swap_prob"] = {0.6, 0.7, 0.8, 0.9, 1};
     change_parameter["entangle_alpha"] = {0.02, 0.002, 0.0002, 0};
     change_parameter["min_fidelity"] = {0.5, 0.7, 0.75, 0.85, 0.95};
     change_parameter["resource_ratio"] = {0.5, 1, 2, 10};
     change_parameter["area_alpha"] = {0.001, 0.01, 0.1}; 
     change_parameter["social_density"] = {0.25, 0.5, 0.75, 1}; 
-    change_parameter["new_request_cnt"] = {30, 40, 50, 60, 70};
+    change_parameter["new_request_cnt"] = {40, 50, 60, 70, 80};
     change_parameter["request_avg"] = {3, 5, 7, 9, 11};
-    change_parameter["memory_cnt_avg"] = {5, 7, 9, 11, 13, 15};
+    // change_parameter["num_of_node"] = {20, 30, 40, 50};
+    change_parameter["num_of_node"] = {50};
 
-    //change_parameter["num_of_node"] = {20, 25, 30, 40, 50};
-
-    vector<string> X_names = { "memory_cnt_avg", "swap_prob" };//"new_request_cnt", "request_avg", "num_of_node", "area_alpha", "resource_ratio", "entangle_alpha","swap_prob" };
-    vector<string> Y_names = { "throughputs",  "use_memory_ratio",\
-                             "use_channel_ratio", "runtime", "use_memory", "total_memory","use_channel", "total_channel"};
+    vector<string> X_names = { /*"new_request_cnt",*/ "num_of_node" /*,"swap_prob", "entangle_alpha", "request_avg" , "area_alpha" ,  "resource_ratio"*/};
+    vector<string> Y_names = { "throughputs", "use_channel_ratio",  "use_memory_ratio", "runtime"}; //"use_memory", "total_memory","use_channel", "total_channel"
 			     //, "divide_cnt", "change_edge_num", "diff_edge_num", "diff_rate","edge_difference"
     vector<string> algo_names = {"Greedy", "QCAST", "REPS", "MyAlgo3"}; //"MyAlgo", "MyGreedyAlgo", "MyAlgo2", 
     // init result
@@ -113,7 +109,7 @@ int main(int argc, char *argv[]){
     }
     
 
-    int round = 30;
+    int round = 1;
     for(string X_name : X_names) {
         map<string, double> input_parameter = default_setting;
 
@@ -156,52 +152,64 @@ int main(int argc, char *argv[]){
                 ofs  << "時間 " << dt << endl << endl; 
 
                 string filename = file_path + "input/round_" + round_str + ".input";
-                string command = "python3 main.py ";
-                string parameter = to_string(num_of_node) + " " + to_string(min_channel_cnt) + " " + to_string(max_channel_cnt) + " " + to_string(min_memory_cnt) + " " + to_string(max_memory_cnt) + " " + to_string(min_fidelity) + " " + to_string(max_fidelity) + " " + to_string(area_alpha) + " " + to_string(min_swap_prob) + " " +  to_string(max_swap_prob);
-                if(system((command + filename + " " + parameter).c_str()) != 0){
-                    cerr<<"error:\tsystem proccess python error"<<endl;
-                    exit(1);
-                }
+                // string command = "python3 main.py ";
+                // string parameter = to_string(num_of_node) + " " + to_string(min_channel_cnt) + " " + to_string(max_channel_cnt) + " " + to_string(min_memory_cnt) + " " + to_string(max_memory_cnt) + " " + to_string(min_fidelity) + " " + to_string(max_fidelity) + " " + to_string(area_alpha) + " " + to_string(min_swap_prob) + " " +  to_string(max_swap_prob);
+                // if(system((command + filename + " " + parameter).c_str()) != 0){
+                //     cerr<<"error:\tsystem proccess python error"<<endl;
+                //     exit(1);
+                // }
+
                 
                 vector<AlgorithmBase*> algorithms;
-                algorithms.emplace_back(new Greedy(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha));
-                algorithms.emplace_back(new QCAST(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha));
-                algorithms.emplace_back(new REPS(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha));
+                // algorithms.emplace_back(new Greedy(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha));
+                // algorithms.emplace_back(new QCAST(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha));
+                // algorithms.emplace_back(new REPS(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha));
                 //algorithms.emplace_back(new MyAlgo(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha));
                 //algorithms.emplace_back(new MyAlgo2(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha));
                 algorithms.emplace_back(new MyAlgo3(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha));
                 
                 // 建完圖，刪除 input 檔避免佔太多空間
-                command = "rm -f " + file_path + "input/round_" + round_str + ".input";
-                if(system((command).c_str()) != 0){
-                    cerr<<"error:\tsystem proccess delete input file error"<<endl;
-                    exit(1);
-                }
+                // command = "rm -f " + file_path + "input/round_" + round_str + ".input";
+                // if(system((command).c_str()) != 0){
+                //     cerr<<"error:\tsystem proccess delete input file error"<<endl;
+                //     exit(1);
+                // }
 
                 ofs<<"---------------in round " <<T<<" -------------" <<endl;
                 for(int t = 0; t < total_time_slot; t++){
                     ofs<<"---------------in timeslot " <<t<<" -------------" <<endl;
                     cout<< "---------generating requests in main.cpp----------" << endl;
 
-                    for(int q = 0; q < new_request_cnt && t < service_time; q++){
-                        bool check_no_repeat;
-                        do{
-                            check_no_repeat=true;
-                            Request new_request = generate_new_request(num_of_node, request_time_limit, min_request, max_request);
-                            for(auto it:algorithms[0]->get_requests()){
-                                if(it.get_source()==new_request.get_source() && it.get_destination()==new_request.get_destination()){
-                                    check_no_repeat=false;
-                                }
-                            }
-                            if(check_no_repeat==true){
-                                cout<<q << ". source: " << new_request.get_source()<<", destination: "<<new_request.get_destination()<<endl;
-                                for(auto &algo:algorithms){
-                                    result[T][algo->get_name()]["total_request"]++; 
-                                    algo->add_new_request(new_request);
-                                }
-                            }
-                        }while(check_no_repeat==false);
+                    // for(int q = 0; q < new_request_cnt && t < service_time; q++){
+                    //     bool check_no_repeat;
+                    //     do{
+                    //         check_no_repeat=true;
+                    //         Request new_request = generate_new_request(num_of_node, request_time_limit, min_request, max_request);
+                    //         for(auto it:algorithms[0]->get_requests()){
+                    //             if(it.get_source()==new_request.get_source() && it.get_destination()==new_request.get_destination()){
+                    //                 check_no_repeat=false;
+                    //             }
+                    //         }
+                    //         if(check_no_repeat==true){
+                    //             cout<<q << ". source: " << new_request.get_source()<<", destination: "<<new_request.get_destination()<<endl;
+                    //             for(auto &algo:algorithms){
+                    //                 result[T][algo->get_name()]["total_request"]++; 
+                    //                 algo->add_new_request(new_request);
+                    //             }
+                    //         }
+                    //     }while(check_no_repeat==false);
+                    // }
+                    Request new_request = generate_fix_request(0, 3, request_time_limit, 4);
+                    for(auto &algo:algorithms){
+                        result[T][algo->get_name()]["total_request"]++; 
+                        algo->add_new_request(new_request);
                     }
+                    new_request = generate_fix_request(0, 2, request_time_limit, 2);
+                    for(auto &algo:algorithms){
+                        result[T][algo->get_name()]["total_request"]++; 
+                        algo->add_new_request(new_request);
+                    }
+
                     cout<< "---------generating requests in main.cpp----------end" << endl;
                     
                     #pragma omp parallel for
@@ -229,6 +237,8 @@ int main(int argc, char *argv[]){
                 for(auto &algo:algorithms){
                     for(string Y_name : Y_names) {
                         result[T][algo->get_name()][Y_name] = algo->get_res(Y_name);
+                        if(Y_name == "throughputs" && algo->get_name() == "MyAlgo3") 
+                            result[T][algo->get_name()]["primal"] = algo->get_res("primal");
                     }
                 }
                 now = time(0);
@@ -262,6 +272,13 @@ int main(int argc, char *argv[]){
                 result[T]["MyAlgo"]["edge_difference"] = result[T]["MyAlgo"]["change_edge_num"] - result[T]["MyAlgo3"]["change_edge_num"];
             }
 
+            
+            for(int T = 0; T < round; T++){
+                sum_res["MyAlgo3"]["primal"] += result[T]["MyAlgo3"]["primal"];
+            }
+            
+                
+
             for(string Y_name : Y_names) {
                 string filename = "ans/" + X_name + "_" + Y_name + ".ans";
                 ofstream ofs;
@@ -273,6 +290,9 @@ int main(int argc, char *argv[]){
                         sum_res[algo_name][Y_name] += result[T][algo_name][Y_name];
                     }
                     ofs << sum_res[algo_name][Y_name] / round << ' ';
+                    if(algo_name == "MyAlgo3" && Y_name == "throughputs"){
+                        ofs << sum_res["MyAlgo3"]["primal"] / round << " ";
+                    }
                 }
                 ofs << endl;
                 ofs.close();
