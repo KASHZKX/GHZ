@@ -153,27 +153,27 @@ vector<int> MyAlgo3::separation_oracle(int req_no, double &req_Us){
     int src = requests[req_no].get_source();
     int dst = requests[req_no].get_destination();
     
-    double brute_min=numeric_limits<double>::infinity();
-    vector<int>brute_path;
-    for(auto it:all_source_target_path[req_no]){            //brute sort U_count
-        double c=0;
-        double r=0;
-        for(unsigned int i=0;i<it.size()-1;i++){
-            c += X(it[i], it[i+1], req_no);               
-            r += Y[req_no][{it[i],it[i+1]}]; 
-        }
-        if(c * exp(r) < brute_min){
-            brute_min = c * exp(r);
-            brute_path = it;
-        }
-    }
+    // double brute_min=numeric_limits<double>::infinity();
+    // vector<int>brute_path;
+    // for(auto it:all_source_target_path[req_no]){            //brute sort U_count
+    //     double c=0;
+    //     double r=0;
+    //     for(unsigned int i=0;i<it.size()-1;i++){
+    //         c += X(it[i], it[i+1], req_no);               
+    //         r += Y[req_no][{it[i],it[i+1]}]; 
+    //     }
+    //     if(c * exp(r) < brute_min){
+    //         brute_min = c * exp(r);
+    //         brute_path = it;
+    //     }
+    // }
 
-    cerr<<"\n[BRUTE]req:"<<req_no<<" ";
-    for(auto it:brute_path){
-        cerr<<it<<"->";
-    }
-    cerr << endl;
-    cerr << "min : " << brute_min << endl;
+    // cerr<<"\n[BRUTE]req:"<<req_no<<" ";
+    // for(auto it:brute_path){
+    //     cerr<<it<<"->";
+    // }
+    // cerr << endl;
+    // cerr << "min : " << brute_min << endl;
 
     SPT = Dijkstra(src, dst, req_no);                               //the first SPT is get by dijkstra
     int cur_node = src;                                     //counting the first path's U(X,Y)=c* e^r
@@ -345,7 +345,6 @@ void MyAlgo3::find_bottleneck(vector<int> path, int req_no){
 
     int rate = 1;
     double s = min(min_s_u, min(min_s_uv, s_i));
-    cerr << "bottleneck : " << s << endl;
     for(int i = 0; i < rate; i++){
         if(x_i_p.find(path) != x_i_p.end())                                         //add flow to path
             x_i_p[path] += s;
@@ -462,7 +461,6 @@ void MyAlgo3::find_violate(){
             max_magni = cur_magni;
         }
     }
-   cerr << "max: " << max_magni << endl;
 
     for(auto it : used_channel){
         cur_magni = it.second / graph.get_channel_size(it.first[0],it.first[1]);
@@ -470,7 +468,6 @@ void MyAlgo3::find_violate(){
             max_magni = cur_magni;
         }
     }
-   cerr << "max: " << max_magni << endl;
 
     for(int i = 0; i < graph.get_size(); i++){
         cur_magni = used_memory[i] / graph.Node_id2ptr(i)->get_memory_cnt();
@@ -478,7 +475,6 @@ void MyAlgo3::find_violate(){
             max_magni = cur_magni;
         }
     }
-   cerr << "max: " << max_magni << endl;
 
 
     
@@ -498,19 +494,6 @@ void MyAlgo3::find_violate(){
         cout<<"["<<it.first[0]<<","<<it.first[1]<<"]:"<<it.second<<endl;
     }
     */
-   for(int i = 0; i < (int)graph.get_size(); i++){
-        cerr << "used memory " << i << " : " << used_memory[i] << endl;
-   }
-
-   for(int i = 0; i < (int)graph.get_size(); i++){
-        for(int j : graph.get_neighbors_id(i)){
-            cerr << "used channel " << "(" << i << "," << j << ") :" << used_channel[{i, j}] << endl;
-        }
-   }
-
-   for(int i = 0; i < (int)requests.size(); i++){
-        cerr << "used demand " << i << " : " << used_request[{requests[i].get_source(), requests[i].get_destination()}] << endl;
-   }
 }
 
 
@@ -826,11 +809,6 @@ void MyAlgo3::calculate(){
             prob*=graph.Node_id2ptr(path[i])->get_swap_prob();  
         }
         sum+=it.second*prob;
-        cerr << "xip" << t << " :" << endl;
-        for(int i = 0; i < (int)it.first.size(); i++){
-            cerr << it.first[i] << "->";
-        }
-        cerr << endl << "ans : " << it.second << " * " << prob << endl << endl;
 
         t++;
     }
@@ -942,19 +920,6 @@ void MyAlgo3::path_assignment(){
     }
 
     initialize();
-    cout << "here1" << endl;
-    
-    for(int i = 0; i < (int)graph.get_size(); i++){
-        cerr << "alpha " << i << " : " << alpha[i] << endl;
-    }
-    for(int i = 0; i < (int)graph.get_size(); i++){
-        for(int j : graph.get_neighbors_id(i)){
-            cerr << "beta(" << i << ", " << j << ") : " << beta[{i,j}] << endl;
-        }
-    }
-    for(int i = 0; i < requests.size(); i++){
-        cerr << "tau " << i << " : " << tau[i] << endl;
-    }
 
     // for(unsigned int i = 0; i < requests.size(); i++){
     //     int src = requests[i].get_source();
@@ -975,33 +940,33 @@ void MyAlgo3::path_assignment(){
         vector<vector<int>>all_path;
         all_path.resize(requests.size());
         U.resize(requests.size());
-        //cout<<"\n------New round-------\n";
-        // #pragma omp parallel for
-        // for(unsigned int i = 0; i < requests.size(); i++){
-        //     all_path[i] =  separation_oracle(i, U[i]);
-        //     //cout << "smallest_U: " << smallest_U << " U: " << U << "\n\n"; 
-        // }
-
-        cout << "Dijkstra start" << endl;
-        vector<int> SPT;
+        // cout<<"\n------New round-------\n";
         #pragma omp parallel for
-        for(int i = 0; i < (int)requests.size(); i++){
-            SPT = Dijkstra(requests[i].get_source(), requests[i].get_destination(), i);
-            int cur_node = requests[i].get_source();
-            while(cur_node != requests[i].get_destination()){
-                all_path[i].push_back(cur_node);
-                cur_node = SPT[cur_node];
-            } 
-            all_path[i].push_back(requests[i].get_destination());
-             
-            U[i] = 0;
-            for(int j = 0; j < (int)all_path[i].size()-1; j++){
-                U[i] += alpha[all_path[i][j]] + alpha[all_path[i][j+1]] ;
-                if(j < all_path[i].size()-1) U[i] += beta[{all_path[i][j], all_path[i][j+1]}];
-            }
-            U[i] += tau[i];
+        for(unsigned int i = 0; i < requests.size(); i++){
+            all_path[i] =  separation_oracle(i, U[i]);
+            //cout << "smallest_U: " << smallest_U << " U: " << U << "\n\n"; 
         }
-        cout << "Dijkstra end" << endl;
+
+        // cout << "Dijkstra start" << endl;
+        // vector<int> SPT;
+        // #pragma omp parallel for
+        // for(int i = 0; i < (int)requests.size(); i++){
+        //     SPT = Dijkstra(requests[i].get_source(), requests[i].get_destination(), i);
+        //     int cur_node = requests[i].get_source();
+        //     while(cur_node != requests[i].get_destination()){
+        //         all_path[i].push_back(cur_node);
+        //         cur_node = SPT[cur_node];
+        //     } 
+        //     all_path[i].push_back(requests[i].get_destination());
+             
+        //     U[i] = 0;
+        //     for(int j = 0; j < (int)all_path[i].size()-1; j++){
+        //         U[i] += alpha[all_path[i][j]] + alpha[all_path[i][j+1]] ;
+        //         if(j < all_path[i].size()-1) U[i] += beta[{all_path[i][j], all_path[i][j+1]}];
+        //     }
+        //     U[i] += tau[i];
+        // }
+        // cout << "Dijkstra end" << endl;
 
         for(unsigned int i = 0; i < requests.size(); i++){
             //cout << "smallest_U: " << smallest_U << " U: " << U << "\n\n"; 
@@ -1015,28 +980,11 @@ void MyAlgo3::path_assignment(){
 
         find_bottleneck(best_path, req_no);
         
-        cerr << "best path : " << endl;
-        for(int i = 0; i < (int)best_path.size(); i++){
-            cerr << best_path[i] << "->";
-        }
-        cerr << endl;
-
-        for(int i = 0; i < (int)graph.get_size(); i++){
-            cerr << "alpha " << i << " : " << alpha[i] << endl;
-        }
-        for(int i = 0; i < (int)graph.get_size(); i++){
-            for(int j : graph.get_neighbors_id(i)){
-                cerr << "beta(" << i << ", " << j << ") : " << beta[{i,j}] << endl;
-            }
-        }
-        for(int i = 0; i < requests.size(); i++){
-            cerr << "tau " << i << " : " << tau[i] << endl;
-        }
         // obj = changing_obj();
         // cout<<"changing_obj obj: " << obj << endl ;
     }
 
-    calculate();
+    // calculate();
     find_violate();
     calculate();
     vector<map<vector<int>, int>>path = Greedy_rounding();
