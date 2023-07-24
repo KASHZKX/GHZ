@@ -934,8 +934,8 @@ void MyAlgo3::path_assignment(){
         // obj = changing_obj();
         // cout<<"changing_obj obj: " << obj << endl ;
     }
-    find_violate();
     calculate();
+    find_violate();
     vector<map<vector<int>, int>>path = Greedy_rounding();
     res["change_edge_num"] = change_edge_num;
     res["diff_edge_num"] = diff_num;
