@@ -1,5 +1,5 @@
 gurobi_path = /home/oba/danger/gurobi951/linux64/
-g++ = g++ -std=c++17 -fopenmp -g -Wall -Wextra
+g++ = g++ -std=c++17 -fopenmp -g -Wall -Wextra -O3
 
 # on server
 #gurobi_path=/home/oba/danger/gurobi951/linux64/
