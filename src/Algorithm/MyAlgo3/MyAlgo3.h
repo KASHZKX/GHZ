@@ -18,7 +18,7 @@ using namespace std;
 class MyAlgo3:public AlgorithmBase {
 
 private:
-    map<pair<int,int>, vector<double>> X;
+    //map<pair<int,int>, vector<double>> X;
     vector<map<pair<int,int>, double>> Y;
     vector<double> alpha;
     map<vector<int>, double> x_i_p;
@@ -31,6 +31,7 @@ private:
     double delta;
     double M;
     vector<double> tau;                
+    double X(int u, int v, int i);
 public: 
     map<int, int> num_of_path_count;
     map<int, int> path_length_encode;

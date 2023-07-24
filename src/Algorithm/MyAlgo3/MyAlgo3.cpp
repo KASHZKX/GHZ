@@ -25,6 +25,14 @@ void MyAlgo3::next_time_slot(){
      AlgorithmBase::base_next_time_slot();
 }
 
+double MyAlgo3::X(int u, int v, int i){
+	double weight = alpha[u] + alpha[v] + beta[{u, v}];
+	if(requests[i].get_source() == u || requests[i].get_source() == v){
+		weight += tau[i];
+	}
+	return weight;
+}
+
 void MyAlgo3::initialize(){
     M = graph.get_size() + graph.get_num_of_edge() + requests.size();              //M=V+E+I
     // delta = (1 + epsilon) * pow(((1 + epsilon) * M), (-1 / epsilon));         
@@ -54,7 +62,7 @@ void MyAlgo3::initialize(){
     for(int i = 0; i < graph.get_size(); i++){
         vector<int> temp = graph.get_neighbors_id(i);                             
         for(auto it: temp){
-            for(unsigned  j = 0;j < requests.size(); j++){
+            /*for(unsigned  j = 0;j < requests.size(); j++){
                 if(i == requests[j].get_source() || it == requests[j].get_source()){
                     X[{i, it}].push_back( alpha[i] + alpha[it] + beta[{i, it}] + tau[j]);
                     X[{it, i}].push_back( alpha[i] + alpha[it] + beta[{i, it}] + tau[j]);
@@ -70,7 +78,7 @@ void MyAlgo3::initialize(){
                 //     X[{it, i}].push_back(alpha[it] + alpha[i] + beta[{it, i}] + tau[j]);
                 //     X[{i, it}].push_back(alpha[it] + alpha[i] + beta[{it, i}] + tau[j]);
                 // }
-            }
+            }*/
             for(unsigned  j = 0;j < requests.size(); j++){                       //Y=-ln(edge)-ln(repeater_1^(1/2))-ln(repeater_2^(1/2))
                 int src = requests[j].get_source();
                 int des = requests[j].get_destination();
@@ -99,7 +107,8 @@ void MyAlgo3::initialize(){
 }
 
 vector<int> MyAlgo3::Dijkstra(int src, int dst, int req_no){ 
-    const double INF = numeric_limits<double>::infinity();
+    //const double INF = numeric_limits<double>::infinity();
+    const double INF = 100;
     int n = graph.get_size();
     vector<double> distance(n, INF);
     vector<int> parent(n, -1);
@@ -114,8 +123,8 @@ vector<int> MyAlgo3::Dijkstra(int src, int dst, int req_no){
         if(used[cur_node]) continue;
         used[cur_node] = true;
         for(int neighbor : graph.get_neighbors_id(cur_node)) {
-            if(distance[cur_node] + X[{cur_node, neighbor}][req_no] < distance[neighbor]) {
-                distance[neighbor] = distance[cur_node] + X[{cur_node, neighbor}][req_no];
+            if(distance[cur_node] + X(cur_node, neighbor, req_no) < distance[neighbor]) {
+                distance[neighbor] = distance[cur_node] + X(cur_node, neighbor, req_no);
                 parent[neighbor] = cur_node;
                 pq.push({distance[neighbor], neighbor});
             }
@@ -150,7 +159,7 @@ vector<int> MyAlgo3::separation_oracle(int req_no, double &req_Us){
         double c=0;
         double r=0;
         for(unsigned int i=0;i<it.size()-1;i++){
-            c += X[{it[i],it[i+1]}][req_no];               
+            c += X(it[i], it[i+1], req_no);               
             r += Y[req_no][{it[i],it[i+1]}]; 
         }
         if(c * exp(r) < brute_min){
@@ -179,7 +188,7 @@ vector<int> MyAlgo3::separation_oracle(int req_no, double &req_Us){
         //     c += X[{SPT[cur_node],cur_node}][req_no];  
         //     r += Y[req_no][{SPT[cur_node],cur_node}];           
         // }
-        c += X[{SPT[cur_node],cur_node}][req_no];  
+        c += X(SPT[cur_node], cur_node, req_no);  
         r += Y[req_no][{SPT[cur_node],cur_node}];  
         best_path.push_back(cur_node);
         cur_node = SPT[cur_node];
@@ -219,18 +228,18 @@ vector<int> MyAlgo3::separation_oracle(int req_no, double &req_Us){
                 // if(SPT[i] == neighbor || SPT[neighbor] == i){      // checking used edge or unused
                 //     continue;   
                 // }else{                                             // if unused
-                    temp1 = X[{i, neighbor}][req_no];
+                    temp1 = X(i, neighbor, req_no);
                     temp2 = Y[req_no][{i, neighbor}];
                     int cur_node = i;
                     while(cur_node != dst){
-                        temp1 += X[{cur_node, SPT[cur_node]}][req_no];
+                        temp1 += X(cur_node, SPT[cur_node], req_no);
                         temp2 += Y[req_no][{cur_node, SPT[cur_node]}];
                         cur_node = SPT[cur_node];
                     } 
 
                     cur_node = neighbor;
                     while(cur_node != dst){
-                        temp1 -= X[{cur_node, SPT[cur_node]}][req_no];
+                        temp1 -= X(cur_node, SPT[cur_node], req_no);
                         temp2 -= Y[req_no][{cur_node, SPT[cur_node]}];
                         cur_node = SPT[cur_node];
                     }       
@@ -276,11 +285,11 @@ vector<int> MyAlgo3::separation_oracle(int req_no, double &req_Us){
         r = 0;
         for(unsigned int i = 0; i < new_path.size() - 1; i++){
             if(new_path[i] < new_path[i+1]){                        //[can alter]no need if else
-                c += X[{new_path[i], new_path[i+1]}][req_no];
+                c += X(new_path[i], new_path[i+1], req_no);
                 r += Y[req_no][{new_path[i], new_path[i+1]}];
             }
             else{
-                c += X[{new_path[i+1], new_path[i]}][req_no];  
+                c += X(new_path[i+1], new_path[i], req_no);  
                 r += Y[req_no][{new_path[i+1], new_path[i]}];           
             }
             //cout<<"PATH:["<<new_path[i]<<" "<<new_path[i+1]<<"] with tot "<< c <<" / " << r <<endl;
@@ -357,7 +366,8 @@ void MyAlgo3::find_bottleneck(vector<int> path, int req_no){
         tau[req_no] = tau[req_no] * (1 + epsilon * s / s_i);    
     }
     //now changing the X
-    for(unsigned int i = 0; i < path.size() -1; i++){
+    /* only change the weight along the path is not enough.
+     * for(unsigned int i = 0; i < path.size() -1; i++){
         // if(path[i]<path[i+1]){
         //     X[{path[i],path[i+1]}][req_no] = alpha[path[i]] + alpha[path[i+1]] + beta[{path[i], path[i+1]}];
         //     X[{path[i+1],path[i]}][req_no] = alpha[path[i]] + alpha[path[i+1]] + beta[{path[i], path[i+1]}];
@@ -375,6 +385,7 @@ void MyAlgo3::find_bottleneck(vector<int> path, int req_no){
         }
 
     }
+    */
 }
 
 double MyAlgo3::changing_obj(){
