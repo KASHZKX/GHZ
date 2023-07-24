@@ -261,6 +261,13 @@ int main(int argc, char *argv[]){
                 result[T]["MyAlgo"]["edge_difference"] = result[T]["MyAlgo"]["change_edge_num"] - result[T]["MyAlgo3"]["change_edge_num"];
             }
 
+            
+            for(int T = 0; T < round; T++){
+                sum_res["MyAlgo3"]["primal"] += result[T]["MyAlgo3"]["primal"];
+            }
+            
+                
+
             for(string Y_name : Y_names) {
                 string filename = "ans/" + X_name + "_" + Y_name + ".ans";
                 ofstream ofs;
@@ -272,6 +279,9 @@ int main(int argc, char *argv[]){
                         sum_res[algo_name][Y_name] += result[T][algo_name][Y_name];
                     }
                     ofs << sum_res[algo_name][Y_name] / round << ' ';
+                    if(algo_name == "MyAlgo3" && Y_name == "throughputs"){
+                        ofs << sum_res["MyAlgo3"]["primal"] << " ";
+                    }
                 }
                 ofs << endl;
                 ofs.close();
