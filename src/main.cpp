@@ -65,12 +65,12 @@ int main(int argc, char *argv[]){
     map<string, double> default_setting;
     default_setting["num_of_node"] = 50;
     default_setting["area_alpha"] = 0.1;
-    default_setting["memory_cnt_avg"] = 7;
+    default_setting["memory_cnt_avg"] = 5;
     default_setting["channel_cnt_avg"] = 3;
     default_setting["resource_ratio"] = 1;
 
-    default_setting["swap_prob"] = 2;
-    default_setting["entangle_alpha"] = 0;
+    default_setting["swap_prob"] = 0.9;
+    default_setting["entangle_alpha"] = 0.0002;
     default_setting["new_request_cnt"] = 70;
     default_setting["total_time_slot"] = 1;
     default_setting["request_avg"] = 3;
@@ -96,7 +96,7 @@ int main(int argc, char *argv[]){
     // change_parameter["num_of_node"] = {20, 30, 40, 50};
     change_parameter["num_of_node"] = {50};
 
-    vector<string> X_names = { /*"new_request_cnt",*/ "num_of_node" /*,"swap_prob", "entangle_alpha", "request_avg" , "area_alpha" ,  "resource_ratio"*/};
+    vector<string> X_names = { "swap_prob", /*"new_request_cnt",*/ "num_of_node" /*,"swap_prob", "entangle_alpha", "request_avg" , "area_alpha" ,  "resource_ratio"*/};
     vector<string> Y_names = { "throughputs", "use_channel_ratio",  "use_memory_ratio", "runtime"}; //"use_memory", "total_memory","use_channel", "total_channel"
 			     //, "divide_cnt", "change_edge_num", "diff_edge_num", "diff_rate","edge_difference"
     vector<string> algo_names = {"Greedy", "QCAST", "REPS", "MyAlgo3"}; //"MyAlgo", "MyGreedyAlgo", "MyAlgo2", 
@@ -112,7 +112,6 @@ int main(int argc, char *argv[]){
     int round = 1;
     for(string X_name : X_names) {
         map<string, double> input_parameter = default_setting;
-
         for(double change_value : change_parameter[X_name]) {         
             vector<map<string, map<string, double>>> result(round);
             input_parameter[X_name] = change_value;
@@ -154,6 +153,7 @@ int main(int argc, char *argv[]){
                 string filename = file_path + "input/round_" + round_str + ".input";
                 string command = "python3 main.py ";
                 string parameter = to_string(num_of_node) + " " + to_string(min_channel_cnt) + " " + to_string(max_channel_cnt) + " " + to_string(min_memory_cnt) + " " + to_string(max_memory_cnt) + " " + to_string(min_fidelity) + " " + to_string(max_fidelity) + " " + to_string(area_alpha) + " " + to_string(min_swap_prob) + " " +  to_string(max_swap_prob);
+                //cout<<command + filename + " " + parameter<<endl;
                 if(system((command + filename + " " + parameter).c_str()) != 0){
                     cerr<<"error:\tsystem proccess python error"<<endl;
                     exit(1);
