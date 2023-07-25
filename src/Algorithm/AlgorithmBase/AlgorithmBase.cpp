@@ -3,8 +3,13 @@
 
 
 AlgorithmBase::AlgorithmBase(string filename, string algorithm_name, int request_time_limit, int node_time_limit, double swap_prob, double entangle_alpha , bool limit_r_or_not)
-    :algorithm_name(algorithm_name), timeslot(0), waiting_time(0), time_limit(request_time_limit), swap_prob(swap_prob), limit_r_or_not(limit_r_or_not) , graph(Graph(filename, node_time_limit, swap_prob, entangle_alpha) ){
-    
+    :timeslot(0), waiting_time(0), time_limit(request_time_limit), swap_prob(swap_prob), limit_r_or_not(limit_r_or_not) , graph(Graph(filename, node_time_limit, swap_prob, entangle_alpha) ){
+    if(limit_r_or_not){
+        algorithm_name=algorithm_name;
+    }
+    else{
+        algorithm_name=algorithm_name+"_Nonlimit";
+    }
 }
 
 AlgorithmBase::~AlgorithmBase(){
