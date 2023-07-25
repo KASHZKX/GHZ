@@ -94,7 +94,7 @@ int main(int argc, char *argv[]){
     change_parameter["new_request_cnt"] = {10, 20, 30, 40, 50};
     change_parameter["request_avg"] = {3, 5, 7, 9, 11};
     change_parameter["num_of_node"] = {20, 30, 40, 50};
-    
+    change_parameter["memory_cnt_avg"] = { 3, 5, 7, 9};
     vector<string> X_names = {"request_avg" , "memory_cnt_avg" , "new_request_cnt", "swap_prob", "num_of_node", "entangle_alpha",  "area_alpha" ,  "resource_ratio"};
     vector<string> Y_names = { "throughputs", "use_channel_ratio",  "use_memory_ratio", "runtime","use_memory", "total_memory","use_channel", "total_channel"};
 			    // "divide_cnt", "change_edge_num", "diff_edge_num", "diff_rate","edge_difference"
