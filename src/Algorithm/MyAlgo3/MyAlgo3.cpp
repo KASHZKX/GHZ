@@ -25,21 +25,33 @@ void MyAlgo3::next_time_slot(){
      AlgorithmBase::base_next_time_slot();
 }
 
+double MyAlgo3::X(int u, int v, int i){
+	double weight = alpha[u] + alpha[v] + beta[{u, v}];
+	if(requests[i].get_source() == u || requests[i].get_source() == v){
+		weight += tau[i];
+	}
+	return weight;
+}
+
 void MyAlgo3::initialize(){
     M = graph.get_size() + graph.get_num_of_edge() + requests.size();              //M=V+E+I
-    delta = (1 + epsilon) * pow(((1 + epsilon) * M), (-1 / epsilon));         
+    // delta = (1 + epsilon) * pow(((1 + epsilon) * M), (-1 / epsilon));         
+    delta = (1 + epsilon) * (1.0 / pow((1 + epsilon) * M, 1.0 / epsilon));
 
     for(int i = 0; i < graph.get_size(); i++){
         alpha.emplace_back(delta / graph.Node_id2ptr(i)->get_memory_cnt());       //alpha=delta/Mu
 
         vector<int> temp = graph.get_neighbors_id(i);                             //beta=delta/Cuv
         for(auto it: temp){
-            if(i < it){
-                beta[make_pair(i,it)] = delta / (graph.get_channel_size(i, it));
-            }
-            else{
-                beta[make_pair(it,i)] = delta / (graph.get_channel_size(i, it));
-            }
+            // if(i < it){
+            //     beta[make_pair(i,it)] = delta / (graph.get_channel_size(i, it));
+            // }
+            // else{
+            //     beta[make_pair(it,i)] = delta / (graph.get_channel_size(i, it));
+            // }
+            beta[make_pair(i,it)] = delta / (graph.get_channel_size(i, it));
+            beta[make_pair(it,i)] = delta / (graph.get_channel_size(i, it));
+
         }
     }
 
@@ -50,55 +62,43 @@ void MyAlgo3::initialize(){
     for(int i = 0; i < graph.get_size(); i++){
         vector<int> temp = graph.get_neighbors_id(i);                             
         for(auto it: temp){
-            for(unsigned  j = 0;j < requests.size(); j++){
-                if(i < it){                                                           //X=alpha(left_node)+alpha(right_node)+beta(edge between them)
+            /*for(unsigned  j = 0;j < requests.size(); j++){
+                if(i == requests[j].get_source() || it == requests[j].get_source()){
                     X[{i, it}].push_back( alpha[i] + alpha[it] + beta[{i, it}] + tau[j]);
                     X[{it, i}].push_back( alpha[i] + alpha[it] + beta[{i, it}] + tau[j]);
+                }else{
+                    X[{i, it}].push_back( alpha[i] + alpha[it] + beta[{i, it}]);
+                    X[{it, i}].push_back( alpha[i] + alpha[it] + beta[{i, it}]);
                 }
-                else{
-                    X[{it, i}].push_back(alpha[it] + alpha[i] + beta[{it, i}] + tau[j]);
-                    X[{i, it}].push_back(alpha[it] + alpha[i] + beta[{it, i}] + tau[j]);
-                }
-            }
+                // if(i < it){                                                           //X=alpha(left_node)+alpha(right_node)+beta(edge between them)
+                //     X[{i, it}].push_back( alpha[i] + alpha[it] + beta[{i, it}] + tau[j]);
+                //     X[{it, i}].push_back( alpha[i] + alpha[it] + beta[{i, it}] + tau[j]);
+                // }
+                // else{
+                //     X[{it, i}].push_back(alpha[it] + alpha[i] + beta[{it, i}] + tau[j]);
+                //     X[{i, it}].push_back(alpha[it] + alpha[i] + beta[{it, i}] + tau[j]);
+                // }
+            }*/
             for(unsigned  j = 0;j < requests.size(); j++){                       //Y=-ln(edge)-ln(repeater_1^(1/2))-ln(repeater_2^(1/2))
                 int src = requests[j].get_source();
                 int des = requests[j].get_destination();
                 double ent_p = exp(graph.Node_id2ptr(i)->distance(*graph.Node_id2ptr(it))*(-graph.get_entangle_alpha()));
-                if(i<it){
-                    if(i != src && i != des && it != src && it != des){
-                        Y[j][{i, it}] = -(log(ent_p)/log(exp(1))) - (log(sqrt(graph.Node_id2ptr(i)->get_swap_prob())/log(exp(1)))) - (log(sqrt(graph.Node_id2ptr(it)->get_swap_prob())/log(exp(1))));
-                        Y[j][{it, i}] = -(log(ent_p)/log(exp(1))) - (log(sqrt(graph.Node_id2ptr(i)->get_swap_prob())/log(exp(1)))) - (log(sqrt(graph.Node_id2ptr(it)->get_swap_prob())/log(exp(1))));
-                    }
-                    else if((i == src && it != des) || (i == des && it != src)){
-                        Y[j][{i, it}] = -(log(ent_p)/log(exp(1))) - (log(sqrt(graph.Node_id2ptr(it)->get_swap_prob())/log(exp(1))));
-                        Y[j][{it, i}] = -(log(ent_p)/log(exp(1))) - (log(sqrt(graph.Node_id2ptr(it)->get_swap_prob())/log(exp(1))));
-                    }
-                    else if((i == src && it != des) || (i == des && it != src)){
-                        Y[j][{i, it}] = -(log(ent_p)/log(exp(1))) - (log(sqrt(graph.Node_id2ptr(i)->get_swap_prob())/log(exp(1))));
-                        Y[j][{it, i}] = -(log(ent_p)/log(exp(1))) - (log(sqrt(graph.Node_id2ptr(i)->get_swap_prob())/log(exp(1))));
-                    }
-                    else{
-                        Y[j][{i, it}] = -(log(ent_p)/log(exp(1)));
-                        Y[j][{it, i}] = -(log(ent_p)/log(exp(1)));
-                    }
+
+                if( make_pair(i, it) == make_pair(src, des) || make_pair(it, i) == make_pair(src, des) ) {
+                    Y[j][{i, it}] = -log(ent_p);
+                    Y[j][{it, i}] = -log(ent_p);
+                }
+                else if( i == src || i == des ){
+                    Y[j][{i, it}] = -log(ent_p) - log(graph.Node_id2ptr(it)->get_swap_prob()) / 2;
+                    Y[j][{it, i}] = -log(ent_p) - log(graph.Node_id2ptr(it)->get_swap_prob()) / 2;
+                }
+                else if( it == src || it == des){
+                    Y[j][{i, it}] = -log(ent_p) - log(graph.Node_id2ptr(i)->get_swap_prob()) / 2;
+                    Y[j][{it, i}] = -log(ent_p) - log(graph.Node_id2ptr(i)->get_swap_prob()) / 2;
                 }
                 else{
-                    if(i != src && i != des && it != src && it != des){
-                        Y[j][{i, it}] = -(log(ent_p)/log(exp(1))) - (log(sqrt(graph.Node_id2ptr(i)->get_swap_prob())/log(exp(1)))) - (log(sqrt(graph.Node_id2ptr(it)->get_swap_prob())/log(exp(1))));
-                        Y[j][{it, i}] = -(log(ent_p)/log(exp(1))) - (log(sqrt(graph.Node_id2ptr(i)->get_swap_prob())/log(exp(1)))) - (log(sqrt(graph.Node_id2ptr(it)->get_swap_prob())/log(exp(1))));
-                    }
-                    else if((i == src && it != des) || (i == des && it != src)){
-                        Y[j][{i, it}] = -(log(ent_p)/log(exp(1))) - (log(sqrt(graph.Node_id2ptr(it)->get_swap_prob())/log(exp(1))));
-                        Y[j][{it, i}] = -(log(ent_p)/log(exp(1))) - (log(sqrt(graph.Node_id2ptr(it)->get_swap_prob())/log(exp(1))));
-                    }
-                    else if((i == src && it != des) || (i == des && it != src)){
-                        Y[j][{i, it}] = -(log(ent_p)/log(exp(1))) - (log(sqrt(graph.Node_id2ptr(i)->get_swap_prob())/log(exp(1))));
-                        Y[j][{it, i}] = -(log(ent_p)/log(exp(1))) - (log(sqrt(graph.Node_id2ptr(i)->get_swap_prob())/log(exp(1))));
-                    }
-                    else{
-                        Y[j][{i, it}] = -(log(ent_p)/log(exp(1)));
-                        Y[j][{it, i}] = -(log(ent_p)/log(exp(1)));
-                    }                  
+                    Y[j][{i, it}] = -log(ent_p) - log(graph.Node_id2ptr(i)->get_swap_prob() * graph.Node_id2ptr(it)->get_swap_prob()) / 2;
+                    Y[j][{it, i}] = -log(ent_p) - log(graph.Node_id2ptr(i)->get_swap_prob() * graph.Node_id2ptr(it)->get_swap_prob()) / 2;
                 }
 
             }
@@ -107,7 +107,8 @@ void MyAlgo3::initialize(){
 }
 
 vector<int> MyAlgo3::Dijkstra(int src, int dst, int req_no){ 
-    const double INF = numeric_limits<double>::infinity();
+    //const double INF = numeric_limits<double>::infinity();
+    const double INF = 100;
     int n = graph.get_size();
     vector<double> distance(n, INF);
     vector<int> parent(n, -1);
@@ -122,8 +123,8 @@ vector<int> MyAlgo3::Dijkstra(int src, int dst, int req_no){
         if(used[cur_node]) continue;
         used[cur_node] = true;
         for(int neighbor : graph.get_neighbors_id(cur_node)) {
-            if(distance[cur_node] + X[{cur_node, neighbor}][req_no] < distance[neighbor]) {
-                distance[neighbor] = distance[cur_node] + X[{cur_node, neighbor}][req_no];
+            if(distance[cur_node] + X(cur_node, neighbor, req_no) < distance[neighbor]) {
+                distance[neighbor] = distance[cur_node] + X(cur_node, neighbor, req_no);
                 parent[neighbor] = cur_node;
                 pq.push({distance[neighbor], neighbor});
             }
@@ -150,15 +151,15 @@ vector<int> MyAlgo3::separation_oracle(int req_no, double &req_Us){
     vector<int> best_path;
     double best_len; 
     int src = requests[req_no].get_source();
-    int dst =  requests[req_no].get_destination();
-
+    int dst = requests[req_no].get_destination();
+    
     // double brute_min=numeric_limits<double>::infinity();
     // vector<int>brute_path;
     // for(auto it:all_source_target_path[req_no]){            //brute sort U_count
     //     double c=0;
     //     double r=0;
     //     for(unsigned int i=0;i<it.size()-1;i++){
-    //         c += X[{it[i],it[i+1]}][req_no];               
+    //         c += X(it[i], it[i+1], req_no);               
     //         r += Y[req_no][{it[i],it[i+1]}]; 
     //     }
     //     if(c * exp(r) < brute_min){
@@ -166,25 +167,29 @@ vector<int> MyAlgo3::separation_oracle(int req_no, double &req_Us){
     //         brute_path = it;
     //     }
     // }
-    // cout<<"\n[BRUTE]req:"<<req_no<<" ";
-    // for(auto it:brute_path){
-    //     cout<<it<<"->";
-    // }
-    // cout<<":"<<brute_min<<endl;
 
-    SPT = Dijkstra(src, dst,req_no);                               //the first SPT is get by dijkstra
+    // cerr<<"\n[BRUTE]req:"<<req_no<<" ";
+    // for(auto it:brute_path){
+    //     cerr<<it<<"->";
+    // }
+    // cerr << endl;
+    // cerr << "min : " << brute_min << endl;
+
+    SPT = Dijkstra(src, dst, req_no);                               //the first SPT is get by dijkstra
     int cur_node = src;                                     //counting the first path's U(X,Y)=c* e^r
     double c = 0;                                           //c=SUM[u,v]:alpha(u)+alpha(v)+beta(u,v)==X[u,v]
     double r = 0;                                           //r=SUM[u,v]:-ln(Pr(u,v))==Y[u,v]
     while(cur_node != dst){
-        if(cur_node < SPT[cur_node]){                       //[can alter]no need if else
-            c += X[{cur_node,SPT[cur_node]}][req_no];               
-            r += Y[req_no][{cur_node,SPT[cur_node]}];
-        }
-        else{
-            c += X[{SPT[cur_node],cur_node}][req_no];  
-            r += Y[req_no][{SPT[cur_node],cur_node}];           
-        }
+        // if(cur_node < SPT[cur_node]){                       //[can alter]no need if else
+        //     c += X[{cur_node,SPT[cur_node]}][req_no];               
+        //     r += Y[req_no][{cur_node,SPT[cur_node]}];
+        // }
+        // else{
+        //     c += X[{SPT[cur_node],cur_node}][req_no];  
+        //     r += Y[req_no][{SPT[cur_node],cur_node}];           
+        // }
+        c += X(SPT[cur_node], cur_node, req_no);  
+        r += Y[req_no][{SPT[cur_node],cur_node}];  
         best_path.push_back(cur_node);
         cur_node = SPT[cur_node];
     } 
@@ -223,18 +228,18 @@ vector<int> MyAlgo3::separation_oracle(int req_no, double &req_Us){
                 if(SPT[i] == neighbor || SPT[neighbor] == i){      // checking used edge or unused
                     continue;   
                 }else{                                             // if unused
-                    temp1 = X[{i, neighbor}][req_no];
+                    temp1 = X(i, neighbor, req_no);
                     temp2 = Y[req_no][{i, neighbor}];
                     int cur_node = i;
                     while(cur_node != dst){
-                        temp1 += X[{cur_node, SPT[cur_node]}][req_no];
+                        temp1 += X(cur_node, SPT[cur_node], req_no);
                         temp2 += Y[req_no][{cur_node, SPT[cur_node]}];
                         cur_node = SPT[cur_node];
                     } 
 
                     cur_node = neighbor;
                     while(cur_node != dst){
-                        temp1 -= X[{cur_node, SPT[cur_node]}][req_no];
+                        temp1 -= X(cur_node, SPT[cur_node], req_no);
                         temp2 -= Y[req_no][{cur_node, SPT[cur_node]}];
                         cur_node = SPT[cur_node];
                     }       
@@ -280,11 +285,11 @@ vector<int> MyAlgo3::separation_oracle(int req_no, double &req_Us){
         r = 0;
         for(unsigned int i = 0; i < new_path.size() - 1; i++){
             if(new_path[i] < new_path[i+1]){                        //[can alter]no need if else
-                c += X[{new_path[i], new_path[i+1]}][req_no];
+                c += X(new_path[i], new_path[i+1], req_no);
                 r += Y[req_no][{new_path[i], new_path[i+1]}];
             }
             else{
-                c += X[{new_path[i+1], new_path[i]}][req_no];  
+                c += X(new_path[i+1], new_path[i], req_no);  
                 r += Y[req_no][{new_path[i+1], new_path[i]}];           
             }
             //cout<<"PATH:["<<new_path[i]<<" "<<new_path[i+1]<<"] with tot "<< c <<" / " << r <<endl;
@@ -324,21 +329,21 @@ void MyAlgo3::find_bottleneck(vector<int> path, int req_no){
 
    
     for(unsigned int i = 0; i < path.size(); i++){
-        if(i == 0 || path.size() - 1)
+        if(i == 0 || i == path.size() - 1)
             s_u[path[i]] = graph.Node_id2ptr(path[i])->get_memory_cnt();        //if src or dst,then only cost 1
         else
-            s_u[path[i]] = graph.Node_id2ptr(path[i])->get_memory_cnt() / 2;    //else cost 2
+            s_u[path[i]] = graph.Node_id2ptr(path[i])->get_memory_cnt() / 2.0;    //else cost 2
         if(s_u[path[i]] < min_s_u)
             min_s_u = s_u[path[i]];
     }
 
     for(unsigned int i = 0; i < path.size() - 1; i++){
         s_uv[i] = graph.get_channel_size(path[i], path[i+1]);                   //channel min
-        if(s_u[i] < min_s_uv)
+        if(s_uv[i] < min_s_uv)
             min_s_uv = s_uv[i];
     }
 
-    int rate = 7;
+    int rate = 10;
     double s = min(min_s_u, min(min_s_uv, s_i));
     for(int i = 0; i < rate; i++){
         if(x_i_p.find(path) != x_i_p.end())                                         //add flow to path
@@ -354,22 +359,32 @@ void MyAlgo3::find_bottleneck(vector<int> path, int req_no){
         for(unsigned int i = 0; i < path.size() - 1; i++){
             obj += (beta[{path[i], path[i+1]}] * (1 + epsilon * s / s_uv[i]) -  beta[{path[i], path[i+1]}]) * graph.get_channel_size(path[i], path[i+1]);;
             beta[{path[i], path[i+1]}] = beta[{path[i], path[i+1]}] * (1 + epsilon * s / s_uv[i]);
+            beta[{path[i+1], path[i]}] = beta[{path[i+1], path[i]}] * (1 + epsilon * s / s_uv[i]);
         }
         obj += (tau[req_no] * (1 + epsilon * s / s_i) - tau[req_no])* requests[req_no].get_send_limit();;    
         tau[req_no] = tau[req_no] * (1 + epsilon * s / s_i);    
     }
     //now changing the X
-    for(unsigned int i = 0; i < path.size() -1; i++){
-        if(path[i]<path[i+1]){
-            X[{path[i],path[i+1]}][req_no] = alpha[path[i]] + alpha[path[i+1]] + beta[{path[i], path[i+1]}];
-            X[{path[i+1],path[i]}][req_no] = alpha[path[i]] + alpha[path[i+1]] + beta[{path[i], path[i+1]}];
-        }
-        else{
-            X[{path[i],path[i+1]}][req_no] = alpha[path[i]] + alpha[path[i+1]] + beta[{path[i+1], path[i]}];
-            X[{path[i+1],path[i]}][req_no] = alpha[path[i]] + alpha[path[i+1]] + beta[{path[i+1], path[i]}];   
+    /* only change the weight along the path is not enough.
+     * for(unsigned int i = 0; i < path.size() -1; i++){
+        // if(path[i]<path[i+1]){
+        //     X[{path[i],path[i+1]}][req_no] = alpha[path[i]] + alpha[path[i+1]] + beta[{path[i], path[i+1]}];
+        //     X[{path[i+1],path[i]}][req_no] = alpha[path[i]] + alpha[path[i+1]] + beta[{path[i], path[i+1]}];
+        // }
+        // else{
+        //     X[{path[i],path[i+1]}][req_no] = alpha[path[i]] + alpha[path[i+1]] + beta[{path[i+1], path[i]}];
+        //     X[{path[i+1],path[i]}][req_no] = alpha[path[i]] + alpha[path[i+1]] + beta[{path[i+1], path[i]}];   
+        // }
+        X[{path[i],path[i+1]}][req_no] = alpha[path[i]] + alpha[path[i+1]] + beta[{path[i+1], path[i]}];
+        X[{path[i+1],path[i]}][req_no] = alpha[path[i]] + alpha[path[i+1]] + beta[{path[i+1], path[i]}]; 
+
+        if(path[i] == requests[req_no].get_source() || path[i+1] == requests[req_no].get_source()){
+            X[{path[i],path[i+1]}][req_no] += tau[req_no];
+            X[{path[i+1],path[i]}][req_no] += tau[req_no];
         }
 
     }
+    */
 }
 
 double MyAlgo3::changing_obj(){
@@ -389,9 +404,9 @@ double MyAlgo3::changing_obj(){
 }
 
 void MyAlgo3::find_violate(){
-    vector<int> used_memory(graph.get_size());
+    vector<double> used_memory(graph.get_size());
     map<vector<int>, double> used_channel;
-    map<pair<int, int>, int> used_request;
+    map<pair<int, int>, double> used_request;
 
     for(auto &it : x_i_p){
         vector<int> path = it.first;
@@ -430,18 +445,6 @@ void MyAlgo3::find_violate(){
 
     double max_magni = 0.0;
     double cur_magni;
-    for(int i = 0; i < graph.get_size(); i++){
-        cur_magni = used_memory[i] / graph.Node_id2ptr(i)->get_memory_cnt();
-        if(cur_magni > max_magni){
-            max_magni = cur_magni;
-        }
-    }
-    for(auto it : used_channel){
-        cur_magni = it.second / graph.get_channel_size(it.first[0],it.first[1]);
-        if(cur_magni > max_magni){
-            max_magni = cur_magni;
-        }
-    }
 
     for(auto it : used_request){
         int src = it.first.first;
@@ -458,6 +461,24 @@ void MyAlgo3::find_violate(){
             max_magni = cur_magni;
         }
     }
+
+    for(auto it : used_channel){
+        cur_magni = it.second / graph.get_channel_size(it.first[0],it.first[1]);
+        if(cur_magni > max_magni){
+            max_magni = cur_magni;
+        }
+    }
+
+    for(int i = 0; i < graph.get_size(); i++){
+        cur_magni = used_memory[i] / graph.Node_id2ptr(i)->get_memory_cnt();
+        if(cur_magni > max_magni){
+            max_magni = cur_magni;
+        }
+    }
+
+
+    
+
     //cout << "Magnification:" << max_magni << endl;
 
     for(auto &x : x_i_p){
@@ -775,6 +796,9 @@ void MyAlgo3::dfs(int src, int dst, vector<vector<int>> &ans, vector<int> &path,
 
 void MyAlgo3::calculate(){
     double sum=0.0;
+
+    int t = 1;
+
     for(auto it:x_i_p){
         double prob=1;
         vector<int>path=it.first;
@@ -785,7 +809,10 @@ void MyAlgo3::calculate(){
             prob*=graph.Node_id2ptr(path[i])->get_swap_prob();  
         }
         sum+=it.second*prob;
+
+        t++;
     }
+    cerr << "sum = " << sum << endl;
     res["primal"] = sum;
 }
 
@@ -868,7 +895,7 @@ vector<map<vector<int>, int>> MyAlgo3::Greedy_rounding(){
 		}
 	}
 	for(int request_id=0;request_id<(int)requests.size();request_id++){
-		cerr<<"GG: It work?"<<endl;
+		// cerr<<"GG: It work?"<<endl;
 		while(requests[request_id].get_send_limit() - used_I[request_id] > 0){
 			vector<int> extra_path = BFS(requests[request_id].get_source(), requests[request_id].get_destination());
 			int width = 0;
@@ -891,9 +918,9 @@ void MyAlgo3::path_assignment(){
         int mem = graph.Node_id2ptr(i)->get_memory_cnt();
         graph.Node_id2ptr(i)->revise(mem);
     }
-
-    initialize();
     
+    initialize();
+
     // for(unsigned int i = 0; i < requests.size(); i++){
     //     int src = requests[i].get_source();
     //     int dst = requests[i].get_destination();
@@ -912,14 +939,33 @@ void MyAlgo3::path_assignment(){
         vector<vector<int>>all_path;
         all_path.resize(requests.size());
         U.resize(requests.size());
-        //cout<<"\n------New round-------\n";
+        // cout<<"\n------New round-------\n";
         #pragma omp parallel for
         for(unsigned int i = 0; i < requests.size(); i++){
             all_path[i] =  separation_oracle(i, U[i]);
             //cout << "smallest_U: " << smallest_U << " U: " << U << "\n\n"; 
-    
         }
 
+        // cout << "Dijkstra start" << endl;
+        // vector<int> SPT;
+        // #pragma omp parallel for
+        // for(int i = 0; i < (int)requests.size(); i++){
+        //     SPT = Dijkstra(requests[i].get_source(), requests[i].get_destination(), i);
+        //     int cur_node = requests[i].get_source();
+        //     while(cur_node != requests[i].get_destination()){
+        //         all_path[i].push_back(cur_node);
+        //         cur_node = SPT[cur_node];
+        //     } 
+        //     all_path[i].push_back(requests[i].get_destination());
+             
+        //     U[i] = 0;
+        //     for(int j = 0; j < (int)all_path[i].size()-1; j++){
+        //         U[i] += alpha[all_path[i][j]] + alpha[all_path[i][j+1]] ;
+        //         if(j < all_path[i].size()-1) U[i] += beta[{all_path[i][j], all_path[i][j+1]}];
+        //     }
+        //     U[i] += tau[i];
+        // }
+        // cout << "Dijkstra end" << endl;
 
         for(unsigned int i = 0; i < requests.size(); i++){
             //cout << "smallest_U: " << smallest_U << " U: " << U << "\n\n"; 
@@ -929,13 +975,18 @@ void MyAlgo3::path_assignment(){
                 req_no = i;
             }
         } 
+        // cout << smallest_U << endl;
 
         find_bottleneck(best_path, req_no);
+        
+        cout << obj << endl;
         // obj = changing_obj();
         // cout<<"changing_obj obj: " << obj << endl ;
     }
-    calculate();
+
+    // calculate();
     find_violate();
+    calculate();
     vector<map<vector<int>, int>>path = Greedy_rounding();
     res["change_edge_num"] = change_edge_num;
     res["diff_edge_num"] = diff_num;

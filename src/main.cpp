@@ -35,8 +35,8 @@ Request generate_new_request(int num_of_node, int time_limit, int min_request, i
     return Request(node1, node2, time_limit, request);
 }
 
-Request generate_new_request(int node1, int node2, int time_limit){//demo
-    return Request(node1, node2, time_limit);
+Request generate_fix_request(int node1, int node2, int time_limit, int request){//demo
+    return Request(node1, node2, time_limit, request);
 }
 
 void create_dir_if_not_exists(const std::string &path) {
@@ -65,13 +65,13 @@ int main(int argc, char *argv[]){
     map<string, double> default_setting;
     default_setting["num_of_node"] = 50;
     default_setting["area_alpha"] = 0.1;
-    default_setting["memory_cnt_avg"] = 5;
+    default_setting["memory_cnt_avg"] = 12;
     default_setting["channel_cnt_avg"] = 3;
     default_setting["resource_ratio"] = 1;
 
     default_setting["swap_prob"] = 0.9;
     default_setting["entangle_alpha"] = 0.0002;
-    default_setting["new_request_cnt"] = 70;
+    default_setting["new_request_cnt"] = 30;
     default_setting["total_time_slot"] = 1;
     default_setting["request_avg"] = 3;
     default_setting["epsilon"] = 0.2;    
@@ -91,11 +91,11 @@ int main(int argc, char *argv[]){
     change_parameter["resource_ratio"] = {0.5, 1, 2, 10};
     change_parameter["area_alpha"] = {0.001, 0.01, 0.1}; 
     change_parameter["social_density"] = {0.25, 0.5, 0.75, 1}; 
-    change_parameter["new_request_cnt"] = {40, 50, 60, 70, 80};
+    change_parameter["new_request_cnt"] = {10, 20, 30, 40, 50};
     change_parameter["request_avg"] = {3, 5, 7, 9, 11};
     change_parameter["num_of_node"] = {20, 30, 40, 50};
-
-    vector<string> X_names = { /*"new_request_cnt",*/ "num_of_node" /*,"swap_prob", "entangle_alpha", "request_avg" , "area_alpha" ,  "resource_ratio"*/};
+    
+    vector<string> X_names = { "new_request_cnt", "swap_prob", "num_of_node", "entangle_alpha", "request_avg" , "area_alpha" ,  "resource_ratio"};
     vector<string> Y_names = { "throughputs", "use_channel_ratio",  "use_memory_ratio", "runtime"}; //"use_memory", "total_memory","use_channel", "total_channel"
 			     //, "divide_cnt", "change_edge_num", "diff_edge_num", "diff_rate","edge_difference"
     vector<string> algo_names = {"Greedy", "QCAST", "REPS", "MyAlgo3"}; //"MyAlgo", "MyGreedyAlgo", "MyAlgo2", 
@@ -111,7 +111,6 @@ int main(int argc, char *argv[]){
     int round = 30;
     for(string X_name : X_names) {
         map<string, double> input_parameter = default_setting;
-
         for(double change_value : change_parameter[X_name]) {         
             vector<map<string, map<string, double>>> result(round);
             input_parameter[X_name] = change_value;
@@ -153,10 +152,12 @@ int main(int argc, char *argv[]){
                 string filename = file_path + "input/round_" + round_str + ".input";
                 string command = "python3 main.py ";
                 string parameter = to_string(num_of_node) + " " + to_string(min_channel_cnt) + " " + to_string(max_channel_cnt) + " " + to_string(min_memory_cnt) + " " + to_string(max_memory_cnt) + " " + to_string(min_fidelity) + " " + to_string(max_fidelity) + " " + to_string(area_alpha) + " " + to_string(min_swap_prob) + " " +  to_string(max_swap_prob);
+                //cout<<command + filename + " " + parameter<<endl;
                 if(system((command + filename + " " + parameter).c_str()) != 0){
                     cerr<<"error:\tsystem proccess python error"<<endl;
                     exit(1);
                 }
+
                 
                 vector<AlgorithmBase*> algorithms;
                 algorithms.emplace_back(new Greedy(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha));
@@ -167,11 +168,11 @@ int main(int argc, char *argv[]){
                 algorithms.emplace_back(new MyAlgo3(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha));
                 
                 // 建完圖，刪除 input 檔避免佔太多空間
-                command = "rm -f " + file_path + "input/round_" + round_str + ".input";
-                if(system((command).c_str()) != 0){
-                    cerr<<"error:\tsystem proccess delete input file error"<<endl;
-                    exit(1);
-                }
+                // command = "rm -f " + file_path + "input/round_" + round_str + ".input";
+                // if(system((command).c_str()) != 0){
+                //     cerr<<"error:\tsystem proccess delete input file error"<<endl;
+                //     exit(1);
+                // }
 
                 ofs<<"---------------in round " <<T<<" -------------" <<endl;
                 for(int t = 0; t < total_time_slot; t++){
@@ -197,6 +198,18 @@ int main(int argc, char *argv[]){
                             }
                         }while(check_no_repeat==false);
                     }
+                    
+                    // Request new_request = generate_fix_request(0, 3, request_time_limit, 4);
+                    // for(auto &algo:algorithms){
+                    //     result[T][algo->get_name()]["total_request"]++; 
+                    //     algo->add_new_request(new_request);
+                    // }
+                    // new_request = generate_fix_request(0, 2, request_time_limit, 2);
+                    // for(auto &algo:algorithms){
+                    //     result[T][algo->get_name()]["total_request"]++; 
+                    //     algo->add_new_request(new_request);
+                    // }
+
                     cout<< "---------generating requests in main.cpp----------end" << endl;
                     
                     #pragma omp parallel for
