@@ -45,6 +45,9 @@ void AlgorithmBase::base_next_time_slot(){
             req_success_ratio = 0;
         }else{
             req_success_ratio = requests[reqno].get_throughput() / requests[reqno].get_send_limit();
+            if(req_success_ratio >= 1){
+                req_success_ratio = 1;
+            }
         }
         if(min_req_success_ratio > req_success_ratio){
             min_req_success_ratio = req_success_ratio;
