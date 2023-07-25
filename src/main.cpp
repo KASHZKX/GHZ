@@ -97,7 +97,7 @@ int main(int argc, char *argv[]){
     
     vector<string> X_names = { "new_request_cnt", "swap_prob", "num_of_node", "entangle_alpha", "request_avg" , "area_alpha" ,  "resource_ratio"};
     vector<string> Y_names = { "throughputs", "use_channel_ratio",  "use_memory_ratio", "runtime","use_memory", "total_memory","use_channel", "total_channel"};
-			     //, "divide_cnt", "change_edge_num", "diff_edge_num", "diff_rate","edge_difference"
+			    // "divide_cnt", "change_edge_num", "diff_edge_num", "diff_rate","edge_difference"
     vector<string> algo_names = {"Greedy_Nonlimit","QCAST_Nonlimit","REPS_Nonlimit", "MyAlgo3"}; //"MyAlgo", "MyGreedyAlgo", "MyAlgo2", 
     // init result
     for(string X_name : X_names) {
@@ -256,18 +256,18 @@ int main(int argc, char *argv[]){
             }
             
             map<string, map<string, double>> sum_res;
-            // for(string algo_name : algo_names){
-            //     for(int T = 0; T < round; T++){
+             for(string algo_name : algo_names){
+                 for(int T = 0; T < round; T++){
             //         result[T][algo_name]["waiting_time"] /= result[T][algo_name]["total_request"];
             //         result[T][algo_name]["encode_ratio"] = result[T][algo_name]["encode_cnt"] / (result[T][algo_name]["encode_cnt"] + result[T][algo_name]["unencode_cnt"]);
             //         result[T][algo_name]["succ-finished_ratio"] = result[T][algo_name]["throughputs"] / result[T][algo_name]["finished_throughputs"];
             //         result[T][algo_name]["fail-finished_ratio"] = 1 - result[T][algo_name]["succ-finished_ratio"];
             //         result[T][algo_name]["path_length"] = result[T][algo_name]["path_length"] / result[T][algo_name]["finished_throughputs"];
             //         result[T][algo_name]["divide_cnt"] = result[T][algo_name]["divide_cnt"] / result[T][algo_name]["finished_throughputs"];
-            //         result[T][algo_name]["use_memory_ratio"] = result[T][algo_name]["use_memory"] / result[T][algo_name]["total_memory"];
-            //         result[T][algo_name]["use_channel_ratio"] = result[T][algo_name]["use_channel"] / result[T][algo_name]["total_channel"];
-            //     }
-            // }
+                     result[T][algo_name]["use_memory_ratio"] = result[T][algo_name]["use_memory"] / result[T][algo_name]["total_memory"];
+                     result[T][algo_name]["use_channel_ratio"] = result[T][algo_name]["use_channel"] / result[T][algo_name]["total_channel"];
+                 }
+             }
             for(int T = 0; T < round; T++){
                 // result[T]["MyAlgo3"]["diff_rate"] = result[T]["MyAlgo3"]["change_edge_num"] / result[T]["MyAlgo3"]["diff_edge_num"];
                 result[T]["MyAlgo"]["edge_difference"] = result[T]["MyAlgo"]["change_edge_num"] - result[T]["MyAlgo3"]["change_edge_num"];
