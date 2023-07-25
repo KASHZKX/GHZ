@@ -95,10 +95,10 @@ int main(int argc, char *argv[]){
     change_parameter["request_avg"] = {3, 5, 7, 9, 11};
     change_parameter["num_of_node"] = {20, 30, 40, 50};
     
-    vector<string> X_names = { "new_request_cnt", "swap_prob", "num_of_node", "entangle_alpha", "request_avg" , "area_alpha" ,  "resource_ratio"};
+    vector<string> X_names = { "new_request_cnt"/*, "swap_prob", "num_of_node", "entangle_alpha", "request_avg" , "area_alpha" ,  "resource_ratio"*/};
     vector<string> Y_names = { "throughputs", "use_channel_ratio",  "use_memory_ratio", "runtime"}; //"use_memory", "total_memory","use_channel", "total_channel"
 			     //, "divide_cnt", "change_edge_num", "diff_edge_num", "diff_rate","edge_difference"
-    vector<string> algo_names = {"Greedy", "QCAST", "REPS", "MyAlgo3"}; //"MyAlgo", "MyGreedyAlgo", "MyAlgo2", 
+    vector<string> algo_names = {"Greedy","Greedy_non","QCAST","QCAST_non", "REPS","REPS_non", "MyAlgo3"}; //"MyAlgo", "MyGreedyAlgo", "MyAlgo2", 
     // init result
     for(string X_name : X_names) {
         for(string Y_name : Y_names){
