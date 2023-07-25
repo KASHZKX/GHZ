@@ -96,6 +96,7 @@ void QCAST::path_assignment(){
             Request &request = requests[reqno];
             // cout<<"REQUEST:"<<request.get_send_limit()<<endl;
             if(get_limit_r_status()){
+                cout<<"DEBUG--------------------------"<<endl;
                 if(request.get_paths().size() >= request.get_send_limit()){ // revise major path select
                     //force to find no path
                     candidate[reqno] = CandPath();
