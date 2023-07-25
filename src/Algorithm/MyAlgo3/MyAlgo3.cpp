@@ -648,7 +648,7 @@ void MyAlgo3::check_enough(vector<map<vector<int>, int>> &path){
         vector<int> long_path;
         for(int i = 0; i < (int)path.size(); i++){
             for(auto it : path[i]){
-                int associate_flag=false; X[{path[i],path[i+1]}];
+                int associate_flag=false;
                 /*
                 for(auto temp:it.first){
                     cout<<temp<<" ";
