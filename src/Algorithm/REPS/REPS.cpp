@@ -3,8 +3,8 @@
 #include <cmath>
 using namespace std;
 
-REPS::REPS(string filename, int request_time_limit, int node_time_limit, double swap_prob, double entangle_alpha)
-    :AlgorithmBase(filename, "REPS", request_time_limit, node_time_limit, swap_prob, entangle_alpha){
+REPS::REPS(string filename, int request_time_limit, int node_time_limit, double swap_prob, double entangle_alpha ,bool limit_r_or_not)
+    :AlgorithmBase(filename, "REPS", request_time_limit, node_time_limit, swap_prob, entangle_alpha , limit_r_or_not){
     //f_hat.resize(graph.get_size());
     if(DEBUG) cerr<<"new REPS"<<endl;
 }
@@ -134,11 +134,13 @@ void REPS::PFT_LP(vector<double> &t_plum, vector<map<pair<int, int>, double>> &f
             }
             model.addConstr(expr <= m, "1f(" + to_string(u) + ")");
         }
-
-        // For QRP
-        // for(int i=0;i<(int)requests.size();i++){
-        //     model.addConstr(t[i] <= requests[i].get_send_limit(), "1QRP" + to_string(i));
-        // }
+        
+        if(get_limit_r_status()){
+            //For QRP
+            for(int i=0;i<(int)requests.size();i++){
+                model.addConstr(t[i] <= requests[i].get_send_limit(), "1QRP" + to_string(i));
+            }
+        }
 
         // Optimize model
         model.optimize();
@@ -291,14 +293,17 @@ void REPS::EPS_LP(vector<vector<double>> &t_bar, vector<vector<map<pair<int, int
             }
         }
 
-        // For QRP 
-        // for(int i=0;i<(int)requests.size();i++){
-        //     for(int k=0;k<(int)requests[i].get_paths().size();k++){
-        //         expr = 0;
-        //         expr += t[i][k];
-        //     }
-        //     model.addConstr(expr <= requests[i].get_send_limit(), "2QRP" + to_string(i));
-        // }
+        if(get_limit_r_status()){
+            // For QRP 
+            for(int i=0;i<(int)requests.size();i++){
+               for(int k=0;k<(int)requests[i].get_paths().size();k++){
+                    expr = 0;
+                    expr += t[i][k];
+                }
+                model.addConstr(expr <= requests[i].get_send_limit(), "2QRP" + to_string(i));
+            }
+        }
+
         
         //model.update();
         //model.write("debug.lp");
@@ -582,9 +587,14 @@ void REPS::ELS(){
     }
     set<int> T;
     for(int i = 0; i < (int)requests.size(); i++){ 
-        // if((int)ELS_P[i].size() < requests[i].get_send_limit()) { // 第 i 個 request 不能有超過 r(i) 條路徑可以嘗試 (for QRP)
+        if(get_limit_r_status()){
+            if((int)ELS_P[i].size() < requests[i].get_send_limit()) { // 第 i 個 request 不能有超過 r(i) 條路徑可以嘗試 (for QRP)
+                T.insert(i);
+            } 
+        }
+        else{
             T.insert(i);
-        // } 
+        }
     }
 
     // line 4
@@ -634,7 +644,9 @@ void REPS::ELS(){
                 y[u][v] ++;
                 y[v][u] ++;
             }
-            // if((int)ELS_P[req_no].size() == requests[req_no].get_send_limit()) T.erase(req_no);
+            if(get_limit_r_status()){
+                if((int)ELS_P[req_no].size() == requests[req_no].get_send_limit()) T.erase(req_no);
+            }
 
             continue;
         }
@@ -643,9 +655,15 @@ void REPS::ELS(){
 
     // line 14
     for(int i = 0; i < (int)requests.size(); i++){
-        // if((int)ELS_P[i].size() < requests[i].get_send_limit()) {  // 第 i 個 request 不能有超過 r(i) 條路徑可以嘗試 (for QRP)
-            T.insert(i);
-        // }
+        if(get_limit_r_status()){
+            if((int)ELS_P[i].size() < requests[i].get_send_limit()) {  // 第 i 個 request 不能有超過 r(i) 條路徑可以嘗試 (for QRP)
+                T.insert(i);
+            }
+        }
+        else{
+            T.insert();
+        }
+
     }
     // line 15
     while(!T.empty()){
@@ -693,7 +711,9 @@ void REPS::ELS(){
             y[u][v] ++;
             y[v][u] ++;
         }
-        // if((int)ELS_P[req_no].size() == requests[req_no].get_send_limit()) T.erase(req_no);
+        if(get_limit_r_status()){
+            if((int)ELS_P[req_no].size() == requests[req_no].get_send_limit()) T.erase(req_no);
+        }
     }
     cout<<"ELS finished!"<<endl;
 }

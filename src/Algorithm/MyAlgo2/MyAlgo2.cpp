@@ -1,7 +1,7 @@
 #include "MyAlgo2.h"
 
 MyAlgo2::MyAlgo2(string filename, int request_time_limit, int node_time_limit, double swap_prob, double entangle_alpha)
-    :AlgorithmBase(filename, "MyAlgo2", request_time_limit, node_time_limit, swap_prob, entangle_alpha){
+    :AlgorithmBase(filename, "MyAlgo2", request_time_limit, node_time_limit, swap_prob, entangle_alpha ,true/*let it be alway true*/){
     if(DEBUG) cerr<<"new MyAlgo2"<<endl;
 }
 

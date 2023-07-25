@@ -13,7 +13,7 @@ directory_path = "20230724/"
 class ChartGenerator:
     # data檔名 Y軸名稱 X軸名稱 Y軸要除多少(10的多少次方) Y軸起始座標 Y軸終止座標 Y軸座標間的間隔
     def __init__(self, dataName, Ylabel, Xlabel):
-        filename = directory_path + 'ans/' + dataName
+        filename = directory_path + 'ans/' + dataName               
         print("start generate", filename)
 
         if not os.path.exists(filename):

@@ -20,14 +20,16 @@ protected:
     int timeslot, waiting_time;
     int time_limit;
     double swap_prob;
+    bool limit_r_or_not;
     map<string, double> res;
     vector<Request> requests;
     //Request* generate_new_request();
 public:
     Graph graph;
-    AlgorithmBase(string filename, string algorithm_name, int request_time_limit, int node_time_limit, double swap_prob, double entangle_alpha);
+    AlgorithmBase(string filename, string algorithm_name, int request_time_limit, int node_time_limit, double swap_prob, double entangle_alpha , bool limit_r_or_not;);
     virtual~AlgorithmBase();
     double get_swap_prob();
+    bool get_limit_r_status();
     string get_name();
     double get_res(string s);
     virtual void path_assignment()=0;

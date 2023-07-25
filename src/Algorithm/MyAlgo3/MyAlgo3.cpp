@@ -1,7 +1,7 @@
 #include "MyAlgo3.h"
 
 MyAlgo3::MyAlgo3(string filename, int request_time_limit, int node_time_limit, double swap_prob, double entangle_alpha)
-    :AlgorithmBase(filename, "MyAlgo3", request_time_limit, node_time_limit, swap_prob, entangle_alpha){
+    :AlgorithmBase(filename, "MyAlgo3", request_time_limit, node_time_limit, swap_prob, entangle_alpha , true /*let it be alway true*/){
     if(DEBUG) cerr<<"new MyAlgo3"<<endl;
 }
 
@@ -648,7 +648,7 @@ void MyAlgo3::check_enough(vector<map<vector<int>, int>> &path){
         vector<int> long_path;
         for(int i = 0; i < (int)path.size(); i++){
             for(auto it : path[i]){
-                int associate_flag=false; X[{path[i],path[i+1]}]
+                int associate_flag=false; X[{path[i],path[i+1]}];
                 /*
                 for(auto temp:it.first){
                     cout<<temp<<" ";

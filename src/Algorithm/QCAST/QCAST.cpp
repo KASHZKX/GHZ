@@ -1,7 +1,7 @@
 #include "QCAST.h"
 
-QCAST::QCAST(string filename, int request_time_limit, int node_time_limit, double swap_prob, double entangle_alpha)
-    :AlgorithmBase(filename, "QCAST", request_time_limit, node_time_limit, swap_prob, entangle_alpha){
+QCAST::QCAST(string filename, int request_time_limit, int node_time_limit, double swap_prob, double entangle_alpha , bool limit_r_or_not)
+    :AlgorithmBase(filename, "QCAST", request_time_limit, node_time_limit, swap_prob, entangle_alpha, limit_r_or_not){
     if(DEBUG) cerr<<"new QCAST"<<endl;
 }
 
@@ -95,11 +95,14 @@ void QCAST::path_assignment(){
         for(int reqno = 0;reqno<(int)requests.size();reqno++){   //find the best path for every request
             Request &request = requests[reqno];
             // cout<<"REQUEST:"<<request.get_send_limit()<<endl;
-            // if(request.get_paths().size() >= request.get_send_limit()){ // revise major path select
-                //force to find no path
-                // candidate[reqno] = CandPath();
-                // continue;
-            // }
+            if(get_limit_r_status()){
+                if(request.get_paths().size() >= request.get_send_limit()){ // revise major path select
+                    //force to find no path
+                    candidate[reqno] = CandPath();
+                    continue;
+                }
+            }
+
             for(int i=0;i<(int)graph.get_size();i++){//initialize the distance
                 dis[i] = -1;
                 parent[i] = -1;
@@ -189,13 +192,20 @@ void QCAST::path_assignment(){
         if(mx_reqno == -1){//no path found
             break;
         }
-        if(requests[mx_reqno].get_paths().size() + find_width(candidate[mx_reqno].path) > requests[mx_reqno].get_send_limit()){
-            total += (requests[mx_reqno].get_send_limit() - requests[mx_reqno].get_paths().size());
-            assign_resource(candidate[mx_reqno].path,(requests[mx_reqno].get_send_limit() - requests[mx_reqno].get_paths().size()) ,mx_reqno);
-        }else{
+        if(get_limit_r_status()){
+            if(requests[mx_reqno].get_paths().size() + find_width(candidate[mx_reqno].path) > requests[mx_reqno].get_send_limit()){
+                total += (requests[mx_reqno].get_send_limit() - requests[mx_reqno].get_paths().size());
+                assign_resource(candidate[mx_reqno].path,(requests[mx_reqno].get_send_limit() - requests[mx_reqno].get_paths().size()) ,mx_reqno);
+            }else{
+                total += find_width(candidate[mx_reqno].path);
+                assign_resource(candidate[mx_reqno].path, mx_reqno);
+            }
+        }
+        else{
             total += find_width(candidate[mx_reqno].path);
             assign_resource(candidate[mx_reqno].path, mx_reqno);
         }
+
 }
 
     find_recovery_path(0);

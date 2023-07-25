@@ -24,7 +24,7 @@ class QCAST:public AlgorithmBase{
     // void assign_resource(vector<int> path, int reqno);                   //assign path's resource to requests[reqno]
     void p4();
 public:
-    QCAST(string filename, int request_time_limit, int node_time_limit, double swap_prob, double entangle_alpha);
+    QCAST(string filename, int request_time_limit, int node_time_limit, double swap_prob, double entangle_alpha , bool limit_r_or_not);
     ~QCAST();
     void path_assignment();
     void find_recovery_path(int R);
