@@ -39,12 +39,16 @@ void AlgorithmBase::base_next_time_slot(){
     vector<int> finished_reqno;
     for(int reqno = 0; reqno < (int)requests.size(); reqno++) {
         double req_success_ratio;
+        double over_ratio=0.0;
         total_path_num += requests[reqno].get_path_num();
         total_success_prob += requests[reqno].get_total_prob();
         if(requests[reqno].get_throughput() == 0){
             req_success_ratio = 0;
         }else{
             req_success_ratio = requests[reqno].get_throughput() / requests[reqno].get_send_limit();
+            if(over_ratio >= req_success_ratio){
+                over_ratio = req_success_ratio;
+            }
             if(req_success_ratio >= 1){
                 req_success_ratio = 1;
             }
@@ -59,7 +63,7 @@ void AlgorithmBase::base_next_time_slot(){
         if(!requests[reqno].is_finished()) {
             continue;
         }
-        res["max_over_ratio"] = max_req_success_ratio;
+        res["max_over_ratio"] = over_ratio;
         res["finished_throughputs"]++;
         // (*graph.Node_id2ptr(requests[reqno].get_source()))++;
         res["path_length"] += requests[reqno].get_send_path_length();
