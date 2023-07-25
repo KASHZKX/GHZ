@@ -66,7 +66,7 @@ int main(int argc, char *argv[]){
     default_setting["num_of_node"] = 50;
     default_setting["area_alpha"] = 0.1;
     default_setting["memory_cnt_avg"] = 12;
-    default_setting["channel_cnt_avg"] = 3;
+    default_setting["channel_cnt_avg"] = 6;
     default_setting["resource_ratio"] = 1;
 
     default_setting["swap_prob"] = 0.9;
