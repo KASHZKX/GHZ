@@ -41,6 +41,10 @@ int Path::get_len(){
     return channels.size();
 }
 
+double Path::get_prob(){
+    return prob;
+}
+
 vector<Node*> Path::get_nodes(){
     return nodes;
 }

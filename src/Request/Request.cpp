@@ -35,6 +35,10 @@ int Request::get_time_limit(){
 int Request::get_send_limit(){
     return send_limit;
 };
+
+int Request::get_path_num(){
+    return path_num;
+};
 // int Request::get_waiting_time(){
 //     return waiting_time;
 // }
@@ -50,6 +54,10 @@ int Request::get_send_path_length(){
         exit(1);
     }
     return send_path_length;
+}
+
+double Request::get_total_prob(){
+    return total_prob;
 }
 
 double Request::get_fidelity(){
@@ -96,6 +104,8 @@ void Request::swap(){
     cout<<"swapping path number: " << paths.size() << endl;
     for(auto &path:paths){
         if(path == nullptr)continue;
+        total_prob += path->get_prob();
+        path_num++;
         if(path->get_entangle_succ()) {  
             if( path->swap()){
                 throughput++;

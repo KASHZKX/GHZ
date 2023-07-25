@@ -39,6 +39,7 @@ public:
     void refresh();
     void print();
     double fidelity();
+    double get_prob();
     bool operator==(const Path &r)const;
     bool operator<(const Path &r)const;
 };

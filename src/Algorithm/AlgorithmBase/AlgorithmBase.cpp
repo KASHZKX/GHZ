@@ -25,6 +25,10 @@ bool AlgorithmBase::get_limit_r_status(){
 }
 
 void AlgorithmBase::base_next_time_slot(){
+    int total_path_num = 0;
+    double total_success_prob = 0;
+    double min_req_success_ratio = 100;
+    double max_req_success_ratio = 0;
     graph.refresh();
     graph.release();
     for(auto &request: requests){
@@ -34,6 +38,21 @@ void AlgorithmBase::base_next_time_slot(){
     //好強
     vector<int> finished_reqno;
     for(int reqno = 0; reqno < (int)requests.size(); reqno++) {
+        double req_success_ratio;
+        total_path_num += requests[reqno].get_path_num();
+        total_success_prob += requests[reqno].get_total_prob();
+        if(requests[reqno].get_throughput() == 0){
+            req_success_ratio = 0;
+        }else{
+            req_success_ratio = requests[reqno].get_throughput() / requests[reqno].get_send_limit();
+        }
+        if(min_req_success_ratio > req_success_ratio){
+            min_req_success_ratio = req_success_ratio;
+        }
+        if(max_req_success_ratio < req_success_ratio){
+            max_req_success_ratio = req_success_ratio;
+        }
+        
         if(!requests[reqno].is_finished()) {
             continue;
         }
@@ -57,6 +76,8 @@ void AlgorithmBase::base_next_time_slot(){
     for(int reqno : finished_reqno) {
         requests.erase(requests.begin() + reqno);
     }
+    res["path_success_avg"] = total_success_prob / total_path_num;
+    res["S_D_complete_ratio_difference"] = max_req_success_ratio - min_req_success_ratio;
 }
 
 void AlgorithmBase::base_entangle(){
