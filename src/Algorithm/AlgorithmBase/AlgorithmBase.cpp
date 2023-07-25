@@ -56,6 +56,7 @@ void AlgorithmBase::base_next_time_slot(){
         if(!requests[reqno].is_finished()) {
             continue;
         }
+        res["max_over_ratio"] = max_req_success_ratio;
         res["finished_throughputs"]++;
         // (*graph.Node_id2ptr(requests[reqno].get_source()))++;
         res["path_length"] += requests[reqno].get_send_path_length();
