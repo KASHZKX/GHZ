@@ -90,6 +90,7 @@ void AlgorithmBase::check_resource(){
     }
     res["use_memory"] = max(res["use_memory"], use_memory_sum);
     res["total_memory"] = memory_sum;
+    res["memory_cnt_avg"] = memory_sum/(int)graph.get_size();
     for(int i = 0; i < (int)graph.get_size(); i++){
         for(int j = i+1; j < (int)graph.get_size(); j++){
             use_channel_sum += graph.get_used_channel_size(i, j);
