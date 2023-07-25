@@ -661,7 +661,7 @@ void REPS::ELS(){
             }
         }
         else{
-            T.insert();
+            T.insert(i);
         }
 
     }
