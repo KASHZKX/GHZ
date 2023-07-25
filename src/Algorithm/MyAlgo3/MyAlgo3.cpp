@@ -107,8 +107,8 @@ void MyAlgo3::initialize(){
 }
 
 vector<int> MyAlgo3::Dijkstra(int src, int dst, int req_no){ 
-    //const double INF = numeric_limits<double>::infinity();
-    const double INF = 100;
+    const double INF = numeric_limits<double>::infinity();
+    //const double INF = 100;
     int n = graph.get_size();
     vector<double> distance(n, INF);
     vector<int> parent(n, -1);
