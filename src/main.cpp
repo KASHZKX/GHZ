@@ -91,7 +91,7 @@ int main(int argc, char *argv[]){
     change_parameter["resource_ratio"] = {0.5, 1, 2, 3, 5};
     change_parameter["area_alpha"] = {0.02, 0.04, 0.06, 0.08, 0.1}; 
     change_parameter["social_density"] = {0.25, 0.5, 0.75, 1}; 
-    change_parameter["new_request_cnt"] = {10, 20, 30, 40, 50};
+    change_parameter["new_request_cnt"] = {20, 30, 40, 50, 60};
     change_parameter["request_avg"] = {3, 5, 7, 9, 11};
     change_parameter["num_of_node"] = {20, 30, 40, 50, 60};
     change_parameter["memory_cnt_avg"] = { 3, 5, 7, 9, 11};
