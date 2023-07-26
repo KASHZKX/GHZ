@@ -8,7 +8,7 @@ import matplotlib.transforms
 import matplotlib
 from matplotlib.offsetbox import AnchoredOffsetbox, TextArea, HPacker, VPacker
 
-directory_path = "epsilon/"
+directory_path = "0727/"
 
 class ChartGenerator:
     # data檔名 Y軸名稱 X軸名稱 Y軸要除多少(10的多少次方) Y軸起始座標 Y軸終止座標 Y軸座標間的間隔
@@ -42,6 +42,7 @@ class ChartGenerator:
             "#0000FF",
             "#000000",
             "#900321",
+            "#AA0000"
         ]
         # matplotlib.rcParams['text.usetex'] = True
 
@@ -155,7 +156,7 @@ class ChartGenerator:
         plt.xticks(fontsize = Xticks_fontsize)
         plt.yticks(fontsize = Yticks_fontsize)
         
-        AlgoName = ["$\epsilon$ = 0.1", "$\epsilon$ = 0.2", "$\epsilon$ = 0.4", "$\epsilon$ = 0.6", "$\epsilon$ = 0.8"]
+        AlgoName = ["Greedy", "QCAST", "REPS", "Ours", "$\epsilon$ = 0.4"]
 
         leg = plt.legend(
             AlgoName,

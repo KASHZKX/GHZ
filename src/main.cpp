@@ -66,7 +66,7 @@ int main(int argc, char *argv[]){
     default_setting["num_of_node"] = 50;
     default_setting["area_alpha"] = 0.1;
     default_setting["memory_cnt_avg"] = 12;
-    default_setting["channel_cnt_avg"] = 6;
+    default_setting["channel_cnt_avg"] = 4;
     default_setting["resource_ratio"] = 1;
 
     default_setting["swap_prob"] = 0.9;
@@ -86,9 +86,9 @@ int main(int argc, char *argv[]){
 
     map<string, vector<double>> change_parameter;
     change_parameter["swap_prob"] = {0.55, 0.65, 0.75, 0.85, 0.95};
-    change_parameter["entangle_alpha"] = {0.001, 0.0008, 0.0006 ,0.0004, 0.0002};
+    change_parameter["entangle_alpha"] = {0.001, 0.0008, 0.0006 ,0.0004, 0.0002, 0};
     change_parameter["min_fidelity"] = {0.5, 0.7, 0.75, 0.85, 0.95};
-    change_parameter["resource_ratio"] = {0.5, 1, 2, 3, 5};
+    change_parameter["resource_ratio"] = {0.5, 1, 2, 3, 4};
     change_parameter["area_alpha"] = {0.02, 0.04, 0.06, 0.08, 0.1}; 
     change_parameter["social_density"] = {0.25, 0.5, 0.75, 1}; 
     change_parameter["new_request_cnt"] = {20, 30, 40, 50, 60};
