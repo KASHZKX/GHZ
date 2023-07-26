@@ -32,6 +32,7 @@ void AlgorithmBase::base_next_time_slot(){
     double min_req_success_ratio = 100;
     double max_req_success_ratio = 0;
     double total_req_success_ratio = 0;
+    double max_over_ratio = 0;
     graph.refresh();
     graph.release();
     for(auto &request: requests){
@@ -42,7 +43,6 @@ void AlgorithmBase::base_next_time_slot(){
     vector<int> finished_reqno;
     for(int reqno = 0; reqno < (int)requests.size(); reqno++) {
         double req_success_ratio;
-        double over_ratio=0.0;
         total_path_num += requests[reqno].get_path_num();
         before_ent_path_num += requests[reqno].get_before_ent_path_num();
         total_success_prob += requests[reqno].get_total_prob();
@@ -52,8 +52,8 @@ void AlgorithmBase::base_next_time_slot(){
             req_success_ratio = 0;
         }else{
             req_success_ratio = requests[reqno].get_throughput() / requests[reqno].get_send_limit();
-            if(over_ratio >= req_success_ratio){
-                over_ratio = req_success_ratio;
+            if(max_over_ratio <= req_success_ratio){
+                max_over_ratio = req_success_ratio;
             }
             if(req_success_ratio >= 1){
                 req_success_ratio = 1;
@@ -70,7 +70,6 @@ void AlgorithmBase::base_next_time_slot(){
         if(!requests[reqno].is_finished()) {
             continue;
         }
-        res["max_over_ratio"] = over_ratio;
         res["finished_throughputs"]++;
         // (*graph.Node_id2ptr(requests[reqno].get_source()))++;
         res["path_length"] += requests[reqno].get_send_path_length();
@@ -87,14 +86,17 @@ void AlgorithmBase::base_next_time_slot(){
         }
     }
    
-    reverse(finished_reqno.begin(), finished_reqno.end());
-    for(int reqno : finished_reqno) {
-        requests.erase(requests.begin() + reqno);
-    }
     res["path_success_avg"] = total_success_prob / total_path_num;
     res["path_success_avg_before_ent"] = before_ent_total_success_prob / before_ent_path_num;
     res["S_D_complete_ratio_difference"] = max_req_success_ratio - min_req_success_ratio;
     res["new_success_ratio"] = total_req_success_ratio / requests.size();
+    res["max_over_ratio"] = max_over_ratio;
+    
+    reverse(finished_reqno.begin(), finished_reqno.end());
+    for(int reqno : finished_reqno) {
+        requests.erase(requests.begin() + reqno);
+    }
+   
 }
 
 void AlgorithmBase::base_entangle(){
