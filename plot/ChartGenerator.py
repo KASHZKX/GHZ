@@ -134,17 +134,17 @@ class ChartGenerator:
                 maxData = max(maxData, y[i][j])
                 minData = min(minData, y[i][j])
 
-        Yend = math.ceil(maxData)
+        Yend = maxData # Yend = math.ceil(maxData)
         Ystart = 0
         Yinterval = (Yend - Ystart) / 5
 
-        if maxData > 1.1:
-            Yinterval = int(math.ceil(Yinterval))
-            Yend = int(Yend)
-        else:
-            Yend = 1
-            Ystart = 0
-            Yinterval = 0.2
+        #if maxData > 1.1:
+         #   Yinterval = int(math.ceil(Yinterval))
+         #   Yend = int(Yend)
+        #else:
+         #   Yend = 1
+          #  Ystart = 0
+           # Yinterval = 0.2
 
         marker = ['o', 's', 'v', 'x', 'd']
         for i in range(numOfAlgo):
@@ -154,7 +154,7 @@ class ChartGenerator:
         plt.xticks(fontsize = Xticks_fontsize)
         plt.yticks(fontsize = Yticks_fontsize)
         
-        AlgoName = ["Greedy", "Q-CAST", "REPS", "MONEY"]
+        AlgoName = ["Greedy", "Q-CAST", "REPS", "Ours"]
 
         leg = plt.legend(
             AlgoName,
@@ -203,8 +203,9 @@ class ChartGenerator:
 if __name__ == "__main__":
     # data檔名 Y軸名稱 X軸名稱 Y軸要除多少(10的多少次方) Y軸起始座標 Y軸終止座標 Y軸座標間的間隔
     # ChartGenerator("numOfnodes_waitingTime.txt", "need #round", "#Request of a round", 0, 0, 25, 5)
-    Xlabels = ["new_request_cnt",  "num_of_node", "request_avg", "swap_prob",  "entangle_alpha", "request_avg", "area_alpha"]
-    Ylabels = ["throughputs",  "use_memory_ratio","use_channel_ratio", "runtime",]
+    Xlabels = ["request_avg" , "memory_cnt_avg" , "new_request_cnt", "swap_prob", "num_of_node", "entangle_alpha",  "area_alpha" ,  "resource_ratio"]
+    Ylabels =  ["throughputs", "use_channel_ratio", "use_memory_ratio", "runtime", "S_D_complete_ratio_difference", "path_success_avg", "max_over_ratio"]
+    
     for Xlabel in Xlabels:
         for Ylabel in Ylabels:
             dataFileName = Xlabel + '_' + Ylabel + '.ans'

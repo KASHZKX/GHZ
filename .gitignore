@@ -10,3 +10,4 @@ separation_oracle.cpp
 *.gch
 *.o
 *.out
+plot

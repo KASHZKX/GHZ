@@ -39,6 +39,14 @@ int Request::get_send_limit(){
 int Request::get_path_num(){
     return path_num;
 };
+
+int Request::get_before_ent_path_num(){
+    return before_ent_path_num;
+};
+
+double Request::get_before_ent_total_prob(){
+    return before_ent_total_prob;
+}
 // int Request::get_waiting_time(){
 //     return waiting_time;
 // }
@@ -94,6 +102,9 @@ void Request::refresh_paths(){
 
 void Request::entangle(){
     for(auto &path:paths){
+        if(path == nullptr)continue;
+        before_ent_total_prob += path->get_prob();
+        before_ent_path_num++;
         path->entangle();
         
     }

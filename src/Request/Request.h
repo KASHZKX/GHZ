@@ -26,6 +26,8 @@ protected:
     double fidelity;
     double total_prob = 0;
     int path_num = 0;
+    double before_ent_total_prob = 0;
+    int before_ent_path_num = 0;
     vector<Path *> paths;                                       //休學
 public:
     Request(int source, int destination, const int& time_limit);
@@ -40,10 +42,12 @@ public:
     int get_send_path_length();
     int get_send_limit();
     int get_path_num();
+    int get_before_ent_path_num();
     int get_cur_send();
     void add_cur(int num);
     double get_fidelity();
     double get_total_prob();
+    double get_before_ent_total_prob();
     vector<Path *> get_paths();
     
     void clear_paths();

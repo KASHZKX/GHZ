@@ -96,7 +96,9 @@ int main(int argc, char *argv[]){
     change_parameter["num_of_node"] = {20, 30, 40, 50};
     change_parameter["memory_cnt_avg"] = { 3, 5, 7, 9};
     vector<string> X_names = {"request_avg" , "memory_cnt_avg" , "new_request_cnt", "swap_prob", "num_of_node", "entangle_alpha",  "area_alpha" ,  "resource_ratio"};
-    vector<string> Y_names = { "throughputs", "use_channel_ratio",  "use_memory_ratio", "runtime","use_memory", "total_memory","use_channel", "total_channel" , "S_D_complete_ratio_difference", "path_success_avg" , "max_over_ratio","throughput_memory_ratio", "throughput_channel_ratio"};
+    vector<string> Y_names = { "throughputs", "use_channel_ratio",  "use_memory_ratio", "runtime","use_memory", "total_memory", \
+                                "use_channel", "total_channel" , "S_D_complete_ratio_difference", "path_success_avg" , "max_over_ratio",\
+                                "throughput_memory_ratio", "throughput_channel_ratio", "path_success_avg_before_ent", "new_success_ratio "};
 			    // "divide_cnt", "change_edge_num", "diff_edge_num", "diff_rate","edge_difference"
     vector<string> algo_names = {"Greedy_Nonlimit","QCAST_Nonlimit","REPS_Nonlimit", "MyAlgo3"}; //"MyAlgo", "MyGreedyAlgo", "MyAlgo2", 
     // init result
