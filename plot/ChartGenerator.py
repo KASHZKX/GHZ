@@ -155,7 +155,7 @@ class ChartGenerator:
         plt.xticks(fontsize = Xticks_fontsize)
         plt.yticks(fontsize = Yticks_fontsize)
         
-        AlgoName = ["e = 0.1", "e = 0.2", "e = 0.3", "e = 0.4"]
+        AlgoName = ["$\epsilon$ = 0.1", "$\epsilon$ = 0.2", "$\epsilon$ = 0.4", "$\epsilon$ = 0.6", "$\epsilon$ = 0.8"]
 
         leg = plt.legend(
             AlgoName,
