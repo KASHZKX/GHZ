@@ -164,6 +164,7 @@ class ChartGenerator:
         
         AlgoName = ["GREEDY", "Q-CAST", "REPS"]
         AlgoName.append("Ours")
+        AlgoName.append("Upperbound")
         AlgoName.reverse()
         leg = plt.legend(
             AlgoName,

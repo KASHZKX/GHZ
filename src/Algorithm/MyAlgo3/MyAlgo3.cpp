@@ -818,7 +818,7 @@ void MyAlgo3::calculate(){
         t++;
     }
     cerr << "sum = " << sum << endl;
-    res["primal"] = sum * (1 - epsilon) * (1 - epsilon);
+    res["primal"] = sum / (1 - epsilon) / (1 - epsilon);
 }
 
 vector<vector<int>> MyAlgo3::allPathsSourceTarget(int src, int dst){
