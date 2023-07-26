@@ -4,6 +4,11 @@ MyAlgo3::MyAlgo3(string filename, int request_time_limit, int node_time_limit, d
     :AlgorithmBase(filename, "MyAlgo3", request_time_limit, node_time_limit, swap_prob, entangle_alpha , true /*let it be alway true*/){
     if(DEBUG) cerr<<"new MyAlgo3"<<endl;
 }
+MyAlgo3::MyAlgo3(string filename, int request_time_limit, int node_time_limit, double swap_prob, double entangle_alpha, double epsilon)
+    :AlgorithmBase(filename, "MyAlgo3_" + to_string(epsilon) , request_time_limit, node_time_limit, swap_prob, entangle_alpha , true /*let it be alway true*/), epsilon(epsilon){
+    if(DEBUG) cerr<<"new MyAlgo3"<<endl;
+}
+
 
 MyAlgo3::~MyAlgo3(){
     if(DEBUG) cerr << "delete MyAlgo3" << endl;

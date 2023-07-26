@@ -59,6 +59,7 @@ void AlgorithmBase::base_next_time_slot(){
                 req_success_ratio = 1;
             }
         }
+        
         if(min_req_success_ratio > req_success_ratio){
             min_req_success_ratio = req_success_ratio;
         }
@@ -71,7 +72,6 @@ void AlgorithmBase::base_next_time_slot(){
             continue;
         }
         res["finished_throughputs"]++;
-        // (*graph.Node_id2ptr(requests[reqno].get_source()))++;
         res["path_length"] += requests[reqno].get_send_path_length();
         res["fidelity"] += requests[reqno].get_fidelity();
         finished_reqno.push_back(reqno);
@@ -91,7 +91,7 @@ void AlgorithmBase::base_next_time_slot(){
     res["S_D_complete_ratio_difference"] = max_req_success_ratio - min_req_success_ratio;
     res["new_success_ratio"] = total_req_success_ratio / requests.size();
     res["max_over_ratio"] = max_over_ratio;
-    
+
     reverse(finished_reqno.begin(), finished_reqno.end());
     for(int reqno : finished_reqno) {
         requests.erase(requests.begin() + reqno);
