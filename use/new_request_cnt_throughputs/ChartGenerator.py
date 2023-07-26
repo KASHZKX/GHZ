@@ -44,8 +44,8 @@ class ChartGenerator:
             "#00FF00",   
             "#0000FF",
             "#000000",
+            "#AA0000",
             "#FF0000",
-            "#900321",
         ]
         # matplotlib.rcParams['text.usetex'] = True
 
@@ -163,8 +163,8 @@ class ChartGenerator:
         plt.yticks(fontsize = Yticks_fontsize)
         
         AlgoName = ["GREEDY", "Q-CAST", "REPS"]
-        AlgoName.append("Ours")
         AlgoName.append("Upperbound")
+        AlgoName.append("Ours")
         AlgoName.reverse()
         leg = plt.legend(
             AlgoName,
