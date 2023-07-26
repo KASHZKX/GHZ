@@ -10,10 +10,9 @@ from matplotlib.offsetbox import AnchoredOffsetbox, TextArea, HPacker, VPacker
 
 import sys
 sys.path.append("./")
-import config
 
 
-directory_path = "new_request_cnt_throughputs/"
+directory_path = ""
 #directory_path = ""
 class ChartGenerator:
     # data檔名 Y軸名稱 X軸名稱 Y軸要除多少(10的多少次方) Y軸起始座標 Y軸終止座標 Y軸座標間的間隔
@@ -154,9 +153,7 @@ class ChartGenerator:
             Yend = 1
             Ystart = 0
             Yinterval = 0.2
-        Yend = 1400
-        Ystart = 0
-        Yinterval = 280
+
         marker = ['o', 's', 'v', 'x', 'd']
         for i in range(numOfAlgo-1, -1, -1):
             ax1.plot(x_data, y[i], color = color[i], lw = 2.5, linestyle = "-", marker = marker[i], markersize = 15, markerfacecolor = "none", markeredgewidth = 2.5, zorder=i)
@@ -166,7 +163,7 @@ class ChartGenerator:
         plt.yticks(fontsize = Yticks_fontsize)
         
         AlgoName = ["GREEDY", "Q-CAST", "REPS"]
-        AlgoName.append(config.myalgoName)
+        AlgoName.append("Ours")
         AlgoName.reverse()
         leg = plt.legend(
             AlgoName,
@@ -225,7 +222,7 @@ if __name__ == "__main__":
     #         ChartGenerator(dataFileName, Ylabel, Xlabel)
 
 
-    Xlabel = "$\\it{\\beta}$ (# Reqs. per Time Slot)"
+    Xlabel = "SD_pairs"
     Ylabel = "Throughput"
     dataFileName = "new_request_cnt_throughputs.ans"
     ChartGenerator(dataFileName, Ylabel, Xlabel)
