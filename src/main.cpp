@@ -93,7 +93,7 @@ int main(int argc, char *argv[]){
     change_parameter["social_density"] = {0.25, 0.5, 0.75, 1}; 
     change_parameter["new_request_cnt"] = {10, 20, 30, 40, 50};
     change_parameter["request_avg"] = {3, 5, 7, 9, 11};
-    change_parameter["num_of_node"] = {20, 30, 40, 50};
+    change_parameter["num_of_node"] = {20, 30, 40, 50, 60, 70};
     change_parameter["memory_cnt_avg"] = { 3, 5, 7, 9};
     vector<string> X_names = {"request_avg" , "memory_cnt_avg" , "new_request_cnt", "swap_prob", "num_of_node", "entangle_alpha",  "area_alpha" ,  "resource_ratio"};
     vector<string> Y_names = { "throughputs", "use_channel_ratio",  "use_memory_ratio", "runtime","use_memory", "total_memory", \
