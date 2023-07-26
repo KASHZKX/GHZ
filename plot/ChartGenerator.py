@@ -8,7 +8,7 @@ import matplotlib.transforms
 import matplotlib
 from matplotlib.offsetbox import AnchoredOffsetbox, TextArea, HPacker, VPacker
 
-directory_path = "20230724/"
+directory_path = "20230726/"
 
 class ChartGenerator:
     # data檔名 Y軸名稱 X軸名稱 Y軸要除多少(10的多少次方) Y軸起始座標 Y軸終止座標 Y軸座標間的間隔
@@ -134,17 +134,18 @@ class ChartGenerator:
                 maxData = max(maxData, y[i][j])
                 minData = min(minData, y[i][j])
 
-        Yend = maxData # Yend = math.ceil(maxData)
+        #Yend = maxData 
+        Yend = math.ceil(maxData)
         Ystart = 0
         Yinterval = (Yend - Ystart) / 5
 
-        #if maxData > 1.1:
-         #   Yinterval = int(math.ceil(Yinterval))
-         #   Yend = int(Yend)
-        #else:
-         #   Yend = 1
-          #  Ystart = 0
-           # Yinterval = 0.2
+        if maxData > 1.1:
+            Yinterval = int(math.ceil(Yinterval))
+            Yend = int(Yend)
+        else:
+            Yend = 1
+            Ystart = 0
+            Yinterval = 0.2
 
         marker = ['o', 's', 'v', 'x', 'd']
         for i in range(numOfAlgo):
@@ -204,7 +205,7 @@ if __name__ == "__main__":
     # data檔名 Y軸名稱 X軸名稱 Y軸要除多少(10的多少次方) Y軸起始座標 Y軸終止座標 Y軸座標間的間隔
     # ChartGenerator("numOfnodes_waitingTime.txt", "need #round", "#Request of a round", 0, 0, 25, 5)
     Xlabels = ["request_avg" , "memory_cnt_avg" , "new_request_cnt", "swap_prob", "num_of_node", "entangle_alpha",  "area_alpha" ,  "resource_ratio"]
-    Ylabels =  ["throughputs", "use_channel_ratio", "use_memory_ratio", "runtime", "S_D_complete_ratio_difference", "path_success_avg", "max_over_ratio"]
+    Ylabels =  ["throughputs", "use_channel_ratio", "use_memory_ratio", "runtime", "S_D_complete_ratio_difference", "path_success_avg", "max_over_ratio","path_success_avg_before_ent", "new_success_ratio "]
     
     for Xlabel in Xlabels:
         for Ylabel in Ylabels:
