@@ -85,7 +85,7 @@ int main(int argc, char *argv[]){
     default_setting["service_time"] = 100;
 
     map<string, vector<double>> change_parameter;
-    change_parameter["swap_prob"] = {0.5, 0.6, 0.7, 0.8 , 0.85, 0.9 ,0.95};
+    change_parameter["swap_prob"] = {0.75, 0.8 , 0.85, 0.9 ,0.95};
     change_parameter["entangle_alpha"] = {0.001, 0.0008, 0.0006 ,0.0004, 0.0002, 0};
     change_parameter["min_fidelity"] = {0.5, 0.7, 0.75, 0.85, 0.95};
     change_parameter["resource_ratio"] = {0.5, 1, 2, 3, 4};
@@ -174,7 +174,7 @@ int main(int argc, char *argv[]){
                 //algorithms.emplace_back(new MyAlgo3(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha ));
                 //algorithms.emplace_back(new MyAlgo3(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha, 0.1 ));
                 algorithms.emplace_back(new MyAlgo3(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha));
-                algorithms.emplace_back(new MyAlgo3(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha, 0.4 ));
+                //algorithms.emplace_back(new MyAlgo3(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha, 0.4 ));
                 //algorithms.emplace_back(new MyAlgo3(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha, 0.6 ));
                 //algorithms.emplace_back(new MyAlgo3(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha, 0.8 )); 
                 // 建完圖，刪除 input 檔避免佔太多空間
