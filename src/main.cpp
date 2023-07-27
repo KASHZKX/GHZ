@@ -95,10 +95,11 @@ int main(int argc, char *argv[]){
     change_parameter["request_avg"] = {3, 5, 7, 9, 11};
     change_parameter["num_of_node"] = {20, 30, 40, 50, 60};
     change_parameter["memory_cnt_avg"] = { 3, 5, 7, 9, 11};
-    vector<string> X_names =  {/*"resource_ratio",*/ "new_request_cnt" /*"swap_prob"*/ /*"num_of_node"*/ /*"entangle_alpha"*/ /*"request_avg"/* , "memory_cnt_avg" , "area_alpha" ,  "resource_ratio"*/};
-    vector<string> Y_names = { "use_channel", "total_channel", "use_memory", "total_memory" ,"throughput_memory_ratio", "throughput_channel_ratio", "throughputs", "prob_avg", "dis_avg"/*, "use_channel_ratio",  "use_memory_ratio", "runtime","use_memory", "total_memory", \
+    vector<string> X_names =  { "swap_prob"}; //"new_request_cnt", "resource_ratio", "num_of_node", "entangle_alpha", "request_avg", "memory_cnt_avg" , "area_alpha" ,  "resource_ratio"
+    vector<string> Y_names =  {  "throughputs", "prob_avg"};
+                            // "use_channel_ratio",  "use_memory_ratio", "runtime","use_memory", "total_memory", \
                                 "use_channel", "total_channel" , "S_D_complete_ratio_difference", "path_success_avg" , "max_over_ratio",\
-                                "throughput_memory_ratio", "throughput_channel_ratio", "path_success_avg_before_ent", "new_success_ratio"*/};
+                                "throughput_memory_ratio", "throughput_channel_ratio", "path_success_avg_before_ent", "new_success_ratio"
 			    // "divide_cnt", "change_edge_num", "diff_edge_num", "diff_rate","edge_difference"
     vector<string> algo_names = {"Greedy_Nonlimit","QCAST_Nonlimit","REPS_Nonlimit", "MyAlgo3"};//{"MyAlgo3_0.100000", "MyAlgo3_0.200000", "MyAlgo3_0.400000","MyAlgo3_0.600000", "MyAlgo3_0.800000"}; //"MyAlgo", "MyGreedyAlgo", "MyAlgo2", 
     // init result
@@ -247,7 +248,6 @@ int main(int argc, char *argv[]){
                 
                 for(auto &algo:algorithms){
                     for(string Y_name : Y_names) {
-                        cout << algo->get_res(Y_name) << endl;
                         result[T][algo->get_name()][Y_name] = algo->get_res(Y_name);
                         if(Y_name == "throughputs" && algo->get_name() == "MyAlgo3") 
                             result[T][algo->get_name()]["primal"] = algo->get_res("primal");
