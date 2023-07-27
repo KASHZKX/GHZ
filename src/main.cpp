@@ -222,7 +222,8 @@ int main(int argc, char *argv[]){
 
                     cout<< "---------generating requests in main.cpp----------end" << endl;
                     
-                    #pragma omp parallel for
+                    
+                    #pragma omp parallel for 
                     for(int i = 0; i < (int)algorithms.size(); i++){
                         auto &algo = algorithms[i];
                         ofs<<"-----------run "<< algo->get_name() << " ---------"<<endl;
