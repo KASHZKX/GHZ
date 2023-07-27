@@ -26,6 +26,7 @@ protected:
     vector<Request> requests;
     //Request* generate_new_request();
 public:
+
     Graph graph;
     AlgorithmBase(string filename, string algorithm_name, int request_time_limit, int node_time_limit, double swap_prob, double entangle_alpha , bool limit_r_or_not);
     virtual~AlgorithmBase();
