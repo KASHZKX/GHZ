@@ -93,6 +93,8 @@ void AlgorithmBase::base_next_time_slot(){
     res["S_D_complete_ratio_difference"] = max_req_success_ratio - min_req_success_ratio;
     res["new_success_ratio"] = total_req_success_ratio / requests.size();
     res["max_over_ratio"] = max_over_ratio;
+    res["dis_avg"] = graph.get_dis_avg();
+    res["prob_avg"] = graph.get_prob_avg();
     reverse(finished_reqno.begin(), finished_reqno.end());
     for(int reqno : finished_reqno) {
         requests.erase(requests.begin() + reqno);

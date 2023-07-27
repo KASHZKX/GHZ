@@ -16,7 +16,8 @@ class Graph
     int num_of_edge;
     int time_limit;
     double swap_prob, entangle_alpha;
-
+    double dis_avg = 0;
+    double prob_avg = 0;
     vector<Node> nodes;
     map<pair<const Node, const Node>, vector<Channel> > channels;
     vector<vector<int> > neighbor;
@@ -41,6 +42,8 @@ public:
     Node *Node_id2ptr(int id);
 
 	double find_success_probability(const vector<int> &path);
+    double get_dis_avg();
+    double get_prob_avg();
     void generate(string);
     void refresh();
     void release();

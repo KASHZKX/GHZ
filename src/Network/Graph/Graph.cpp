@@ -144,6 +144,7 @@ void Graph::generate(string filename){
     int channel_cnt;
     double fidelity;
     double dis_sum = 0;
+    double prob_sum = 0;
     graph_input >> num_of_edge;
     for(int i = 0;i < num_of_edge; i++){
         graph_input >> node_id1 >> node_id2 >> channel_cnt >> fidelity;
@@ -162,11 +163,14 @@ void Graph::generate(string filename){
 	    }
         dis_sum += node1.distance(node2);
         double entangle_prob = exp(-entangle_alpha * (node1.distance(node2))); // e^( -alpha * dis(node1, node2) )
+        prob_sum += entangle_prob;
         if(DEBUG) cerr<<"entangle_prob:\t" << entangle_prob << endl;
         for(int i = 0; i < channel_cnt; i++){
             channels[make_pair(node1, node2)].emplace_back(&node1, &node2, entangle_prob, fidelity);
         }
     }
+    dis_avg = dis_sum /(double)num_of_edge;
+    prob_avg = prob_sum /(double)num_of_edge;
     // int is_trust;
     // for(int i = 0; i < num_of_node; i++){
     //     for(int j = 0; j < num_of_node; j++){
@@ -177,6 +181,14 @@ void Graph::generate(string filename){
 
     graph_input.close();
     if(DEBUG)cerr<<"new graph!"<<endl;
+}
+
+double Graph::get_dis_avg(){
+    return dis_avg;
+}
+
+double Graph::get_prob_avg(){
+    return prob_avg;
 }
 
 double Graph::find_success_probability(const vector<int> &path){
