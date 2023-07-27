@@ -95,11 +95,11 @@ int main(int argc, char *argv[]){
     change_parameter["request_avg"] = {3, 5, 7, 9, 11};
     change_parameter["num_of_node"] = {20, 30, 40, 50, 60};
     change_parameter["memory_cnt_avg"] = { 3, 5, 7, 9, 11};
-    vector<string> X_names =  {"entangle_alpha" }; //"new_request_cnt", "resource_ratio", "num_of_node","swap_prob" , "request_avg", "memory_cnt_avg" , "area_alpha" ,  "resource_ratio"
-    vector<string> Y_names =  {  "throughputs"};
-                            // "use_channel_ratio",  "use_memory_ratio", "runtime","use_memory", "total_memory", 
-                            // "use_channel", "total_channel" , "S_D_complete_ratio_difference", "path_success_avg" , "max_over_ratio",
-                            // "throughput_memory_ratio", "throughput_channel_ratio", "path_success_avg_before_ent", "new_success_ratio"
+    vector<string> X_names =  {  "num_of_node"}; //"new_request_cnt","entangle_alpha", "resource_ratio","swap_prob" , "request_avg", "memory_cnt_avg" , "area_alpha" ,  "resource_ratio"
+    vector<string> Y_names =  {  "throughputs", "use_channel_ratio",  "use_memory_ratio","use_memory", "total_memory","use_channel", "total_channel" ,"throughput_memory_ratio", "throughput_channel_ratio"};
+                            // "use_channel_ratio",  "use_memory_ratio", "use_memory", "use_channel", "total_channel", "total_memory" "throughput_memory_ratio", "throughput_channel_ratio",
+                            // "S_D_complete_ratio_difference", "path_success_avg" , "max_over_ratio",
+                            // "path_success_avg_before_ent", "new_success_ratio"
 			                // "divide_cnt", "change_edge_num", "diff_edge_num", "diff_rate","edge_difference"
     vector<string> algo_names = {"Greedy_Nonlimit","QCAST_Nonlimit","REPS_Nonlimit", "MyAlgo3"};//{"MyAlgo3_0.100000", "MyAlgo3_0.200000", "MyAlgo3_0.400000","MyAlgo3_0.600000", "MyAlgo3_0.800000"}; //"MyAlgo", "MyGreedyAlgo", "MyAlgo2", 
     // init result

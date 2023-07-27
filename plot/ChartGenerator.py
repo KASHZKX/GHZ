@@ -8,7 +8,7 @@ import matplotlib.transforms
 import matplotlib
 from matplotlib.offsetbox import AnchoredOffsetbox, TextArea, HPacker, VPacker
 
-directory_path = "0727/"
+directory_path = "0728/"
 
 class ChartGenerator:
     # data檔名 Y軸名稱 X軸名稱 Y軸要除多少(10的多少次方) Y軸起始座標 Y軸終止座標 Y軸座標間的間隔
@@ -42,7 +42,6 @@ class ChartGenerator:
             "#0000FF",
             "#000000",
             "#900321",
-            "#0072BD"
         ]
         # matplotlib.rcParams['text.usetex'] = True
 
@@ -108,7 +107,7 @@ class ChartGenerator:
             # print(_y)
             counter += 1
         numOfAlgo = len(_y) // numOfData
-        print(numOfAlgo)
+
 
         y = [[] for _ in range(numOfAlgo)]
         for i in range(numOfData * numOfAlgo):
@@ -138,7 +137,7 @@ class ChartGenerator:
 
         #Yend = maxData 
         Yend = math.ceil(maxData)
-        Ystart = 0
+        Ystart = 15
         Yinterval = (Yend - Ystart) / 5
 
         if maxData > 1.1:
@@ -149,7 +148,7 @@ class ChartGenerator:
             Ystart = 0
             Yinterval = 0.2
 
-        marker = ['o', 's', 'v', 'x', 'd', '*']
+        marker = ['o', 's', 'v', 'x', 'd']
         for i in range(numOfAlgo):
             ax1.plot(x_data, y[i], color = color[i], lw = 2.5, linestyle = "-", marker = marker[i], markersize = 15, markerfacecolor = "none", markeredgewidth = 2.5)
         # plt.show()
@@ -157,7 +156,7 @@ class ChartGenerator:
         plt.xticks(fontsize = Xticks_fontsize)
         plt.yticks(fontsize = Yticks_fontsize)
         
-        AlgoName = ["Greedy", "QCAST", "REPS", "Ours", "UB", "$\epsilon$ = 0.4"]
+        AlgoName = ["Ours", "Greedy", "QCAST", "REPS", "UB"]
 
         leg = plt.legend(
             AlgoName,
@@ -169,7 +168,7 @@ class ChartGenerator:
             handletextpad = 0.2,
             handlelength = 1,
             columnspacing = 0.2,
-            ncol = 2,
+            ncol = 3,
             facecolor = "None",
         )
 
@@ -206,8 +205,8 @@ class ChartGenerator:
 if __name__ == "__main__":
     # data檔名 Y軸名稱 X軸名稱 Y軸要除多少(10的多少次方) Y軸起始座標 Y軸終止座標 Y軸座標間的間隔
     # ChartGenerator("numOfnodes_waitingTime.txt", "need #round", "#Request of a round", 0, 0, 25, 5)
-    Xlabels = ["request_avg" , "memory_cnt_avg" , "new_request_cnt", "swap_prob", "num_of_node", "entangle_alpha",  "area_alpha" ,  "resource_ratio"]
-    Ylabels =  ["throughputs", "use_channel_ratio", "use_memory_ratio", "runtime", "S_D_complete_ratio_difference", "path_success_avg", "max_over_ratio","path_success_avg_before_ent", "new_success_ratio", "throughput_memory_ratio", "throughput_channel_ratio"]
+    Xlabels = ["entangle_alpha"]
+    Ylabels =  ["throughputs"]
     
     for Xlabel in Xlabels:
         for Ylabel in Ylabels:
