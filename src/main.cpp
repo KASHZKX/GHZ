@@ -222,7 +222,7 @@ int main(int argc, char *argv[]){
 
                     cout<< "---------generating requests in main.cpp----------end" << endl;
                     
-                    
+
                     #pragma omp parallel for 
                     for(int i = 0; i < (int)algorithms.size(); i++){
                         auto &algo = algorithms[i];
@@ -330,7 +330,7 @@ int main(int argc, char *argv[]){
                 ofs << change_value << endl;
                 
                 for(string algo_name : algo_names){
-                    sort(sum_vt[algo_name][Y_name].begin(),sum_vt[algo_name][Y_name].end(),greater<double>);
+                    sort(sum_vt[algo_name][Y_name].begin(),sum_vt[algo_name][Y_name].end());
                     for(auto it:sum_vt[algo_name][Y_name]){
                         ofs << it << " ";
                     }
