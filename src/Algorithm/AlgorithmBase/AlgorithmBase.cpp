@@ -41,6 +41,7 @@ void AlgorithmBase::base_next_time_slot(){
 
     //好強
     vector<int> finished_reqno;
+    res_vt.clear();
     for(int reqno = 0; reqno < (int)requests.size(); reqno++) {
         double req_success_ratio;
         total_path_num += requests[reqno].get_path_num();
@@ -49,7 +50,7 @@ void AlgorithmBase::base_next_time_slot(){
         before_ent_total_success_prob += requests[reqno].get_before_ent_total_prob();
 
         if(requests[reqno].get_throughput() == 0){
-            req_success_ratio = 0;
+            req_success_ratio = 0.0;
         }else{
             req_success_ratio = (double)requests[reqno].get_throughput() / (double)requests[reqno].get_send_limit();
             if(max_over_ratio <= req_success_ratio){
