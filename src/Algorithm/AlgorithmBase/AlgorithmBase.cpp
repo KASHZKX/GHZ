@@ -41,6 +41,7 @@ void AlgorithmBase::base_next_time_slot(){
 
     //好強
     vector<int> finished_reqno;
+    res_vt.clear();
     for(int reqno = 0; reqno < (int)requests.size(); reqno++) {
         double req_success_ratio;
         total_path_num += requests[reqno].get_path_num();
@@ -49,7 +50,7 @@ void AlgorithmBase::base_next_time_slot(){
         before_ent_total_success_prob += requests[reqno].get_before_ent_total_prob();
 
         if(requests[reqno].get_throughput() == 0){
-            req_success_ratio = 0;
+            req_success_ratio = 0.0;
         }else{
             req_success_ratio = (double)requests[reqno].get_throughput() / (double)requests[reqno].get_send_limit();
             if(max_over_ratio <= req_success_ratio){
@@ -67,13 +68,14 @@ void AlgorithmBase::base_next_time_slot(){
             max_req_success_ratio = req_success_ratio;
         }
         total_req_success_ratio += (1 - req_success_ratio);
-
+        res_vt.push_back(req_success_ratio);
         if(!requests[reqno].is_finished()) {
             continue;
         }
         res["finished_throughputs"]++;
         res["path_length"] += requests[reqno].get_send_path_length();
         res["fidelity"] += requests[reqno].get_fidelity();
+        
         finished_reqno.push_back(reqno);
         if(requests[reqno].get_throughput() != 0){
             cout << "reqno: " << reqno << " " <<  requests[reqno].get_throughput() << endl;
@@ -91,7 +93,6 @@ void AlgorithmBase::base_next_time_slot(){
     res["S_D_complete_ratio_difference"] = max_req_success_ratio - min_req_success_ratio;
     res["new_success_ratio"] = total_req_success_ratio / requests.size();
     res["max_over_ratio"] = max_over_ratio;
-
     reverse(finished_reqno.begin(), finished_reqno.end());
     for(int reqno : finished_reqno) {
         requests.erase(requests.begin() + reqno);
@@ -319,3 +320,7 @@ string AlgorithmBase::get_name(){
 double AlgorithmBase::get_res(string s){
     return res[s];
 }
+
+vector<double> AlgorithmBase::get_res_vt(){
+    return res_vt;
+};

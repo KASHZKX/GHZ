@@ -85,7 +85,7 @@ int main(int argc, char *argv[]){
     default_setting["service_time"] = 100;
 
     map<string, vector<double>> change_parameter;
-    change_parameter["swap_prob"] = {0.55, 0.65, 0.75, 0.85, 0.95};
+    change_parameter["swap_prob"] = {0.5, 0.6, 0.7, 0.8 , 0.85, 0.9 ,0.95};
     change_parameter["entangle_alpha"] = {0.001, 0.0008, 0.0006 ,0.0004, 0.0002, 0};
     change_parameter["min_fidelity"] = {0.5, 0.7, 0.75, 0.85, 0.95};
     change_parameter["resource_ratio"] = {0.5, 1, 2, 3, 4};
@@ -95,10 +95,10 @@ int main(int argc, char *argv[]){
     change_parameter["request_avg"] = {3, 5, 7, 9, 11};
     change_parameter["num_of_node"] = {20, 30, 40, 50, 60};
     change_parameter["memory_cnt_avg"] = { 3, 5, 7, 9, 11};
-    vector<string> X_names =  {"new_request_cnt", "swap_prob", "num_of_node", "entangle_alpha", "request_avg" , "memory_cnt_avg" , "area_alpha" ,  "resource_ratio"};
-    vector<string> Y_names = { "throughputs", "use_channel_ratio",  "use_memory_ratio", "runtime","use_memory", "total_memory", \
+    vector<string> X_names =  {/*"new_request_cnt",*/ "swap_prob"/*, "num_of_node", "entangle_alpha", "request_avg" , "memory_cnt_avg" , "area_alpha" ,  "resource_ratio"*/};
+    vector<string> Y_names = { "throughputs"/*, "use_channel_ratio",  "use_memory_ratio", "runtime","use_memory", "total_memory", \
                                 "use_channel", "total_channel" , "S_D_complete_ratio_difference", "path_success_avg" , "max_over_ratio",\
-                                "throughput_memory_ratio", "throughput_channel_ratio", "path_success_avg_before_ent", "new_success_ratio"};
+                                "throughput_memory_ratio", "throughput_channel_ratio", "path_success_avg_before_ent", "new_success_ratio"*/};
 			    // "divide_cnt", "change_edge_num", "diff_edge_num", "diff_rate","edge_difference"
     vector<string> algo_names = {"Greedy_Nonlimit","QCAST_Nonlimit","REPS_Nonlimit", "MyAlgo3", "MyAlgo3_0.400000"};//{"MyAlgo3_0.100000", "MyAlgo3_0.200000", "MyAlgo3_0.400000","MyAlgo3_0.600000", "MyAlgo3_0.800000"}; //"MyAlgo", "MyGreedyAlgo", "MyAlgo2", 
     // init result
@@ -115,6 +115,9 @@ int main(int argc, char *argv[]){
         map<string, double> input_parameter = default_setting;
         for(double change_value : change_parameter[X_name]) {         
             vector<map<string, map<string, double>>> result(round);
+
+            map<string,map<string,vector<double>>> sum_vt;
+
             input_parameter[X_name] = change_value;
             
             int num_of_node = input_parameter["num_of_node"];
@@ -219,7 +222,8 @@ int main(int argc, char *argv[]){
 
                     cout<< "---------generating requests in main.cpp----------end" << endl;
                     
-                    #pragma omp parallel for
+
+                    #pragma omp parallel for 
                     for(int i = 0; i < (int)algorithms.size(); i++){
                         auto &algo = algorithms[i];
                         ofs<<"-----------run "<< algo->get_name() << " ---------"<<endl;
@@ -248,6 +252,18 @@ int main(int argc, char *argv[]){
                             result[T][algo->get_name()]["primal"] = algo->get_res("primal");
                     }
                 }
+                
+
+                /*
+                for(auto &algo:algorithms){
+                    for(string Y_name :Y_names){
+                        for(auto it:algo->get_res_vt()){
+                            sum_vt[algo->get_name()][Y_name].push_back(it);
+                        }
+                    }
+                }
+                */
+
                 now = time(0);
                 dt = ctime(&now);
                 cerr  << "時間 " << dt << endl << endl; 
@@ -307,6 +323,27 @@ int main(int argc, char *argv[]){
                 ofs << endl;
                 ofs.close();
             }
+
+            /*
+            for(string Y_name : Y_names){
+                
+                string filename = "ans/" + X_name + "_" + Y_name + "_res_pq.ans";
+                ofstream ofs;
+                ofs.open(file_path + filename, ios::app);
+                ofs << change_value << endl;
+                
+                for(string algo_name : algo_names){
+                    ofs<<algo_name<<endl;
+                    sort(sum_vt[algo_name][Y_name].begin(),sum_vt[algo_name][Y_name].end());
+                    for(auto it:sum_vt[algo_name][Y_name]){
+                        ofs << it << " ";
+                    }
+                    ofs << endl;
+                }
+                ofs << endl;
+                ofs.close();
+            }
+            */
         }
     }
     return 0;
