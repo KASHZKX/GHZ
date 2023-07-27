@@ -85,7 +85,7 @@ int main(int argc, char *argv[]){
     default_setting["service_time"] = 100;
 
     map<string, vector<double>> change_parameter;
-    change_parameter["swap_prob"] = {0.55, 0.65, 0.75, 0.85, 0.95};
+    change_parameter["swap_prob"] = {0.5, 0.6, 0.7, 0.8 , 0.85, 0.9 ,0.95};
     change_parameter["entangle_alpha"] = {0.001, 0.0008, 0.0006 ,0.0004, 0.0002, 0};
     change_parameter["min_fidelity"] = {0.5, 0.7, 0.75, 0.85, 0.95};
     change_parameter["resource_ratio"] = {0.5, 1, 2, 3, 4};
@@ -95,7 +95,7 @@ int main(int argc, char *argv[]){
     change_parameter["request_avg"] = {3, 5, 7, 9, 11};
     change_parameter["num_of_node"] = {20, 30, 40, 50, 60};
     change_parameter["memory_cnt_avg"] = { 3, 5, 7, 9, 11};
-    vector<string> X_names =  {"new_request_cnt"/*, "swap_prob", "num_of_node", "entangle_alpha", "request_avg" , "memory_cnt_avg" , "area_alpha" ,  "resource_ratio"*/};
+    vector<string> X_names =  {/*"new_request_cnt",*/ "swap_prob"/*, "num_of_node", "entangle_alpha", "request_avg" , "memory_cnt_avg" , "area_alpha" ,  "resource_ratio"*/};
     vector<string> Y_names = { "throughputs"/*, "use_channel_ratio",  "use_memory_ratio", "runtime","use_memory", "total_memory", \
                                 "use_channel", "total_channel" , "S_D_complete_ratio_difference", "path_success_avg" , "max_over_ratio",\
                                 "throughput_memory_ratio", "throughput_channel_ratio", "path_success_avg_before_ent", "new_success_ratio"*/};
@@ -254,7 +254,7 @@ int main(int argc, char *argv[]){
                 }
                 
 
-                
+                /*
                 for(auto &algo:algorithms){
                     for(string Y_name :Y_names){
                         for(auto it:algo->get_res_vt()){
@@ -262,6 +262,7 @@ int main(int argc, char *argv[]){
                         }
                     }
                 }
+                */
 
                 now = time(0);
                 dt = ctime(&now);
@@ -322,6 +323,7 @@ int main(int argc, char *argv[]){
                 ofs.close();
             }
 
+            /*
             for(string Y_name : Y_names){
                 
                 string filename = "ans/" + X_name + "_" + Y_name + "_res_pq.ans";
@@ -340,7 +342,7 @@ int main(int argc, char *argv[]){
                 ofs << endl;
                 ofs.close();
             }
-            
+            */
         }
     }
     return 0;
