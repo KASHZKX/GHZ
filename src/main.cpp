@@ -330,6 +330,7 @@ int main(int argc, char *argv[]){
                 ofs << change_value << endl;
                 
                 for(string algo_name : algo_names){
+                    ofs<<algo_name<<endl;
                     sort(sum_vt[algo_name][Y_name].begin(),sum_vt[algo_name][Y_name].end());
                     for(auto it:sum_vt[algo_name][Y_name]){
                         ofs << it << " ";
