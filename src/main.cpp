@@ -95,7 +95,7 @@ int main(int argc, char *argv[]){
     change_parameter["request_avg"] = {3, 5, 7, 9, 11};
     change_parameter["num_of_node"] = {20, 30, 40, 50, 60};
     change_parameter["memory_cnt_avg"] = { 3, 5, 7, 9, 11};
-    vector<string> X_names =  {  "num_of_node"}; //"new_request_cnt","entangle_alpha", "resource_ratio","swap_prob" , "request_avg", "memory_cnt_avg" , "area_alpha" ,  "resource_ratio"
+    vector<string> X_names =  {  "new_request_cnt"}; //"num_of_node","entangle_alpha", "resource_ratio","swap_prob" , "request_avg", "memory_cnt_avg" , "area_alpha" ,  "resource_ratio"
     vector<string> Y_names =  {  "throughputs", "use_channel_ratio",  "use_memory_ratio","use_memory", "total_memory","use_channel", "total_channel" ,"throughput_memory_ratio", "throughput_channel_ratio"};
                             // "use_channel_ratio",  "use_memory_ratio", "use_memory", "use_channel", "total_channel", "total_memory" "throughput_memory_ratio", "throughput_channel_ratio",
                             // "S_D_complete_ratio_difference", "path_success_avg" , "max_over_ratio",
