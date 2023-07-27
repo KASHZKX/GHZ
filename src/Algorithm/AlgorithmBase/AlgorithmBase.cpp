@@ -67,14 +67,14 @@ void AlgorithmBase::base_next_time_slot(){
             max_req_success_ratio = req_success_ratio;
         }
         total_req_success_ratio += (1 - req_success_ratio);
-
+        res_vt.push_back(req_success_ratio);
         if(!requests[reqno].is_finished()) {
             continue;
         }
         res["finished_throughputs"]++;
         res["path_length"] += requests[reqno].get_send_path_length();
         res["fidelity"] += requests[reqno].get_fidelity();
-        res_vt.push_back(req_success_ratio);
+        
         finished_reqno.push_back(reqno);
         if(requests[reqno].get_throughput() != 0){
             cout << "reqno: " << reqno << " " <<  requests[reqno].get_throughput() << endl;
