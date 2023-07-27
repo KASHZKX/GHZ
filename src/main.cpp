@@ -247,6 +247,7 @@ int main(int argc, char *argv[]){
                 
                 for(auto &algo:algorithms){
                     for(string Y_name : Y_names) {
+                        cout << algo->get_res(Y_name) << endl;
                         result[T][algo->get_name()][Y_name] = algo->get_res(Y_name);
                         if(Y_name == "throughputs" && algo->get_name() == "MyAlgo3") 
                             result[T][algo->get_name()]["primal"] = algo->get_res("primal");
