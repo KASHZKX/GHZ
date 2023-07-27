@@ -74,6 +74,7 @@ void AlgorithmBase::base_next_time_slot(){
         res["finished_throughputs"]++;
         res["path_length"] += requests[reqno].get_send_path_length();
         res["fidelity"] += requests[reqno].get_fidelity();
+        res_vt.push_back(req_success_ratio);
         finished_reqno.push_back(reqno);
         if(requests[reqno].get_throughput() != 0){
             cout << "reqno: " << reqno << " " <<  requests[reqno].get_throughput() << endl;
@@ -91,7 +92,6 @@ void AlgorithmBase::base_next_time_slot(){
     res["S_D_complete_ratio_difference"] = max_req_success_ratio - min_req_success_ratio;
     res["new_success_ratio"] = total_req_success_ratio / requests.size();
     res["max_over_ratio"] = max_over_ratio;
-
     reverse(finished_reqno.begin(), finished_reqno.end());
     for(int reqno : finished_reqno) {
         requests.erase(requests.begin() + reqno);
@@ -319,3 +319,7 @@ string AlgorithmBase::get_name(){
 double AlgorithmBase::get_res(string s){
     return res[s];
 }
+
+vector<double> AlgorithmBase::get_res_vt(){
+    return res_vt;
+};

@@ -22,6 +22,7 @@ protected:
     double swap_prob;
     bool limit_r_or_not;
     map<string, double> res;
+    vector<double> res_vt;
     vector<Request> requests;
     //Request* generate_new_request();
 public:
@@ -32,6 +33,7 @@ public:
     bool get_limit_r_status();
     string get_name();
     double get_res(string s);
+    vector<double> get_res_vt();
     virtual void path_assignment()=0;
     int find_width(vector<int> path);
     vector<int> BFS(int source, int destination);
