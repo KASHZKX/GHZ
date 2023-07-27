@@ -42,7 +42,7 @@ class ChartGenerator:
             "#0000FF",
             "#000000",
             "#900321",
-            "#AA0000"
+            "#0072BD"
         ]
         # matplotlib.rcParams['text.usetex'] = True
 
@@ -108,6 +108,7 @@ class ChartGenerator:
             # print(_y)
             counter += 1
         numOfAlgo = len(_y) // numOfData
+        print(numOfAlgo)
 
         y = [[] for _ in range(numOfAlgo)]
         for i in range(numOfData * numOfAlgo):
@@ -148,7 +149,7 @@ class ChartGenerator:
             Ystart = 0
             Yinterval = 0.2
 
-        marker = ['o', 's', 'v', 'x', 'd']
+        marker = ['o', 's', 'v', 'x', 'd', '*']
         for i in range(numOfAlgo):
             ax1.plot(x_data, y[i], color = color[i], lw = 2.5, linestyle = "-", marker = marker[i], markersize = 15, markerfacecolor = "none", markeredgewidth = 2.5)
         # plt.show()
@@ -156,7 +157,7 @@ class ChartGenerator:
         plt.xticks(fontsize = Xticks_fontsize)
         plt.yticks(fontsize = Yticks_fontsize)
         
-        AlgoName = ["Greedy", "QCAST", "REPS", "Ours", "$\epsilon$ = 0.4", "UB"]
+        AlgoName = ["Greedy", "QCAST", "REPS", "Ours", "$\epsilon$ = 0.4"]
 
         leg = plt.legend(
             AlgoName,

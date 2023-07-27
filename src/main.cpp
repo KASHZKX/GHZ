@@ -299,9 +299,10 @@ int main(int argc, char *argv[]){
                         sum_res[algo_name][Y_name] += result[T][algo_name][Y_name];
                     }
                     ofs << sum_res[algo_name][Y_name] / round << ' ';
-                    if(algo_name == "MyAlgo3" && Y_name == "throughputs"){
-                        ofs << sum_res["MyAlgo3"]["primal"] / round << " ";
-                    }
+                    
+                }
+                if(Y_name == "throughputs"){
+                    ofs << sum_res["MyAlgo3"]["primal"] / round << " ";
                 }
                 ofs << endl;
                 ofs.close();
