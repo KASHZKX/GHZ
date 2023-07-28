@@ -255,7 +255,7 @@ int main(int argc, char *argv[]){
                 }
                 
 
-                /*
+                
                 for(auto &algo:algorithms){
                     for(string Y_name :Y_names){
                         for(auto it:algo->get_res_vt()){
@@ -263,7 +263,7 @@ int main(int argc, char *argv[]){
                         }
                     }
                 }
-                */
+                
 
                 now = time(0);
                 dt = ctime(&now);
@@ -325,10 +325,10 @@ int main(int argc, char *argv[]){
                 ofs.close();
             }
 
-            /*
+            
             for(string Y_name : Y_names){
                 
-                string filename = "ans/" + X_name + "_" + Y_name + "_res_pq.ans";
+                string filename = "ans/" + X_name + "_" + Y_name + "_before_ent_path_prob_vt.ans";
                 ofstream ofs;
                 ofs.open(file_path + filename, ios::app);
                 ofs << change_value << endl;
@@ -344,7 +344,7 @@ int main(int argc, char *argv[]){
                 ofs << endl;
                 ofs.close();
             }
-            */
+            
         }
     }
     return 0;

@@ -101,12 +101,13 @@ void Request::refresh_paths(){
 }
 
 void Request::entangle(){
+    before_ent_path_prob_vt.clear();
     for(auto &path:paths){
         if(path == nullptr)continue;
         before_ent_total_prob += path->get_prob();
         before_ent_path_num++;
-        path->entangle();
-        
+        before_ent_path_prob_vt.push_back(path->get_prob());
+        path->entangle(); 
     }
 }
 
@@ -179,6 +180,10 @@ void Request::add_cur(int num){
 
 int Request::get_cur_send(){
     return cur_send;
+}
+
+vector<double> Request::get_before_ent_path_prob_vt(){
+    return before_ent_path_prob_vt;
 }
 
 void Request::operator+=(Path *path){
