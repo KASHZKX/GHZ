@@ -96,11 +96,11 @@ int main(int argc, char *argv[]){
     change_parameter["num_of_node"] = {20, 30, 40, 50, 60};
     change_parameter["memory_cnt_avg"] = { 3, 5, 7, 9, 11};
     vector<string> X_names =  {  "new_request_cnt", "num_of_node","entangle_alpha", "resource_ratio","swap_prob" , "request_avg", "memory_cnt_avg" , "area_alpha"}; //
-    vector<string> Y_names =  { "max_over_ratio",*/ "throughputs"};
+    vector<string> Y_names =  { "max_over_ratio", "throughputs",
                              "use_channel_ratio",  "use_memory_ratio", "use_memory", "use_channel", "total_channel", "total_memory" "throughput_memory_ratio", "throughput_channel_ratio",
-                             "S_D_complete_ratio_difference", "path_success_avg" , ,
-                             "path_success_avg_before_ent", "new_success_ratio"
-			                 "divide_cnt", "change_edge_num", "diff_edge_num", "diff_rate","edge_difference"
+                             "S_D_complete_ratio_difference", "path_success_avg" ,
+                             "path_success_avg_before_ent", "new_success_ratio",
+			                 "divide_cnt", "change_edge_num", "diff_edge_num", "diff_rate","edge_difference"};
     vector<string> algo_names = {"Greedy_Nonlimit","QCAST_Nonlimit","REPS_Nonlimit", "MyAlgo3"};//{"MyAlgo3_0.100000", "MyAlgo3_0.200000", "MyAlgo3_0.400000","MyAlgo3_0.600000", "MyAlgo3_0.800000"}; //"MyAlgo", "MyGreedyAlgo", "MyAlgo2", 
     // init result
     for(string X_name : X_names) {
