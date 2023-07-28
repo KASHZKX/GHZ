@@ -29,6 +29,7 @@ protected:
     double before_ent_total_prob = 0;
     int before_ent_path_num = 0;
     vector<Path *> paths;                                       //休學
+    vector<double>before_ent_path_prob_vt;
 public:
     Request(int source, int destination, const int& time_limit);
     Request(int source, int destination, const int& time_limit, int send_limit);
@@ -49,7 +50,7 @@ public:
     double get_total_prob();
     double get_before_ent_total_prob();
     vector<Path *> get_paths();
-    
+    vector<double> get_before_ent_path_prob_vt();
     void clear_paths();
     void refresh_paths();
     void add_one_throughput();
