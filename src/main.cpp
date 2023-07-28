@@ -95,12 +95,12 @@ int main(int argc, char *argv[]){
     change_parameter["request_avg"] = {3, 5, 7, 9, 11};
     change_parameter["num_of_node"] = {20, 30, 40, 50, 60};
     change_parameter["memory_cnt_avg"] = { 3, 5, 7, 9, 11};
-    vector<string> X_names =  {  "new_request_cnt"/*, "num_of_node","entangle_alpha", "resource_ratio","swap_prob" , "request_avg", "memory_cnt_avg" , "area_alpha"*/}; //
-    vector<string> Y_names =  {/* "max_over_ratio",*/ "throughputs"};
-                            // "use_channel_ratio",  "use_memory_ratio", "use_memory", "use_channel", "total_channel", "total_memory" "throughput_memory_ratio", "throughput_channel_ratio",
-                            // "S_D_complete_ratio_difference", "path_success_avg" , ,
-                            // "path_success_avg_before_ent", "new_success_ratio"
-			                // "divide_cnt", "change_edge_num", "diff_edge_num", "diff_rate","edge_difference"
+    vector<string> X_names =  {  "new_request_cnt", "num_of_node","entangle_alpha", "resource_ratio","swap_prob" , "request_avg", "memory_cnt_avg" , "area_alpha"}; //
+    vector<string> Y_names =  { "max_over_ratio",*/ "throughputs"};
+                             "use_channel_ratio",  "use_memory_ratio", "use_memory", "use_channel", "total_channel", "total_memory" "throughput_memory_ratio", "throughput_channel_ratio",
+                             "S_D_complete_ratio_difference", "path_success_avg" , ,
+                             "path_success_avg_before_ent", "new_success_ratio"
+			                 "divide_cnt", "change_edge_num", "diff_edge_num", "diff_rate","edge_difference"
     vector<string> algo_names = {"Greedy_Nonlimit","QCAST_Nonlimit","REPS_Nonlimit", "MyAlgo3"};//{"MyAlgo3_0.100000", "MyAlgo3_0.200000", "MyAlgo3_0.400000","MyAlgo3_0.600000", "MyAlgo3_0.800000"}; //"MyAlgo", "MyGreedyAlgo", "MyAlgo2", 
     // init result
     for(string X_name : X_names) {
@@ -255,7 +255,7 @@ int main(int argc, char *argv[]){
                 }
                 
 
-                
+                /*
                 for(auto &algo:algorithms){
                     for(string Y_name :Y_names){
                         for(auto it:algo->get_res_vt()){
@@ -263,7 +263,7 @@ int main(int argc, char *argv[]){
                         }
                     }
                 }
-                
+                */
 
                 now = time(0);
                 dt = ctime(&now);
@@ -325,7 +325,7 @@ int main(int argc, char *argv[]){
                 ofs.close();
             }
 
-            
+            /*
             for(string Y_name : Y_names){
                 
                 string filename = "ans/" + X_name + "_" + Y_name + "_before_ent_path_prob_vt.ans";
@@ -344,7 +344,7 @@ int main(int argc, char *argv[]){
                 ofs << endl;
                 ofs.close();
             }
-            
+            */
         }
     }
     return 0;
