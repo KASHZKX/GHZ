@@ -96,7 +96,7 @@ int main(int argc, char *argv[]){
     change_parameter["num_of_node"] = {20, 30, 40, 50, 60};
     change_parameter["memory_cnt_avg"] = { 3, 5, 7, 9, 11};
 
-    vector<string> X_names =  {  "new_request_cnt", "num_of_node","entangle_alpha", "resource_ratio","swap_prob" , "request_avg", "memory_cnt_avg" , "area_alpha"}; //
+    vector<string> X_names =  { "num_of_node","swap_prob","entangle_alpha", "resource_ratio"/*, "request_avg" , "new_request_cnt",  "memory_cnt_avg" , "area_alpha"*/}; 
     vector<string> Y_names =  { /*"max_over_ratio",*/"throughputs"
                              /*,"use_channel_ratio",  "use_memory_ratio", "use_memory", "use_channel", "total_channel", "total_memory" "throughput_memory_ratio", "throughput_channel_ratio",
                              "S_D_complete_ratio_difference", "path_success_avg" ,
