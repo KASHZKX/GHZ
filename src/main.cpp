@@ -304,7 +304,7 @@ int main(int argc, char *argv[]){
 
             
             for(int T = 0; T < round; T++){
-                double min_UB=min(result[T]["MyAlgo3"]["primal"],result[T]["MyAlgo3_0.100000"]["primal"],result[T]["MyAlgo3_0.300000"]["primal"]);
+                double min_UB=min(result[T]["MyAlgo3"]["primal"],min(result[T]["MyAlgo3_0.100000"]["primal"],result[T]["MyAlgo3_0.300000"]["primal"]));
                 sum_res["MyAlgo3"]["primal"] += min_UB;
             }
             
