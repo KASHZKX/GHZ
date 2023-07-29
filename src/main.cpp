@@ -86,7 +86,7 @@ int main(int argc, char *argv[]){
 
     map<string, vector<double>> change_parameter;
     change_parameter["swap_prob"] = {0.75, 0.8 , 0.85, 0.9 ,0.95};
-    change_parameter["entangle_alpha"] = {0.001, 0.0008, 0.0006 ,0.0004, 0.0002, 0};
+    change_parameter["entangle_alpha"] = {0.0004, 0.0003,0.0002, 0.0001, 0};
     change_parameter["min_fidelity"] = {0.5, 0.7, 0.75, 0.85, 0.95};
     change_parameter["resource_ratio"] = {0.5, 1, 1.5, 2, 2.5};
     change_parameter["area_alpha"] = {0.02, 0.04, 0.06, 0.08, 0.1}; 
@@ -96,7 +96,7 @@ int main(int argc, char *argv[]){
     change_parameter["num_of_node"] = {20, 30, 40, 50, 60};
     change_parameter["memory_cnt_avg"] = { 3, 5, 7, 9, 11};
 
-    vector<string> X_names =  { /*"num_of_node","swap_prob","entangle_alpha", "resource_ratio", "request_avg",*/ "new_request_cnt" /*,  "memory_cnt_avg" , "area_alpha"*/}; 
+    vector<string> X_names =  { /*"num_of_node","swap_prob",*/"entangle_alpha"/*, "resource_ratio", "request_avg", "new_request_cnt" ,  "memory_cnt_avg" , "area_alpha"*/}; 
     vector<string> Y_names =  { /*"max_over_ratio",*/"throughputs"
                              /*,"use_channel_ratio",  "use_memory_ratio", "use_memory", "use_channel", "total_channel", "total_memory" "throughput_memory_ratio", "throughput_channel_ratio",
                              "S_D_complete_ratio_difference", "path_success_avg" ,
