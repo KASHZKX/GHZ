@@ -96,12 +96,12 @@ int main(int argc, char *argv[]){
     change_parameter["num_of_node"] = {20, 30, 40, 50, 60};
     change_parameter["memory_cnt_avg"] = { 3, 5, 7, 9, 11};
     vector<string> X_names =  {  "new_request_cnt", "num_of_node","entangle_alpha", "resource_ratio","swap_prob" , "request_avg", "memory_cnt_avg" , "area_alpha"}; //
-    vector<string> Y_names =  { "max_over_ratio", "throughputs",
-                             "use_channel_ratio",  "use_memory_ratio", "use_memory", "use_channel", "total_channel", "total_memory" "throughput_memory_ratio", "throughput_channel_ratio",
+    vector<string> Y_names =  { /*"max_over_ratio",*/"throughputs"
+                             /*,"use_channel_ratio",  "use_memory_ratio", "use_memory", "use_channel", "total_channel", "total_memory" "throughput_memory_ratio", "throughput_channel_ratio",
                              "S_D_complete_ratio_difference", "path_success_avg" ,
                              "path_success_avg_before_ent", "new_success_ratio",
-			                 "divide_cnt", "change_edge_num", "diff_edge_num", "diff_rate","edge_difference"};
-    vector<string> algo_names = {"Greedy_Nonlimit","QCAST_Nonlimit","REPS_Nonlimit", "MyAlgo3"};//{"MyAlgo3_0.100000", "MyAlgo3_0.200000", "MyAlgo3_0.400000","MyAlgo3_0.600000", "MyAlgo3_0.800000"}; //"MyAlgo", "MyGreedyAlgo", "MyAlgo2", 
+			                 "divide_cnt", "change_edge_num", "diff_edge_num", "diff_rate","edge_difference"*/};
+    vector<string> algo_names = {"Greedy_Nonlimit","QCAST_Nonlimit","REPS_Nonlimit", "MyAlgo3", "MyAlgo3_0.100000", "MyAlgo3_0.300000"};//{ "MyAlgo3_0.400000","MyAlgo3_0.600000", "MyAlgo3_0.800000"}; //"MyAlgo", "MyGreedyAlgo", "MyAlgo2", 
     // init result
     for(string X_name : X_names) {
         for(string Y_name : Y_names){
@@ -173,7 +173,7 @@ int main(int argc, char *argv[]){
                 //algorithms.emplace_back(new REPS(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha ,true ));
                 algorithms.emplace_back(new REPS(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha ,false ));
                 //algorithms.emplace_back(new MyAlgo3(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha ));
-                //algorithms.emplace_back(new MyAlgo3(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha, 0.1 ));
+                algorithms.emplace_back(new MyAlgo3(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha, 0.1 ));
                 algorithms.emplace_back(new MyAlgo3(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha));
                 //algorithms.emplace_back(new MyAlgo3(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha, 0.4 ));
                 //algorithms.emplace_back(new MyAlgo3(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha, 0.6 ));
@@ -300,7 +300,8 @@ int main(int argc, char *argv[]){
 
             
             for(int T = 0; T < round; T++){
-                sum_res["MyAlgo3"]["primal"] += result[T]["MyAlgo3"]["primal"];
+                double min_UB=min(result[T]["MyAlgo3"]["primal"],result[T]["MyAlgo3_0.100000"]["primal"],result[T]["MyAlgo3_0.300000"]["primal"]);
+                sum_res["MyAlgo3"]["primal"] += min_UB;
             }
             
                 
