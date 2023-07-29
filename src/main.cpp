@@ -102,7 +102,7 @@ int main(int argc, char *argv[]){
                              "S_D_complete_ratio_difference", "path_success_avg" ,
                              "path_success_avg_before_ent", "new_success_ratio",
 			                 "divide_cnt", "change_edge_num", "diff_edge_num", "diff_rate","edge_difference"*/};
-    vector<string> algo_names = {"Greedy_Nonlimit","QCAST_Nonlimit","REPS_Nonlimit", "MyAlgo3", "MyAlgo3_0.100000", "MyAlgo3_0.300000"};//{ "MyAlgo3_0.400000","MyAlgo3_0.600000", "MyAlgo3_0.800000"}; //"MyAlgo", "MyGreedyAlgo", "MyAlgo2", 
+    vector<string> algo_names = { "MyAlgo3","Greedy_Nonlimit","QCAST_Nonlimit","REPS_Nonlimit", "MyAlgo3_0.100000", "MyAlgo3_0.300000"};//{ "MyAlgo3_0.400000","MyAlgo3_0.600000", "MyAlgo3_0.800000"}; //"MyAlgo", "MyGreedyAlgo", "MyAlgo2", 
 
     // init result
     for(string X_name : X_names) {
@@ -304,6 +304,7 @@ int main(int argc, char *argv[]){
 
             
             for(int T = 0; T < round; T++){
+                cout<<result[T]["MyAlgo3"]["primal"]<<" "<<result[T]["MyAlgo3_0.100000"]["primal"]<<" "<<result[T]["MyAlgo3_0.300000"]["primal"]<<endl
                 double min_UB=min(result[T]["MyAlgo3"]["primal"],min(result[T]["MyAlgo3_0.100000"]["primal"],result[T]["MyAlgo3_0.300000"]["primal"]));
                 sum_res["MyAlgo3"]["primal"] += min_UB;
             }
