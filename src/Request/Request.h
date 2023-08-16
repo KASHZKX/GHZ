@@ -28,6 +28,7 @@ protected:
     int path_num = 0;
     double before_ent_total_prob = 0;
     int before_ent_path_num = 0;
+    double avg_hop = 0;
     vector<Path *> paths;                                       //休學
     vector<double>before_ent_path_prob_vt;
 public:
