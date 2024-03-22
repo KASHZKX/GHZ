@@ -8,7 +8,6 @@ import latex
 import matplotlib
 from matplotlib.offsetbox import AnchoredOffsetbox, TextArea, HPacker, VPacker
 
-
 directory_path = "0728/"
 matplotlib.rcParams['text.usetex'] = True
 

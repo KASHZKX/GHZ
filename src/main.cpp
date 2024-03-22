@@ -239,7 +239,7 @@ int main(int argc, char *argv[]){
                 for(auto &algo:algorithms){
                     for(string Y_name : Y_names) {
                         result[T][algo->get_name()][Y_name] = algo->get_res(Y_name);
-                        if(Y_name == "throughputs" && (algo->get_name() == "MyAlgo3" || algo->get_name() == "MyAlgo3_0.100000"|| algo->get_name() == "MyAlgo3_0.300000")){
+                        if(Y_name == "throughputs" && (algo->get_name() == "MyAlgo3") ){
                             result[T][algo->get_name()]["primal"] = algo->get_res("primal");
                         }
                     }
@@ -291,8 +291,8 @@ int main(int argc, char *argv[]){
 
             double min_UB;
             for(int T = 0; T < round; T++){
-                cout<<result[T]["MyAlgo3"]["primal"]<<" "<<result[T]["MyAlgo3_0.100000"]["primal"]<<" "<<result[T]["MyAlgo3_0.300000"]["primal"]<<endl;
-                min_UB=min(result[T]["MyAlgo3"]["primal"],min(result[T]["MyAlgo3_0.100000"]["primal"],result[T]["MyAlgo3_0.300000"]["primal"]));
+                cout<<result[T]["MyAlgo3"]["primal"]<<endl;
+                min_UB=result[T]["MyAlgo3"]["primal"];
                 sum_res["MyAlgo3"]["primal"] += min_UB;
             }
             
