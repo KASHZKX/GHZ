@@ -102,7 +102,7 @@ int main(int argc, char *argv[]){
                              "S_D_complete_ratio_difference", "path_success_avg" ,
                              "path_success_avg_before_ent", "new_success_ratio",
 			                 "divide_cnt", "change_edge_num", "diff_edge_num", "diff_rate","edge_difference"*/};
-    vector<string> algo_names = { "MyAlgo3","Greedy_Nonlimit","QCAST_Nonlimit","REPS_Nonlimit", "MyAlgo3_0.100000", "MyAlgo3_0.300000"};//{ "MyAlgo3_0.400000","MyAlgo3_0.600000", "MyAlgo3_0.800000"}; //"MyAlgo", "MyGreedyAlgo", "MyAlgo2", 
+    vector<string> algo_names = { "MyAlgo3"/*,"Greedy_Nonlimit","QCAST_Nonlimit","REPS_Nonlimit", "MyAlgo3_0.100000", "MyAlgo3_0.300000"*/}; 
 
     // init result
     for(string X_name : X_names) {
@@ -113,7 +113,7 @@ int main(int argc, char *argv[]){
     }
     
 
-    int round = 50;
+    int round = 1;
     for(string X_name : X_names) {
         map<string, double> input_parameter = default_setting;
         for(double change_value : change_parameter[X_name]) {         
@@ -169,19 +169,7 @@ int main(int argc, char *argv[]){
                 
                 vector<AlgorithmBase*> algorithms;
                  algorithms.emplace_back(new MyAlgo3(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha));
-                //algorithms.emplace_back(new Greedy(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha , true));
-                algorithms.emplace_back(new Greedy(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha , false));
-                //algorithms.emplace_back(new QCAST(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha , true));
-                algorithms.emplace_back(new QCAST(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha , false));
-                //algorithms.emplace_back(new REPS(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha ,true ));
-                algorithms.emplace_back(new REPS(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha ,false ));
-                algorithms.emplace_back(new MyAlgo3(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha));
-                algorithms.emplace_back(new MyAlgo3(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha, 0.1 ));
-                
-                algorithms.emplace_back(new MyAlgo3(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha, 0.3));
-                //algorithms.emplace_back(new MyAlgo3(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha, 0.4 ));
-                //algorithms.emplace_back(new MyAlgo3(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha, 0.6 ));
-                //algorithms.emplace_back(new MyAlgo3(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha, 0.8 )); 
+
                 // 建完圖，刪除 input 檔避免佔太多空間
                 // command = "rm -f " + file_path + "input/round_" + round_str + ".input";
                 // if(system((command).c_str()) != 0){
