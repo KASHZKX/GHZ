@@ -33,6 +33,10 @@ double Node::get_swap_prob()
     return swap_prob;
 }
 
+pair<double, double> Node::get_pos(){
+    return pos;
+}
+
 bool Node::swap()
 {
     // 亂數引擎

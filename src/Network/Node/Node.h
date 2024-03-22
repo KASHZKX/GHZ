@@ -24,7 +24,7 @@ public:
     int get_id();
     int get_memory_cnt();
     double get_swap_prob();
-
+    pair<double, double> get_pos();
     bool swap();                 //release one remain memory
     double distance(const Node &right)const;     //return the distance of two node
     bool is_assignable()const;                   //return if we can use this node to build an entangle or not

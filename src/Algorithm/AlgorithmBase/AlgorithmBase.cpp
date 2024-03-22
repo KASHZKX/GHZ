@@ -25,14 +25,14 @@ bool AlgorithmBase::get_limit_r_status(){
 }
 
 void AlgorithmBase::base_next_time_slot(){
-    int total_path_num = 0;
-    int before_ent_path_num = 0;
-    double total_success_prob = 0;
-    double before_ent_total_success_prob = 0;
-    double min_req_success_ratio = 100;
-    double max_req_success_ratio = 0;
-    double total_req_success_ratio = 0;
-    double max_over_ratio = 0;
+    // int total_path_num = 0;
+    // int before_ent_path_num = 0;
+    // double total_success_prob = 0;
+    // double before_ent_total_success_prob = 0;
+    // double min_req_success_ratio = 100;
+    // double max_req_success_ratio = 0;
+    // double total_req_success_ratio = 0;
+    // double max_over_ratio = 0;
     graph.refresh();
     graph.release();
     for(auto &request: requests){
@@ -43,64 +43,60 @@ void AlgorithmBase::base_next_time_slot(){
     vector<int> finished_reqno;
     res_vt.clear();
     for(int reqno = 0; reqno < (int)requests.size(); reqno++) {
-        double req_success_ratio;
-        total_path_num += requests[reqno].get_path_num();
-        before_ent_path_num += requests[reqno].get_before_ent_path_num();
-        total_success_prob += requests[reqno].get_total_prob();
-        before_ent_total_success_prob += requests[reqno].get_before_ent_total_prob();
+    //     double req_success_ratio;
+    //     total_path_num += requests[reqno].get_tree_num();
+    //     before_ent_path_num += requests[reqno].get_before_ent_path_num();
+    //     total_success_prob += requests[reqno].get_total_prob();
+    //     before_ent_total_success_prob += requests[reqno].get_before_ent_total_prob();
         
-        for(auto it:requests[reqno].get_before_ent_path_prob_vt()){
-            res_vt.push_back(it);
-        }
+    //     for(auto it:requests[reqno].get_before_ent_path_prob_vt()){
+    //         res_vt.push_back(it);
+    //     }
         
-        if(requests[reqno].get_throughput() == 0){
-            req_success_ratio = 0.0;
-        }else{
-            req_success_ratio = (double)requests[reqno].get_throughput() / (double)requests[reqno].get_send_limit();
-            if(max_over_ratio <= req_success_ratio){
-                max_over_ratio = req_success_ratio;
-            }
-            if(req_success_ratio >= 1){
-                req_success_ratio = 1;
-            }
-        }
+    //     if(requests[reqno].get_throughput() == 0){
+    //         req_success_ratio = 0.0;
+    //     }else{
+    //         req_success_ratio = (double)requests[reqno].get_throughput() / (double)requests[reqno].get_send_limit();
+    //         if(max_over_ratio <= req_success_ratio){
+    //             max_over_ratio = req_success_ratio;
+    //         }
+    //         if(req_success_ratio >= 1){
+    //             req_success_ratio = 1;
+    //         }
+    //     }
 
-        if(min_req_success_ratio > req_success_ratio){
-            min_req_success_ratio = req_success_ratio;
-        }
-        if(max_req_success_ratio < req_success_ratio){
-            max_req_success_ratio = req_success_ratio;
-        }
-        total_req_success_ratio += (1 - req_success_ratio);
-        if(!requests[reqno].is_finished()) {
-            continue;
-        }
-        res["finished_throughputs"]++;
-        res["path_length"] += requests[reqno].get_send_path_length();
-        res["fidelity"] += requests[reqno].get_fidelity();
+    //     if(min_req_success_ratio > req_success_ratio){
+    //         min_req_success_ratio = req_success_ratio;
+    //     }
+    //     if(max_req_success_ratio < req_success_ratio){
+    //         max_req_success_ratio = req_success_ratio;
+    //     }
+    //     total_req_success_ratio += (1 - req_success_ratio);
+    //     if(!requests[reqno].is_finished()) {
+    //         continue;
+    //     }
+    //     res["finished_throughputs"]++;
+    //     res["path_length"] += requests[reqno].get_send_path_length();
+    //     res["fidelity"] += requests[reqno].get_fidelity();
         
-        finished_reqno.push_back(reqno);
+    //     finished_reqno.push_back(reqno);
         if(requests[reqno].get_throughput() != 0){
             cout << "reqno: " << reqno << " " <<  requests[reqno].get_throughput() << endl;
-            if(requests[reqno].get_throughput() >= requests[reqno].get_send_limit()){
-                res["throughputs"]+= requests[reqno].get_send_limit();
-            }else{
-                res["throughputs"]+= requests[reqno].get_throughput();
-            }  
+            res["throughputs"]+= requests[reqno].get_throughput();
         }
     }
    
-    res["path_success_avg"] = total_success_prob / total_path_num;
-    res["path_success_avg_before_ent"] = before_ent_total_success_prob / before_ent_path_num;
-    res["S_D_complete_ratio_difference"] = max_req_success_ratio - min_req_success_ratio;
-    res["new_success_ratio"] = total_req_success_ratio / requests.size();
-    res["max_over_ratio"] = max_over_ratio;
-    res["dis_avg"] = graph.get_dis_avg();
-    res["prob_avg"] = graph.get_prob_avg();
-    reverse(finished_reqno.begin(), finished_reqno.end());
-    for(int reqno : finished_reqno) {
-        requests.erase(requests.begin() + reqno);
-    }
+    // res["path_success_avg"] = total_success_prob / total_path_num;
+    // res["path_success_avg_before_ent"] = before_ent_total_success_prob / before_ent_path_num;
+    // res["S_D_complete_ratio_difference"] = max_req_success_ratio - min_req_success_ratio;
+    // res["new_success_ratio"] = total_req_success_ratio / requests.size();
+    // res["max_over_ratio"] = max_over_ratio;
+    // res["dis_avg"] = graph.get_dis_avg();
+    // res["prob_avg"] = graph.get_prob_avg();
+    // reverse(finished_reqno.begin(), finished_reqno.end());
+    // for(int reqno : finished_reqno) {
+    //     requests.erase(requests.begin() + reqno);
+    // }
    
 }
 
@@ -162,13 +158,9 @@ void AlgorithmBase::run(){
 }
 
 void AlgorithmBase::add_new_request(Request new_request){
-    int src = new_request.get_source();
     requests.push_back(new_request);
-    // if(graph.Node_id2ptr(src)->get_remain() >= 1) {
-    //     requests.push_back(new_request);
-    //     (*graph.Node_id2ptr(src))--;
-    // }
-    
+    cout <<"Request:"<<endl;
+    cout <<new_request.get_node1()<<" "<<new_request.get_node2()<<" "<<new_request.get_node3()<<endl;
 }
 
 int AlgorithmBase::find_width(vector<int> path){
@@ -187,45 +179,57 @@ int AlgorithmBase::find_width(vector<int> path){
     return width;
 }
 
-void AlgorithmBase::assign_resource(vector<int> path, int reqno){
+void AlgorithmBase::assign_resource(vector<vector<int>> tree, int reqno){
     
     if(DEBUG) cerr<< "---------AlgorithmBase::assign_resource----------" << endl;
-    int width = find_width(path);
+    
+    int width = min(find_width(tree[0]), min( find_width(tree[1]), find_width(tree[2])));
     if(DEBUG) {
         cerr<<"find a path to build! with width:    "<<width<<endl;
-        for(auto ele:path){
-            cerr<<ele<<" ";
+        for(auto &path:tree){
+            for(auto &ele:path){
+                cerr<<ele<<" ";
+            }
+            cerr <<endl;
         }
-        cerr << endl;
+        cerr << "tree_end-------------------------"<<endl;
     }
     if(width == 0x3f3f3f3f){
         cerr<<"error:\twidth = INF"<<endl;
         exit(1);
     }
-    while(width-- > 0){
-       
-        requests[reqno] +=  graph.build_path(path);
+    while(width-- > 0){                                                      //while?????
+        vector<Path *>new_tree;
+        for(int i=0; i<3; i++){
+            new_tree.push_back(graph.build_path(tree[i]));
+        }
+        
+        requests[reqno] += new_tree;
     }
     if(DEBUG) cerr<< "---------AlgorithmBase::assign_resource----------end" << endl;
 }
 
-void AlgorithmBase::assign_resource(vector<int> path, int width, int reqno){
+void AlgorithmBase::assign_resource(vector<vector<int>> tree, int width, int reqno){
     
     if(DEBUG) cerr<< "---------AlgorithmBase::assign_resource----------" << endl;
     if(DEBUG) {
         cerr<<"find a path to build! with width:    "<<width<<endl;
-        for(auto ele:path){
-            cerr<<ele<<" ";
+        for(auto &path:tree){
+            for(auto &ele:path){
+                cerr<<ele<<" ";
+            }
+            cerr <<endl;
         }
-        cerr << endl;
+        cerr << "tree_end-------------------------"<<endl;
     }
-    if(width == 0x3f3f3f3f){
-        cerr<<"error:\twidth = INF"<<endl;
-        exit(1);
-    }
-    while(width-- > 0){
-       
-        requests[reqno] +=  graph.build_path(path);
+
+    while(width-- > 0){                                                      //while?????
+        vector<Path *>new_path;
+        for(int i=0; i<3; i++){
+            new_path.push_back(graph.build_path(tree[i]));
+        }
+
+        requests[reqno] += new_path;
     }
     if(DEBUG) cerr<< "---------AlgorithmBase::assign_resource----------end" << endl;
 }

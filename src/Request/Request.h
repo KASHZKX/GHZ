@@ -16,54 +16,34 @@ const int REQUEST_FAIL = -1;
 
 class Request{
 protected:
-    int source, destination;
-    int time_limit;
-    int send_limit;
+    int node1, node2, node3;
     int cur_send = 0;
     int throughput = 0;
     int status;
-    int send_path_length;
-    double fidelity;
-    double total_prob = 0;
-    int path_num = 0;
-    double before_ent_total_prob = 0;
-    int before_ent_path_num = 0;
-    double avg_hop = 0;
-    vector<Path *> paths;                                       //休學
-    vector<double>before_ent_path_prob_vt;
+    int tree_num = 0;
+    vector<vector<Path *>> trees;                                       //休學-[哪個tree][tree的哪個邊]
+    vector<vector<double>> tree_prob_vt;                     
 public:
-    Request(int source, int destination, const int& time_limit);
-    Request(int source, int destination, const int& time_limit, int send_limit);
+    Request(int node1, int node2, int node3);
     ~Request(void);
-    void set_path(int path_id, Path *p);                        //should delete old path before set new path
-    int get_time_limit();
-    int get_waiting_time();
-    int get_source();
-    int get_destination();
+    void set_path(int path_id, int edge_id, Path *p);                        //should delete old path before set new path
+    int get_node1();
+    int get_node2();
+    int get_node3();
     int get_throughput();
-    int get_send_path_length();
-    int get_send_limit();
-    int get_path_num();
-    int get_before_ent_path_num();
+    int get_tree_num();
     int get_cur_send();
     void add_cur(int num);
-    double get_fidelity();
-    double get_total_prob();
-    double get_before_ent_total_prob();
-    vector<Path *> get_paths();
-    vector<double> get_before_ent_path_prob_vt();
-    void clear_paths();
-    void refresh_paths();
-    void add_one_throughput();
+    vector<vector<Path *>> get_trees();
+    void clear_trees();
+    void refresh_trees();
     void entangle();
     void swap();
     void send();
     bool is_finished();
     bool is_success();
     void next_timeslot();
-    void operator+=(Path *path);
-    void print();
-    void delete_path();
+    void operator+=(vector<Path *>tree);
 };
 
 #endif
