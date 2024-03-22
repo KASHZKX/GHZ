@@ -10,13 +10,10 @@ all: a.out
 encode_path.out: encode_path_ratio.cpp Network/Node/Node.o Network/Channel/Channel.o Path/Path.o Network/Graph/Graph.o Algorithm/AlgorithmBase/AlgorithmBase.o Request/Request.o config.o Algorithm/MyAlgo/MyAlgo.o Request/WholeRequest.o
 	$(g++) encode_path_ratio.cpp Network/Node/Node.o Network/Channel/Channel.o Path/Path.o Network/Graph/Graph.o Algorithm/AlgorithmBase/AlgorithmBase.o Request/Request.o config.o Algorithm/MyAlgo/MyAlgo.o Request/WholeRequest.o -o encode_path.out
 
-a.out: main.cpp $(dependency) Algorithm/Greedy/Greedy.o Request/Request.o Algorithm/MyAlgo/MyAlgo.o Algorithm/MyAlgo2/MyAlgo2.o  Algorithm/MyAlgo3/MyAlgo3.o Algorithm/QCAST/QCAST.o Algorithm/REPS/REPS.o 
-	$(g++) main.cpp $(dependency) Algorithm/Greedy/Greedy.o Algorithm/MyAlgo/MyAlgo.o Algorithm/MyAlgo2/MyAlgo2.o Algorithm/MyAlgo3/MyAlgo3.o Algorithm/QCAST/QCAST.o Algorithm/REPS/REPS.o -I$(gurobi_path)/include/ -L$(gurobi_path)/lib -lgurobi_c++ -lgurobi95 -lm 
+a.out: main.cpp $(dependency) Algorithm/Greedy/Greedy.o Request/Request.o  Algorithm/MyAlgo3/MyAlgo3.o 
+	$(g++) main.cpp $(dependency) Algorithm/Greedy/Greedy.o Algorithm/MyAlgo3/MyAlgo3.o -I$(gurobi_path)/include/ -L$(gurobi_path)/lib -lgurobi_c++ -lgurobi95 -lm 
 
-#fight_with_local_opt.out: fight_with_local_opt.cpp $(dependency) Request/WholeRequest.o 
-#	$(g++) fight_with_local_opt.cpp $(dependency) Algorithm/MyAlgo/MyAlgo.o  Algorithm/MyAlgo2/MyAlgo2.o Algorithm/MyGreedyAlgo/MyGreedyAlgo.o Request/WholeRequest.o -o fight_with_local_opt.out
 
-# qcast.out: Network/Node/Node.o Network/Channel/Channel.o Path/Path.o Network/Graph/Graph.o Algorithm/AlgorithmBase/AlgorithmBase.o
 Network/Node/Node.o: Network/Node/Node.cpp Network/Node/Node.h config.h
 	$(g++) -c Network/Node/Node.cpp Network/Node/Node.h config.h
 	mv Node.o Network/Node/Node.o
@@ -49,25 +46,9 @@ Algorithm/Greedy/Greedy.o: Algorithm/Greedy/Greedy.h Algorithm/Greedy/Greedy.cpp
 	$(g++) -c Algorithm/Greedy/Greedy.h Algorithm/Greedy/Greedy.cpp config.h
 	mv Greedy.o Algorithm/Greedy/Greedy.o
 
-Algorithm/MyAlgo/MyAlgo.o: Algorithm/MyAlgo/MyAlgo.h Algorithm/MyAlgo/MyAlgo.cpp config.h
-	$(g++) -c --static Algorithm/MyAlgo/MyAlgo.h Algorithm/MyAlgo/MyAlgo.cpp config.h
-	mv MyAlgo.o Algorithm/MyAlgo/MyAlgo.o
-
-Algorithm/MyAlgo2/MyAlgo2.o: Algorithm/MyAlgo2/MyAlgo2.h Algorithm/MyAlgo2/MyAlgo2.cpp config.h
-	$(g++) -c --static Algorithm/MyAlgo2/MyAlgo2.h Algorithm/MyAlgo2/MyAlgo2.cpp config.h
-	mv MyAlgo2.o Algorithm/MyAlgo2/MyAlgo2.o
-
 Algorithm/MyAlgo3/MyAlgo3.o: Algorithm/MyAlgo3/MyAlgo3.h Algorithm/MyAlgo3/MyAlgo3.cpp config.h
 	$(g++) -c --static Algorithm/MyAlgo3/MyAlgo3.h Algorithm/MyAlgo3/MyAlgo3.cpp config.h
 	mv MyAlgo3.o Algorithm/MyAlgo3/MyAlgo3.o
-
-Algorithm/QCAST/QCAST.o: Algorithm/QCAST/QCAST.h Algorithm/QCAST/QCAST.cpp config.h
-	$(g++) -c Algorithm/QCAST/QCAST.h Algorithm/QCAST/QCAST.cpp config.h
-	mv QCAST.o Algorithm/QCAST/QCAST.o
-
-Algorithm/REPS/REPS.o: Algorithm/REPS/REPS.h Algorithm/REPS/REPS.cpp config.h
-	$(g++) -c --static Algorithm/REPS/REPS.h Algorithm/REPS/REPS.cpp config.h -m64 -I$(gurobi_path)/include/  -L$(gurobi_path)/lib -lgurobi_c++ -lgurobi95 -lm 
-	mv REPS.o Algorithm/REPS/REPS.o
 
 config.o:	config.h config.cpp
 	g++ -std=c++17 -c -g -O3 config.h config.cpp
@@ -85,8 +66,6 @@ clean:
 	rm -f Path/Path.o Path/Path.h.gch
 	rm -f Network/Graph/Graph.o Network/Graph/Graph.h.gch
 	rm -f Request/Request.o Request/Request.h.gch
-	rm -f Algorithm/MyAlgo/MyAlgo.o Algorithm/MyAlgo/MyAlgo.h.gch
-	rm -f Algorithm/MyAlgo2/MyAlgo2.o Algorithm/MyAlgo2/MyAlgo2.h.gch
 	rm -f Algorithm/MyAlgo3/MyAlgo3.o Algorithm/MyAlgo3/MyAlgo3.h.gch
 	rm -f config.o config.h.gch
 	find . -type f -name '*.o' -delete

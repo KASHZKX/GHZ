@@ -12,8 +12,6 @@
 #include "Network/Graph/Graph.h"
 #include "Algorithm/AlgorithmBase/AlgorithmBase.h"
 #include "Algorithm/Greedy/Greedy.h"
-#include "Algorithm/QCAST/QCAST.h"
-#include "Algorithm/REPS/REPS.h"
 #include "Algorithm/MyAlgo3/MyAlgo3.h"
 // #include "Algorithm/MyGreedyAlgo/MyGreedyAlgo.h"
 
@@ -63,7 +61,7 @@ int main(int argc, char *argv[]){
 
     }
     map<string, double> default_setting;
-    default_setting["num_of_node"] = 50;
+    default_setting["num_of_node"] = 30;
     default_setting["area_alpha"] = 0.1;
     default_setting["memory_cnt_avg"] = 12;
     default_setting["channel_cnt_avg"] = 4;
@@ -71,7 +69,7 @@ int main(int argc, char *argv[]){
 
     default_setting["swap_prob"] = 0.9;
     default_setting["entangle_alpha"] = 0.0002;
-    default_setting["new_request_cnt"] = 30;
+    default_setting["new_request_cnt"] = 5;
     default_setting["total_time_slot"] = 1;
     default_setting["request_avg"] = 3;
     default_setting["epsilon"] = 0.2;    
@@ -102,7 +100,7 @@ int main(int argc, char *argv[]){
                              "S_D_complete_ratio_difference", "path_success_avg" ,
                              "path_success_avg_before_ent", "new_success_ratio",
 			                 "divide_cnt", "change_edge_num", "diff_edge_num", "diff_rate","edge_difference"*/};
-    vector<string> algo_names = { "MyAlgo3"/*,"Greedy_Nonlimit","QCAST_Nonlimit","REPS_Nonlimit", "MyAlgo3_0.100000", "MyAlgo3_0.300000"*/}; 
+    vector<string> algo_names = { "MyAlgo3"}; 
 
     // init result
     for(string X_name : X_names) {
