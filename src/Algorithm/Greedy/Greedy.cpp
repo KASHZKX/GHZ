@@ -13,12 +13,23 @@ void Greedy::cal_need(vector<int>path, vector<int>& need_memory, map<pair<int,in
         else{
             need_memory[path[i]]+=2;
         }
-        if(need_channel.find({path[i],path[i+1]}) != need_channel.end()){
-            need_channel[{path[i],path[i+1]}] ++;
+        if(path[i]<path[i+1]){
+            if(need_channel.find({path[i],path[i+1]}) != need_channel.end()){
+                need_channel[{path[i],path[i+1]}] ++;
+            }
+            else{
+                need_channel[{path[i],path[i+1]}] = 1;
+            }
         }
         else{
-            need_channel[{path[i],path[i+1]}] = 1;
+            if(need_channel.find({path[i+1],path[i]}) != need_channel.end()){
+                need_channel[{path[i+1],path[i]}] ++;
+            }
+            else{
+                need_channel[{path[i+1],path[i]}] = 1;
+            }            
         }
+
     }
     need_memory[path[path.size()-1]]++;
     // for(auto it:need_memory){
@@ -86,15 +97,30 @@ void Greedy::path_assignment(){
             }
             if(continue_flag) continue;
             for(auto edge:need_channel){
-                if(used_channel.find(edge.first) != used_channel.end()){
-                    if(used_channel[edge.first] + edge.second > graph.get_channel_size(edge.first.first,edge.first.second)){
-                        continue_flag = true;
-                        break;
+                if(edge.first.first>edge.first.second){
+                    if(used_channel.find(edge.first) != used_channel.end()){
+                        if(used_channel[edge.first] + edge.second > graph.get_channel_size(edge.first.first,edge.first.second)){
+                            continue_flag = true;
+                            break;
+                        }
+                    }
+                    else if(edge.second > graph.get_channel_size(edge.first.first,edge.first.second)){
+                            continue_flag = true;
+                            break;
                     }
                 }
-                else if(edge.second > graph.get_channel_size(edge.first.first,edge.first.second)){
-                        continue_flag = true;
-                        break;
+                else{
+                    pair<int,int>rev_edge = {edge.first.second,edge.first.first};
+                    if(used_channel.find(rev_edge) != used_channel.end()){
+                        if(used_channel[rev_edge] + edge.second > graph.get_channel_size(edge.first.first,edge.first.second)){
+                            continue_flag = true;
+                            break;
+                        }
+                    }
+                    else if(edge.second > graph.get_channel_size(edge.first.first,edge.first.second)){
+                            continue_flag = true;
+                            break;
+                    }                    
                 }
             }
             if(continue_flag) continue;
@@ -108,11 +134,22 @@ void Greedy::path_assignment(){
             }
 
             for(auto edge:need_channel){
-                if(used_channel.find(edge.first) != used_channel.end()){
-                    used_channel[edge.first] += edge.second;
+                if(edge.first.first > edge.first.second){
+                    if(used_channel.find(edge.first) != used_channel.end()){
+                        used_channel[edge.first] += edge.second;
+                    }
+                    else{
+                        used_channel[edge.first] = edge.second;
+                    }
                 }
                 else{
-                    used_channel[edge.first] = edge.second;
+                    pair<int,int>rev_edge = {edge.first.second,edge.first.first};
+                    if(used_channel.find(rev_edge) != used_channel.end()){
+                        used_channel[rev_edge] += edge.second;
+                    }
+                    else{
+                        used_channel[rev_edge] = edge.second;
+                    }                    
                 }
             }
             flag = true;
