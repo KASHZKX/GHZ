@@ -81,7 +81,7 @@ void AlgorithmBase::base_next_time_slot(){
         
     //     finished_reqno.push_back(reqno);
         if(requests[reqno].get_throughput() != 0){
-            cout << "reqno: " << reqno << " " <<  requests[reqno].get_throughput() << endl;
+            //cout << "reqno: " << reqno << " " <<  requests[reqno].get_throughput() << endl;
             res["throughputs"]+= requests[reqno].get_throughput();
         }
     }
@@ -104,17 +104,20 @@ void AlgorithmBase::base_entangle(){
     for(int i=0;i<(int)requests.size();i++){
         requests[i].entangle();
     }
+
 }
 
 void AlgorithmBase::base_swap(){
     for(int i=0;i<(int)requests.size();i++){
         requests[i].swap();
     }
+
 }
 void AlgorithmBase::base_send(){
     for(int i=0;i<(int)requests.size();i++){
         requests[i].send();
    }
+
 }
 
 void AlgorithmBase::base_test_active(){
@@ -123,6 +126,7 @@ void AlgorithmBase::base_test_active(){
 }
 
 void AlgorithmBase::check_resource(){
+
     double use_memory_sum = 0, memory_sum = 0, use_channel_sum = 0, channel_sum = 0;
     for(int i = 0; i < (int)graph.get_size(); i++){
         Node *node_ptr = graph.Node_id2ptr(i);
@@ -267,8 +271,9 @@ vector<int> AlgorithmBase::BFS(int source, int destination){
     }
     vector<int> path_nodes;
     path_nodes.clear();
-    if(parent[destination] == -1) return path_nodes;
-
+    if(parent[destination] == -1){
+        return path_nodes;
+    }
     int now = destination;
     while(now != -1){
         path_nodes.push_back(now); 

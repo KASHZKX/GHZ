@@ -88,7 +88,6 @@ void Request::entangle(){
 
 void Request::swap(){
     for(auto &tree:trees){
-        cout<<"HI ";
         throughput ++;
     }
 }
@@ -122,7 +121,6 @@ void Request::next_timeslot(){
 }
 
 void Request::operator+=(vector<Path *>tree){
-    cout<<tree[0]<<"hi"<<endl;
     trees.emplace_back(tree);
 }
 

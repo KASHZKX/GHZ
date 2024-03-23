@@ -61,6 +61,8 @@ void Greedy::path_assignment(){
             vector<int> path1 = BFS(request.get_node1(), smallest_middle);          //狠一點 別給它dij
             vector<int> path2 = BFS(request.get_node2(), smallest_middle);
             vector<int> path3 = BFS(request.get_node3(), smallest_middle);
+            if(path1.size() == 0 || path2.size() == 0 || path3.size() == 0 ){continue;}
+
             cal_need(path1,need_memory,need_channel); cal_need(path2,need_memory,need_channel); cal_need(path3,need_memory,need_channel);
             for(auto it :path1){
                 cout << it << " ";

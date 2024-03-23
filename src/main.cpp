@@ -140,7 +140,7 @@ int main(int argc, char *argv[]){
             int total_time_slot = input_parameter["total_time_slot"];
             // python generate graph
 
-            #pragma omp parallel for
+            //#pragma omp parallel for
             for(int T = 0; T < round; T++){
                 string round_str = to_string(T);
                 ofstream ofs;
@@ -208,7 +208,7 @@ int main(int argc, char *argv[]){
                     cout<< "---------generating requests in main.cpp----------end" << endl;
                     
 
-                    #pragma omp parallel for 
+                    //#pragma omp parallel for 
                     for(int i = 0; i < (int)algorithms.size(); i++){
                         auto &algo = algorithms[i];
                         ofs<<"-----------run "<< algo->get_name() << " ---------"<<endl;
