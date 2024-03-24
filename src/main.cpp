@@ -12,7 +12,7 @@
 #include "Network/Graph/Graph.h"
 #include "Algorithm/AlgorithmBase/AlgorithmBase.h"
 #include "Algorithm/Greedy/Greedy.h"
-// #include "Algorithm/MyAlgo3/MyAlgo3.h"
+#include "Algorithm/MyAlgo/MyAlgo.h"
 // #include "Algorithm/MyGreedyAlgo/MyGreedyAlgo.h"
 
 using namespace std;
@@ -68,7 +68,7 @@ int main(int argc, char *argv[]){
 
     default_setting["swap_prob"] = 0.9;
     default_setting["entangle_alpha"] = 0.0002;
-    default_setting["new_request_cnt"] = 20;
+    default_setting["new_request_cnt"] = 1;
     default_setting["total_time_slot"] = 1;
     default_setting["epsilon"] = 0.2;    
 
@@ -98,7 +98,7 @@ int main(int argc, char *argv[]){
                              "S_D_complete_ratio_difference", "path_success_avg" ,
                              "path_success_avg_before_ent", "new_success_ratio",
 			                 "divide_cnt", "change_edge_num", "diff_edge_num", "diff_rate","edge_difference"*/};
-    vector<string> algo_names = { /*"MyAlgo3"*/ "Greedy"}; 
+    vector<string> algo_names = { "MyAlgo"/* "Greedy" */}; 
 
     // init result
     for(string X_name : X_names) {
@@ -109,7 +109,7 @@ int main(int argc, char *argv[]){
     }
     
 
-    int round = 1000;
+    int round = 1;
     for(string X_name : X_names) {
         map<string, double> input_parameter = default_setting;
         for(double change_value : change_parameter[X_name]) {         
@@ -140,7 +140,7 @@ int main(int argc, char *argv[]){
             int total_time_slot = input_parameter["total_time_slot"];
             // python generate graph
 
-            #pragma omp parallel for
+            //#pragma omp parallel for
             for(int T = 0; T < round; T++){
                 string round_str = to_string(T);
                 ofstream ofs;
@@ -162,15 +162,15 @@ int main(int argc, char *argv[]){
 
                 
                 vector<AlgorithmBase*> algorithms;
-                //algorithms.emplace_back(new MyAlgo3(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha));
-                algorithms.emplace_back(new Greedy(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha, 0));
-                
+                algorithms.emplace_back(new MyAlgo(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha));
+                //algorithms.emplace_back(new Greedy(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha, 0));
+
                 // 建完圖，刪除 input 檔避免佔太多空間
-                command = "rm -f " + file_path + "input/round_" + round_str + ".input";
-                if(system((command).c_str()) != 0){
-                    cerr<<"error:\tsystem proccess delete input file error"<<endl;
-                    exit(1);
-                }
+                // command = "rm -f " + file_path + "input/round_" + round_str + ".input";
+                // if(system((command).c_str()) != 0){
+                //     cerr<<"error:\tsystem proccess delete input file error"<<endl;
+                //     exit(1);
+                // }
 
                 ofs<<"---------------in round " <<T<<" -------------" <<endl;
                 for(int t = 0; t < total_time_slot; t++){
@@ -209,7 +209,7 @@ int main(int argc, char *argv[]){
                     cout<< "---------generating requests in main.cpp----------end" << endl;
                     
 
-                    #pragma omp parallel for 
+                    //#pragma omp parallel for 
                     for(int i = 0; i < (int)algorithms.size(); i++){
                         auto &algo = algorithms[i];
                         ofs<<"-----------run "<< algo->get_name() << " ---------"<<endl;
@@ -234,7 +234,7 @@ int main(int argc, char *argv[]){
                 for(auto &algo:algorithms){
                     for(string Y_name : Y_names) {
                         result[T][algo->get_name()][Y_name] = algo->get_res(Y_name);
-                        if(Y_name == "throughputs" && (algo->get_name() == "MyAlgo3") ){
+                        if(Y_name == "throughputs" && (algo->get_name() == "MyAlgo") ){
                             result[T][algo->get_name()]["primal"] = algo->get_res("primal");
                         }
                     }
@@ -280,15 +280,15 @@ int main(int argc, char *argv[]){
                  }
              }
             for(int T = 0; T < round; T++){
-                // result[T]["MyAlgo3"]["diff_rate"] = result[T]["MyAlgo3"]["change_edge_num"] / result[T]["MyAlgo3"]["diff_edge_num"];
-                result[T]["MyAlgo"]["edge_difference"] = result[T]["MyAlgo"]["change_edge_num"] - result[T]["MyAlgo3"]["change_edge_num"];
+                // result[T]["MyAlgo"]["diff_rate"] = result[T]["MyAlgo"]["change_edge_num"] / result[T]["MyAlgo"]["diff_edge_num"];
+                result[T]["MyAlgo"]["edge_difference"] = result[T]["MyAlgo"]["change_edge_num"] - result[T]["MyAlgo"]["change_edge_num"];
             }
 
             double min_UB;
             for(int T = 0; T < round; T++){
-                //cout<<result[T]["MyAlgo3"]["primal"]<<endl;
-                min_UB=result[T]["MyAlgo3"]["primal"];
-                sum_res["MyAlgo3"]["primal"] += min_UB;
+                //cout<<result[T]["MyAlgo"]["primal"]<<endl;
+                min_UB=result[T]["MyAlgo"]["primal"];
+                sum_res["MyAlgo"]["primal"] += min_UB;
             }
             
                 
@@ -307,7 +307,7 @@ int main(int argc, char *argv[]){
                     
                 }
                 if(Y_name == "throughputs"){
-                    ofs << sum_res["MyAlgo3"]["primal"] / round << " ";
+                    ofs << sum_res["MyAlgo"]["primal"] / round << " ";
                 }
                 ofs << endl;
                 ofs.close();
