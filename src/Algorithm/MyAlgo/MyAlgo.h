@@ -49,7 +49,7 @@ public:
     vector<map<vector<int>, int>> Greedy_rounding();
     void find_bottleneck(vector<int>, int req_no);
     void initialize(int mid);
-    void adjust_dual();
+    void init_dual();
     void check_enough(vector<map<vector<int>, int>> &path);
     void readd(vector<map<vector<int>, int>> &path,vector<int> &over_memory,map<vector<int>,int> &over_channel);
     double changing_obj();

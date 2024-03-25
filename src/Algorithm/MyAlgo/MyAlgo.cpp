@@ -38,23 +38,16 @@ double MyAlgo::X(int u, int v){
 	return weight;
 }
 
-void MyAlgo::adjust_dual(){
+void MyAlgo::init_dual(){
     M = graph.get_size() + graph.get_num_of_edge() + requests.size();              //M=V+E+I         
-    delta = (1 + epsilon) * (1.0 / pow((1 + epsilon) * M, 1.0 / epsilon));         //[unsure] -1/epsilon
+    delta = (1 + epsilon) * (1.0 / pow((1 + epsilon) * M, 1.0 / epsilon));         
 
     for(int i = 0; i < graph.get_size(); i++){
         alpha.emplace_back(delta / graph.Node_id2ptr(i)->get_memory_cnt());       //alpha=delta/Mu
 
         vector<int> temp = graph.get_neighbors_id(i);                             //beta=delta/Cuv
         for(auto it: temp){
-            // if(i < it){
-            //     beta[make_pair(i,it)] = delta / (graph.get_channel_size(i, it));
-            // }
-            // else{
-            //     beta[make_pair(it,i)] = delta / (graph.get_channel_size(i, it));
-            // }
             beta[make_pair(i,it)] = delta / (graph.get_channel_size(i, it));
-            beta[make_pair(it,i)] = delta / (graph.get_channel_size(i, it));
         }
     }
 
@@ -73,29 +66,29 @@ void MyAlgo::initialize(int mid){
         vector<int> temp = graph.get_neighbors_id(i);                             
             for(auto it: temp){
                 double ent_p = exp(graph.Node_id2ptr(i)->distance(*graph.Node_id2ptr(it))*(-graph.get_entangle_alpha()));
-                if( i == mid){                                                                                                                                 
-                    if( find(three_node.begin() , three_node.end() ,it) != three_node.end() ){                                                                                                 
+                if( i == mid){                                                                                                                                      //if u=x,
+                    if( find(three_node.begin() , three_node.end() ,it) != three_node.end() ){                                                                      //and if v={}                           
                         Y[mid][j][{i, it}] = -log(ent_p) - log(graph.Node_id2ptr(i)->get_swap_prob()) / 3;              
                     }
-                    else{                                                                                                                                          
+                    else{                                                                                                                                           //else if v!={}       
                         Y[mid][j][{i, it}] = -log(ent_p) - (log(graph.Node_id2ptr(it)->get_swap_prob()) / 2) - (log(graph.Node_id2ptr(i)->get_swap_prob()) / 3);               
                     }
                 }
-                else if( it == mid ){                                                                                                                                                                           
-                    if( find(three_node.begin() , three_node.end() ,i) != three_node.end() ){                                                                                                 
+                else if( it == mid ){                                                                                                                               //if v=x                                            
+                    if( find(three_node.begin() , three_node.end() ,i) != three_node.end() ){                                                                       //and if u={}                          
                         Y[mid][j][{i, it}] = -log(ent_p) - log(graph.Node_id2ptr(it)->get_swap_prob()) / 3;             
                     }
-                    else{                                                                                                                                         
+                    else{                                                                                                                                           //else if u!={}
                         Y[mid][j][{i, it}] = -log(ent_p) - (log(graph.Node_id2ptr(i)->get_swap_prob()) / 2) - (log(graph.Node_id2ptr(it)->get_swap_prob()) / 3);               
                     }
                 }                
-                else if( i != mid && find(three_node.begin() , three_node.end() ,it) != three_node.end()){                                                                                                     
+                else if( i != mid && find(three_node.begin() , three_node.end() ,it) != three_node.end()){                                                          //if u!=x and v={}                                           
                     Y[mid][j][{i, it}] = -log(ent_p) - log(graph.Node_id2ptr(i)->get_swap_prob()) / 2;             
                 } 
-                else if( it != mid && find(three_node.begin() , three_node.end() ,i) != three_node.end()){                                                                                                                                                                                                                                                 
+                else if( it != mid && find(three_node.begin() , three_node.end() ,i) != three_node.end()){                                                          //if v!=x and u={}                                                                                                                                                                                       
                     Y[mid][j][{i, it}] = -log(ent_p) - log(graph.Node_id2ptr(it)->get_swap_prob()) / 2;             
                 } 
-                else{
+                else{                                                                                                                                               //if u、v!=x and v、u!={}
                     Y[mid][j][{i, it}] = -log(ent_p) - log(graph.Node_id2ptr(it)->get_swap_prob()) / 2 - log(graph.Node_id2ptr(i)->get_swap_prob()) / 2;             
                 }
             }
@@ -727,83 +720,62 @@ void MyAlgo::path_assignment(){
         graph.Node_id2ptr(i)->revise(mem);
         Y[i].resize(requests.size() + 1);
     }
+    init_dual();
     for(int i = 0; i < graph.get_size(); i++){
         initialize(i);
     }
-    for(auto it1:Y){
-        cout<<"------------------------------"<<endl;
-        for(auto it2:it1){
-            cout<<"next request"<<endl;
-            for(auto it3:it2){
-                cout<<it3.first.first<<"-"<<it3.first.second<<":"<<it3.second<<endl;
-            }
+    // for(auto it1:Y){
+    //     cout<<"------------------------------"<<endl;
+    //     for(auto it2:it1){
+    //         cout<<"next request"<<endl;
+    //         for(auto it3:it2){
+    //             cout<<it3.first.first<<"-"<<it3.first.second<<":"<<it3.second<<endl;
+    //         }
             
+    //     }
+    // }
+
+    // for(unsigned int i = 0; i < requests.size(); i++){
+    //     int src = requests[i].get_source();
+    //     int dst = requests[i].get_destination();
+    //     all_source_target_path.push_back(allPathsSourceTarget(src, dst));
+    // }
+
+    obj = M * delta;
+    while(obj < 1){
+        int req_no = 0;
+        vector<vector<int>> best_tree(3,vector<int>());
+        for(int middle = 0; middle < graph.get_size(); midlle++){
+            double smallest_U = numeric_limits<double>::infinity();
+            // cout<<"\n------New round-------\n";
+            #pragma omp parallel for
+            for(unsigned int i = 0; i < requests.size(); i++){
+                map<pair<double,double>,double>path1_range =  separation_oracle(i, U[i]);
+                map<pair<double,double>,double>path2_range =  separation_oracle(i, U[i]);
+                map<pair<double,double>,double>path3_range =  separation_oracle(i, U[i]);
+                //cout << "smallest_U: " << smallest_U << " U: " << U << "\n\n"; 
+            }
+
+            for(unsigned int i = 0; i < requests.size(); i++){
+                //cout << "smallest_U: " << smallest_U << " U: " << U << "\n\n"; 
+                if(U[i] < smallest_U){
+                    smallest_U  = U[i];
+                    best_path = all_path[i];
+                    req_no = i;
+                }
+            } 
+        // cout << smallest_U << endl;
         }
-    }
-    while(1){};
-}
-//     adjust_dual();
-//     // for(unsigned int i = 0; i < requests.size(); i++){
-//     //     int src = requests[i].get_source();
-//     //     int dst = requests[i].get_destination();
-//     //     all_source_target_path.push_back(allPathsSourceTarget(src, dst));
-//     // }
-//     obj = M * delta;
-//     vector<int> best_path;
-//     vector<int> cur_path;
-//     // double U;
-//     while(obj < 1){
-//         for(int middle = 0; middle < graph.get_size(); midlle++){
-//             int req_no = 0;
-//             double smallest_U = numeric_limits<double>::infinity();
-//             vector<double> U;
-//             vector<vector<int>>all_path;
-//             all_path.resize(requests.size());
-//             U.resize(requests.size());
-//             // cout<<"\n------New round-------\n";
-//             #pragma omp parallel for
-//             for(unsigned int i = 0; i < requests.size(); i++){
-//                 all_path[i] =  separation_oracle(i, U[i]);
-//                 //cout << "smallest_U: " << smallest_U << " U: " << U << "\n\n"; 
-//             }
-
-//             // cout << "Dijkstra start" << endl;
-//             // vector<int> SPT;
-//             // #pragma omp parallel for
-//             // for(int i = 0; i < (int)requests.size(); i++){
-//             //     SPT = Dijkstra(requests[i].get_source(), requests[i].get_destination());
-//             //     int cur_node = requests[i].get_source();
-//             //     while(cur_node != requests[i].get_destination()){
-//             //         all_path[i].push_back(cur_node);
-//             //         cur_node = SPT[cur_node];
-//             //     } 
-//             //     all_path[i].push_back(requests[i].get_destination());
-                
-//             //     U[i] = 0;
-//             //     for(int j = 0; j < (int)all_path[i].size()-1; j++){
-//             //         U[i] += alpha[all_path[i][j]] + alpha[all_path[i][j+1]] ;
-//             //         if(j < all_path[i].size()-1) U[i] += beta[{all_path[i][j], all_path[i][j+1]}];
-//             //     }
-//             //     U[i] += tau[i];
-//             // }
-//             // cout << "Dijkstra end" << endl;
-
-//             for(unsigned int i = 0; i < requests.size(); i++){
-//                 //cout << "smallest_U: " << smallest_U << " U: " << U << "\n\n"; 
-//                 if(U[i] < smallest_U){
-//                     smallest_U  = U[i];
-//                     best_path = all_path[i];
-//                     req_no = i;
-//                 }
-//             } 
-//         // cout << smallest_U << endl;
-//         }
-//         find_bottleneck(best_path, req_no);
+        find_bottleneck(best_path, req_no);
         
-//         cout << obj << endl;
-//         // obj = changing_obj();
-//         // cout<<"changing_obj obj: " << obj << endl ;
-//     }
+        cout << obj << endl;
+        // obj = changing_obj();
+        // cout<<"changing_obj obj: " << obj << endl ;
+    }
+}
+    
+
+
 
 //     // calculate();
 //     find_violate();
