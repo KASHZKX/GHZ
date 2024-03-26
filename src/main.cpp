@@ -17,9 +17,6 @@
 
 using namespace std;
 
-
-
-
 Request generate_new_request(int num_of_node, int time_limit){
     //亂數引擎 
     random_device rd;
@@ -68,7 +65,7 @@ int main(int argc, char *argv[]){
 
     default_setting["swap_prob"] = 0.9;
     default_setting["entangle_alpha"] = 0.0002;
-    default_setting["new_request_cnt"] = 1;
+    default_setting["new_request_cnt"] = 3;
     default_setting["total_time_slot"] = 1;
     default_setting["epsilon"] = 0.2;    
 

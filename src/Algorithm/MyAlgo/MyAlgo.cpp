@@ -156,13 +156,12 @@ void MyAlgo::separation_oracle(int src, int dst, int req_no, int path_id, vector
         smallest_U = d1 * exp(d2);
         best_path = SDpath;
     }
-
-    cout<<"Begin path:";
-    for(auto it: SDpath){
-        cout<<it<<" ";
-    }
-    cout<<endl;
-    cout<<"U = "<< d1 * exp(d2)<<endl;
+    // cout<<"Begin path:";
+    // for(auto it: SDpath){
+    //     cout<<it<<" ";
+    // }
+    // cout<<endl;
+    // cout<<"U = "<< d1 * exp(d2)<<endl;
     for(int i = 0; i < graph.get_size(); i++){                               //(4)compute lexmin
         if(i == src){continue;}
         for(auto &neigh:graph.get_neighbors_id(i)){                               
@@ -1074,25 +1073,21 @@ void MyAlgo::path_assignment(){
             int smallest_index = -1;
             vector<vector<vector<int>>> cur_tree(3,vector<vector<int>>());                //[path_id][extreme_tree_id][eles]
             vector<vector<vector<double>>> cur_label(3,vector<vector<double>>());         //[path_id][extreme_tree_id][last_ratio, new_ratio, U]
-            // cout<<"\n------New round-------\n";
-            //#pragma omp parallel for
             for(unsigned int i = 0; i < requests.size(); i++){
                 if(middle == requests[i].get_node1() || middle == requests[i].get_node2() || middle == requests[i].get_node3()){continue;}
                 separation_oracle(requests[i].get_node1(), middle, i, 0, cur_tree, cur_label);
-                cout<<"------------------------\n";
                 separation_oracle(requests[i].get_node2(), middle, i, 1, cur_tree, cur_label);
-                cout<<"------------------------\n";
                 separation_oracle(requests[i].get_node3(), middle, i, 2, cur_tree, cur_label);
-                for(int fir = 0; fir < cur_tree.size(); fir++){
-                    for(int sec = 0; sec < cur_tree[fir].size(); sec++){
-                        cout<<"["<<cur_label[fir][sec][0]<<" ~ "<<cur_label[fir][sec][1]<<"] : "<<cur_label[fir][sec][2]<<endl;
-                        for(auto it:cur_tree[fir][sec]){
-                            cout<<it<<" ";
-                        }
-                        cout<<"\n-----------------------"<<endl;
-                    }
-                    cout<<"\nNEXT\n";
-                }
+                // for(int fir = 0; fir < cur_tree.size(); fir++){
+                //     for(int sec = 0; sec < cur_tree[fir].size(); sec++){
+                //         cout<<"["<<cur_label[fir][sec][0]<<" ~ "<<cur_label[fir][sec][1]<<"] : "<<cur_label[fir][sec][2]<<endl;
+                //         for(auto it:cur_tree[fir][sec]){
+                //             cout<<it<<" ";
+                //         }
+                //         cout<<"\n-----------------------"<<endl;
+                //     }
+                //     cout<<"\nNEXT\n";
+                // }
                 vector<double>label_area;
                 label_area.push_back(0);
                 label_area.push_back(INF);
@@ -1112,14 +1107,14 @@ void MyAlgo::path_assignment(){
                         }
                     }
                 }
-                for(auto it:label_area){
-                    cout<<it<<" ";
-                }
-                cout<<endl;
-                for(auto it:total_U){
-                    cout<<it<<" ";
-                }
-                cout<<endl;              
+                // for(auto it:label_area){
+                //     cout<<it<<" ";
+                // }
+                // cout<<endl;
+                // for(auto it:total_U){
+                //     cout<<it<<" ";
+                // }
+                // cout<<endl;              
                 for(int j = 0; j < total_U.size(); j++){
                     if(smallest_U > total_U[j]){
                         smallest_index = j;
@@ -1127,6 +1122,7 @@ void MyAlgo::path_assignment(){
                     }
                 }
                 if(smallest_U < global_U){
+                    global_U = smallest_U;
                     for(int fir = 0; fir < cur_label.size(); fir++){
                         for(int sec = 0; sec < cur_label[fir].size(); sec++){
                             if(cur_label[fir][sec][0] <= label_area[smallest_index] &&  label_area[smallest_index+1] <= cur_label[fir][sec][1]){
@@ -1135,28 +1131,26 @@ void MyAlgo::path_assignment(){
                             }
                         }
                     } 
-                }
-                for(auto it:best_tree){
-                    for(auto it1:it){
-                        cout<<it1<<" ";
+                    cout<<"Request "<<i<<" with : "<<smallest_U <<" \n";
+                    for(auto it:best_tree){
+                        for(auto it1:it){
+                            cout<<it1<<" ";
+                        }
+                        cout<<endl;
                     }
-                    cout<<endl;
+                    cout<<"--------------------------"<<endl;
                 }
+
             }
-            
-            //to shut down
-            break;
-        
-        //     for(unsigned int i = 0; i < requests.size(); i++){
-        //         //cout << "smallest_U: " << smallest_U << " U: " << U << "\n\n"; 
-        //         if(U[i] < smallest_U){
-        //             smallest_U  = U[i];
-        //             best_path = all_path[i];
-        //             req_no = i;
-        //         }
-        //     } 
-        // // cout << smallest_U << endl;
         }
+        cout<<"THIS ROUND ANS: "<<global_U<<endl;
+        for(auto it:best_tree){
+            for(auto it2:it){
+                cout<<it2<<" ";
+            }
+            cout<<endl;
+        }
+        cout<<endl;
         break;
         // find_bottleneck(best_path, req_no);
         
