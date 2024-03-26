@@ -129,7 +129,7 @@ vector<int> MyAlgo::Dijkstra(int src, int dst, int req, vector<pair<double,doubl
 }       
    
 
-void MyAlgo::separation_oracle(int src, int dst, int req_no, vector<vector<vector<int>>> &cur_tree, vector<vector<vector<double>>> &cur_label){     
+void MyAlgo::separation_oracle(int src, int dst, int req_no, int path_id, vector<vector<vector<int>>> &cur_tree, vector<vector<vector<double>>> &cur_label){     
     double INF=numeric_limits<double>::infinity();
     vector<pair<double,double>>dist (graph.get_size(),{INF,INF});            
     vector<int> pred (graph.get_size(),-1);                                  
@@ -203,13 +203,16 @@ void MyAlgo::separation_oracle(int src, int dst, int req_no, vector<vector<vecto
         pred[min_i] = cpred_table[min_i];
         if(min_i == dst){                                       //(9)
             if(min_theta > last_ratio){                         //(10)
-                cout << "[" << last_ratio << "," << min_theta << "] with " << d1 * exp(d2) << endl;
+                //cout << "[" << last_ratio << "," << min_theta << "] with " << d1 * exp(d2) << endl;
+                vector<double>temp = {last_ratio,min_theta, (d1 * exp(d2))};
                 last_ratio = min_theta;
-                cout<<"Extremepath: ";
-                for(auto it:SDpath){
-                    cout << it <<" ";
-                }
-                cout<<endl<<endl;
+                cur_tree[path_id].push_back(SDpath);
+                cur_label[path_id].push_back(temp);
+                // cout<<"Extremepath: ";
+                // for(auto it:SDpath){
+                //     cout << it <<" ";
+                // }
+                // cout<<endl<<endl;
             }
             SDpath.clear();
             current = dst;
@@ -266,11 +269,14 @@ void MyAlgo::separation_oracle(int src, int dst, int req_no, vector<vector<vecto
             }
         }
     }
-    cout<<"Best path :";
-    for(auto it:best_path){
-        cout<<it<<" ";
-    }           
-    cout<<endl<<"U : "<<smallest_U<<endl;
+    // cout<<"Last path :";
+    // for(auto it:SDpath){
+    //     cout<<it<<" ";
+    // }
+    vector<double>temp = {last_ratio,INF,(d1 * exp(d2))};
+    cur_tree[path_id].push_back(SDpath);
+    cur_label[path_id].push_back(temp);        
+    //cout<<endl<<"U : "<< d1 * exp(d2) <<" and ratio: " <<last_ratio<<endl;
 }
 
 // //                   Our Old Friend                                //
@@ -1030,6 +1036,7 @@ vector<map<vector<int>, int>> MyAlgo::Greedy_rounding(){
 }
 
 void MyAlgo::path_assignment(){
+    double INF=numeric_limits<double>::infinity();
     Y.resize(graph.get_size());
     for(int i = 0; i < graph.get_size(); i++){
         int mem = graph.Node_id2ptr(i)->get_memory_cnt();
@@ -1061,18 +1068,80 @@ void MyAlgo::path_assignment(){
     while(obj < 1){
         int req_no = 0;
         vector<vector<int>> best_tree(3,vector<int>());
+        double global_U = numeric_limits<double>::infinity();
         for(int middle = 0; middle < graph.get_size(); middle++){
             double smallest_U = numeric_limits<double>::infinity();
-            vector<vector<vector<int>>> cur_tree(graph.get_size(),vector<vector<int>>(3,vector<int>()));                //[req][path_id][eles]
-            vector<vector<vector<double>>> cur_label(graph.get_size(),vector<vector<double>>(3,vector<double>(3,-1)));
+            int smallest_index = -1;
+            vector<vector<vector<int>>> cur_tree(3,vector<vector<int>>());                //[path_id][extreme_tree_id][eles]
+            vector<vector<vector<double>>> cur_label(3,vector<vector<double>>());         //[path_id][extreme_tree_id][last_ratio, new_ratio, U]
             // cout<<"\n------New round-------\n";
             //#pragma omp parallel for
             for(unsigned int i = 0; i < requests.size(); i++){
-                separation_oracle(requests[i].get_node1(), middle, i, cur_tree, cur_label);
+                if(middle == requests[i].get_node1() || middle == requests[i].get_node2() || middle == requests[i].get_node3()){continue;}
+                separation_oracle(requests[i].get_node1(), middle, i, 0, cur_tree, cur_label);
                 cout<<"------------------------\n";
-                separation_oracle(requests[i].get_node2(), middle, i, cur_tree, cur_label);
+                separation_oracle(requests[i].get_node2(), middle, i, 1, cur_tree, cur_label);
                 cout<<"------------------------\n";
-                separation_oracle(requests[i].get_node3(), middle, i, cur_tree, cur_label);
+                separation_oracle(requests[i].get_node3(), middle, i, 2, cur_tree, cur_label);
+                for(int fir = 0; fir < cur_tree.size(); fir++){
+                    for(int sec = 0; sec < cur_tree[fir].size(); sec++){
+                        cout<<"["<<cur_label[fir][sec][0]<<" ~ "<<cur_label[fir][sec][1]<<"] : "<<cur_label[fir][sec][2]<<endl;
+                        for(auto it:cur_tree[fir][sec]){
+                            cout<<it<<" ";
+                        }
+                        cout<<"\n-----------------------"<<endl;
+                    }
+                    cout<<"\nNEXT\n";
+                }
+                vector<double>label_area;
+                label_area.push_back(0);
+                label_area.push_back(INF);
+                for(int fir = 0; fir < cur_label.size(); fir++){
+                    for(int sec = 0; sec < cur_label[fir].size()-1; sec++){
+                        label_area.push_back(cur_label[fir][sec][1]);
+                    }
+                }
+                sort(label_area.begin(),label_area.end());
+                vector<double>total_U(label_area.size()-1,0);
+                for(int fir = 0; fir < cur_label.size(); fir++){
+                    for(int sec = 0; sec < cur_label[fir].size(); sec++){
+                        for(int third = 1; third < label_area.size(); third++){
+                            if(cur_label[fir][sec][0] <= label_area[third-1] && cur_label[fir][sec][1] >= label_area[third]){
+                                total_U[third-1] += cur_label[fir][sec][2];
+                            }
+                        }
+                    }
+                }
+                for(auto it:label_area){
+                    cout<<it<<" ";
+                }
+                cout<<endl;
+                for(auto it:total_U){
+                    cout<<it<<" ";
+                }
+                cout<<endl;              
+                for(int j = 0; j < total_U.size(); j++){
+                    if(smallest_U > total_U[j]){
+                        smallest_index = j;
+                        smallest_U = total_U[j];
+                    }
+                }
+                if(smallest_U < global_U){
+                    for(int fir = 0; fir < cur_label.size(); fir++){
+                        for(int sec = 0; sec < cur_label[fir].size(); sec++){
+                            if(cur_label[fir][sec][0] <= label_area[smallest_index] &&  label_area[smallest_index+1] <= cur_label[fir][sec][1]){
+                                best_tree[fir] = cur_tree[fir][sec];
+                                break;
+                            }
+                        }
+                    } 
+                }
+                for(auto it:best_tree){
+                    for(auto it1:it){
+                        cout<<it1<<" ";
+                    }
+                    cout<<endl;
+                }
             }
             
             //to shut down

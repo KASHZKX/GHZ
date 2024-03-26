@@ -49,7 +49,7 @@ public:
     map<int, int> num_of_path_count;
     map<int, int> path_length_encode;
     map<int, int> path_length_cnt;
-    void separation_oracle(int src, int dst, int req_no, vector<vector<vector<int>>> &cur_tree, vector<vector<vector<double>>> &cur_label);
+    void separation_oracle(int src, int dst, int req_no, int path_id, vector<vector<vector<int>>> &cur_tree, vector<vector<vector<double>>> &cur_label);
     vector<int> Dijkstra(int src, int dst, int req, vector<pair<double,double>>&dist);
     vector<int> Dijkstra_ori(int src, int dst, int req_no);
     void separation_oracle_ori(int src,int dst,int req_no);
