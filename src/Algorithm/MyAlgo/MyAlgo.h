@@ -15,8 +15,21 @@
 
 using namespace std;
 
-class MyAlgo:public AlgorithmBase {
+class Label {
+public:
+  double theta, obj_bar2;
+  int i;
 
+  Label(double t, double o, int i) : theta(t), obj_bar2(o), i(i){};
+
+    bool operator>(const Label &b) const {
+    if (theta == b.theta)
+      return obj_bar2 > b.obj_bar2;
+    return theta > b.theta;
+  }
+};
+
+class MyAlgo:public AlgorithmBase {
 private:
     //map<pair<int,int>, vector<double>> X;
     vector<vector<map<pair<int,int>, double>>> Y;
@@ -36,8 +49,10 @@ public:
     map<int, int> num_of_path_count;
     map<int, int> path_length_encode;
     map<int, int> path_length_cnt;
-    vector<int> separation_oracle(int req_no,int src,int dst, double &req_Us);
-    vector<int> Dijkstra(int src, int dst);
+    void separation_oracle(int src, int dst, int req_no, vector<vector<vector<int>>> &cur_tree, vector<vector<vector<double>>> &cur_label);
+    vector<int> Dijkstra(int src, int dst, int req, vector<pair<double,double>>&dist);
+    vector<int> Dijkstra_ori(int src, int dst, int req_no);
+    void separation_oracle_ori(int src,int dst,int req_no);
     void path_assignment();
     void calculate();
     void entangle();
