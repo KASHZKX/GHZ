@@ -8,6 +8,7 @@
 #include <limits>
 #include <string>
 #include <cmath>
+#include <tuple>
 #include "../AlgorithmBase/AlgorithmBase.h"
 #include "../../Request/WholeRequest.h"
 #include "../../Network/Graph/Graph.h"
@@ -34,7 +35,8 @@ private:
     //map<pair<int,int>, vector<double>> X;
     vector<vector<map<pair<int,int>, double>>> Y;
     vector<double> alpha;
-    map<vector<int>, double> x_i_p;
+    vector<vector<vector<int>>> x_i_t_tree;
+    vector<double> x_i_t;
     map<pair<int,int>, double> beta;
     vector<vector<vector<int>>> all_source_target_path;
     int change_edge_num = 0; 
@@ -62,7 +64,7 @@ public:
     vector<vector<int>> allPathsSourceTarget(int src, int dst);
     void next_time_slot();
     vector<map<vector<int>, int>> Greedy_rounding();
-    void find_bottleneck(vector<int>, int req_no);
+    void find_bottleneck(vector<vector<int>> &tree, int req_no);
     void initialize(int mid);
     void init_dual();
     void check_enough(vector<map<vector<int>, int>> &path);

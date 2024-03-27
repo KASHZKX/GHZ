@@ -278,343 +278,154 @@ void MyAlgo::separation_oracle(int src, int dst, int req_no, int path_id, vector
     //cout<<endl<<"U : "<< d1 * exp(d2) <<" and ratio: " <<last_ratio<<endl;
 }
 
-// //                   Our Old Friend                                //
-// vector<int> MyAlgo::Dijkstra_ori(int src, int dst, int req_no){ 
-//     const double INF = numeric_limits<double>::infinity();
-//     //const double INF = 100;
-//     int n = graph.get_size();
-//     vector<double> distance(n, INF);
-//     vector<int> parent(n, -1);
-//     vector<bool> used(n, false);
-//     priority_queue<pair<double, int>, vector<pair<double, int>>, greater<pair<double, int>>> pq;
+void MyAlgo::find_bottleneck(vector<vector<int>> &tree, int req_no){
+    double min_s_u = numeric_limits<double>::infinity();
+    double min_s_uv = numeric_limits<double>::infinity();
+    //double s_i = 1;                                                         //send_limit = 1???
+    vector<double> s_u(graph.get_size() + 5);                                              
+    vector<int> used_u(graph.get_size() + 5, 0);
+    map<pair<int,int>,int> used_uv;
+    map<pair<int,int>,double> s_uv;
+    // Calculate used 
+    for(int i = 0; i < 3; i++){
+        for(int j = 0; j < tree[i].size() - 1; j++){
+            if(j == 0){
+                used_u[tree[i][j]]++;
+            }
+            else{
+                used_u[tree[i][j]]+=2;
+            }
+            if(used_uv.find({tree[i][j],tree[i][j+1]}) != used_uv.end()){
+                used_uv[{tree[i][j],tree[i][j+1]}]++;
+                used_uv[{tree[i][j+1],tree[i][j]}]++;
+            }
+            else{
+                used_uv[{tree[i][j],tree[i][j+1]}] = 1;
+                used_uv[{tree[i][j+1],tree[i][j]}] = 1;
+            }
+        }
+        used_u[tree[i][tree[i].size()-1]]++;
+    }
 
-//     distance[dst] = 0;
-//     pq.push({0, dst});
-//     while(!pq.empty()) {
-//         int cur_node = pq.top().second;
-//         pq.pop();
-//         if(used[cur_node]) continue;
-//         used[cur_node] = true;
-//         for(int neighbor : graph.get_neighbors_id(cur_node)) {
-//             if(distance[cur_node] + X(cur_node, neighbor) < distance[neighbor]) {
-//                 distance[neighbor] = distance[cur_node] + X(cur_node, neighbor);
-//                 parent[neighbor] = cur_node;
-//                 pq.push({distance[neighbor], neighbor});
-//             }
-//         }
-//     }
+    for(int i = 0; i < graph.get_size(); i++){
+        if(used_u[i] == 0){continue;}
+        s_u[i] = graph.Node_id2ptr(i)->get_memory_cnt() / used_u[i] ;        
+        if(s_u[i] < min_s_u)
+            min_s_u = s_u[i];
+    }
 
-//     if(distance[src] >= INF) return{};
-// /*
-//     int cur_node = src;
-//     vector<int> path;
-//     while(cur_node != -1) {
-//         path.push_back(cur_node);
-//         cur_node = parent[cur_node];
-//     }
+    for(auto &it:used_uv){
+        s_uv[{it.first.first, it.first.second}] = graph.get_channel_size(it.first.first, it.first.second) / it.second;                   //channel min
+        if(s_uv[{it.first.first, it.first.second}] < min_s_uv)
+            min_s_uv = s_uv[{it.first.first, it.first.second}];
+    }
 
-//     reverse(path.begin(), path.end());
-// */
-//     return parent;
-// }
+    int rate = 1;
+    double s = min(min_s_u, min_s_uv);                                      //request limit=1?
+    for(int i = 0; i < rate; i++){
+        bool find = false;
+        for(int j = 0; j < x_i_t_tree.size(); j++){                                                   //add flow to path
+            if(x_i_t_tree[j][0] == tree[0] && x_i_t_tree[j][1] == tree[1] && x_i_t_tree[j][2] == tree[2]){
+                x_i_t[j] += s;
+                find = true;
+                break;
+            }
+        }                                        
+        if(find == false){
+            x_i_t.push_back(s);
+            x_i_t_tree.push_back(tree);
+        }    
 
-// void MyAlgo::separation_oracle_ori(int src,int dst,int req_no){     
-//     vector<int> SPT;                  //nodes' parent in the spanning tree
-//     vector<int> best_path;
-//     double best_len; 
-//     SPT = Dijkstra_ori(src, dst, req_no);                               //the first SPT is get by dijkstra
-//     int cur_node = src;                                     //counting the first path's U(X,Y)=c* e^r
-//     double c = 0;                                           //c=SUM[u,v]:alpha(u)+alpha(v)+beta(u,v)==X[u,v]
-//     double r = 0;                                           //r=SUM[u,v]:-ln(Pr(u,v))==Y[u,v]
-//     while(cur_node != dst){
-//         // if(cur_node < SPT[cur_node]){                       //[can alter]no need if else
-//         //     c += X[{cur_node,SPT[cur_node]}][req_no];               
-//         //     r += Y[req_no][{cur_node,SPT[cur_node]}];
-//         // }
-//         // else{
-//         //     c += X[{SPT[cur_node],cur_node}][req_no];  
-//         //     r += Y[req_no][{SPT[cur_node],cur_node}];           
-//         // }
-//         c += X(SPT[cur_node], cur_node);  
-//         r += Y[dst][req_no][{SPT[cur_node],cur_node}];  
-//         best_path.push_back(cur_node);
-//         cur_node = SPT[cur_node];
-//     } 
-//     best_path.push_back(dst);
-//     best_len = c * exp(r);
+        for(int i = 0; i < used_u.size(); i++){
+            if(used_u[i] == 0){continue;}
+            obj += (alpha[i] * (1 + epsilon * s / s_u[i]) - alpha[i]) * graph.Node_id2ptr(i)->get_memory_cnt();;            //alter alpha,beta,tau
+            alpha[i] = alpha[i] * (1 + epsilon * s / s_u[i]);
+        }
 
-//     cout << "\nBegin path: ";
-//     for(auto p : best_path){
-//             cout << p << "->";
-//     }
-//     cout << endl;
-//     cout << "U = "<< best_len<<endl;
-//     map<pair<int, int>, bool> used_edge;
-//     vector<int> new_path;   
-//     pair<int,int> new_edge;
-
-//     for(unsigned int i = 0; i < SPT.size(); i++){
-//         int cur_node=i;
-//         while(cur_node!=dst){
-//             if(used_edge.find({cur_node,SPT[cur_node]})!=used_edge.end() && used_edge[{cur_node,SPT[cur_node]}] != false){
-//                 break;
-//             }
-//             used_edge[{cur_node,SPT[cur_node]}] = true;
-//             used_edge[{SPT[cur_node],cur_node}] = true;
-//             cur_node=SPT[cur_node];
-//         }
-//     }
-
-//     while(1){
-//         double minimum = numeric_limits<double>::infinity();
-//         for(int i = 0; i < graph.get_size(); i++){                 //creating many new SPT
-//             vector<int> neighbors = graph.get_neighbors_id(i);  
-//             for(auto neighbor : neighbors){
-//                 double temp1 = 0, temp2 = 0;
-//                 if(SPT[i] == neighbor || SPT[neighbor] == i){      // checking used edge or unused
-//                     continue;   
-//                 }else{                                             // if unused
-//                     temp1 = X(i, neighbor);
-//                     temp2 = Y[dst][req_no][{i, neighbor}];
-//                     int cur_node = i;
-//                     while(cur_node != dst){
-//                         temp1 += X(cur_node, SPT[cur_node]);
-//                         temp2 += Y[dst][req_no][{cur_node, SPT[cur_node]}];
-//                         cur_node = SPT[cur_node];
-//                     } 
-
-//                     cur_node = neighbor;
-//                     while(cur_node != dst){
-//                         temp1 -= X(cur_node, SPT[cur_node]);
-//                         temp2 -= Y[dst][req_no][{cur_node, SPT[cur_node]}];
-//                         cur_node = SPT[cur_node];
-//                     }       
-//                     if(temp2 < 0 && temp1 > 0 ) {               // we need the smallest edge to change the SPT
-//                         if(i<neighbor){
-//                             if(used_edge.find({i, neighbor}) != used_edge.end() && used_edge[{i, neighbor}] != false){
-//                                 continue;
-//                             }
-//                         }
-//                         else{
-//                             if(used_edge.find({neighbor ,i}) != used_edge.end() && used_edge[{neighbor ,i}] != false){
-//                                 continue;
-//                             }
-//                         }
-//                         if(minimum > - temp1 / temp2){
-//                             new_edge = {i, neighbor};
-//                             minimum = - temp1 / temp2;
-//                         }
-//                     }
-//                 }
-//             }
-//         }        // 找到最小的 edge 
-
-//         if(minimum == numeric_limits<double>::infinity()){   //原本設計是有break,但之後用不到
-//             break;
-//         }else{
-//             new_path.clear();
-//         }
-//         used_edge[{new_edge.second,SPT[new_edge.second]}] = false;
-//         used_edge[{SPT[new_edge.second],new_edge.second}] = false;
-//         used_edge[new_edge] = true;
-//         used_edge[{new_edge.second,new_edge.first}] = true;
-//         change_edge_num++;
-//         SPT[new_edge.second]=new_edge.first;
-
-//         cur_node = src;                                   
-//         while(cur_node != dst) {
-//             new_path.push_back(cur_node);
-//             cur_node = SPT[cur_node];
-//         }       
-//         new_path.push_back(dst);
-        
-//         double new_len = 0;                                         //counting the new path's U(X,Y)=c* e^r
-//         c = 0;
-//         r = 0;
-//         for(unsigned int i = 0; i < new_path.size() - 1; i++){
-//             if(new_path[i] < new_path[i+1]){                        //[can alter]no need if else
-//                 c += X(new_path[i], new_path[i+1]);
-//                 r += Y[dst][req_no][{new_path[i], new_path[i+1]}];
-//             }
-//             else{
-//                 c += X(new_path[i+1], new_path[i]);  
-//                 r += Y[dst][req_no][{new_path[i+1], new_path[i]}];           
-//             }
-//             //cout<<"PATH:["<<new_path[i]<<" "<<new_path[i+1]<<"] with tot "<< c <<" / " << r <<endl;
-//         }
-//         new_len =  c * exp(r);
-//         if(new_len < best_len){
-//             cout<<"find new\n";
-//             best_len = new_len;
-//             best_path = new_path;                                            //路線修改,新的spt產生
-//         } 
-        
-       
-//     }
-//     cout << "Best path: ";
-//     for(auto p : best_path){
-//         cout <<p << " ";
-//     }
-//     cout << endl;
-//     cout << "U: " << best_len << endl;                                         
-// }
-
-
-
-void MyAlgo::find_bottleneck(vector<int> path, int req_no){
-    
-//     double min_s_u = numeric_limits<double>::infinity();
-//     double min_s_uv = numeric_limits<double>::infinity();
-//     double s_i = requests[req_no].get_send_limit();                             //request[no] min
-//     vector<double> s_u(graph.get_size() + 5);
-//     vector<double> s_uv(graph.get_size() + 5);                                               
-
-   
-//     for(unsigned int i = 0; i < path.size(); i++){
-//         if(i == 0 || i == path.size() - 1)
-//             s_u[path[i]] = graph.Node_id2ptr(path[i])->get_memory_cnt();        //if src or dst,then only cost 1
-//         else
-//             s_u[path[i]] = graph.Node_id2ptr(path[i])->get_memory_cnt() / 2.0;    //else cost 2
-//         if(s_u[path[i]] < min_s_u)
-//             min_s_u = s_u[path[i]];
-//     }
-
-//     for(unsigned int i = 0; i < path.size() - 1; i++){
-//         s_uv[i] = graph.get_channel_size(path[i], path[i+1]);                   //channel min
-//         if(s_uv[i] < min_s_uv)
-//             min_s_uv = s_uv[i];
-//     }
-
-//     int rate = 10;
-//     double s = min(min_s_u, min(min_s_uv, s_i));
-//     for(int i = 0; i < rate; i++){
-//         if(x_i_p.find(path) != x_i_p.end())                                         //add flow to path
-//             x_i_p[path] += s;
-//         else
-//             x_i_p[path] = s;
-
-//         for(auto id : path){
-//             obj += (alpha[id] * (1 + epsilon * s / s_u[id]) - alpha[id]) * graph.Node_id2ptr(id)->get_memory_cnt();;            //alter alpha,beta,tau
-//             alpha[id] = alpha[id] * (1 + epsilon * s / s_u[id]);
-//         }
-
-//         for(unsigned int i = 0; i < path.size() - 1; i++){
-//             obj += (beta[{path[i], path[i+1]}] * (1 + epsilon * s / s_uv[i]) -  beta[{path[i], path[i+1]}]) * graph.get_channel_size(path[i], path[i+1]);;
-//             beta[{path[i], path[i+1]}] = beta[{path[i], path[i+1]}] * (1 + epsilon * s / s_uv[i]);
-//             beta[{path[i+1], path[i]}] = beta[{path[i+1], path[i]}] * (1 + epsilon * s / s_uv[i]);
-//         }
-//         obj += (tau[req_no] * (1 + epsilon * s / s_i) - tau[req_no])* requests[req_no].get_send_limit();;    
-//         tau[req_no] = tau[req_no] * (1 + epsilon * s / s_i);    
-//     }
-// }
-
-// double MyAlgo::changing_obj(){
-//     double temp_obj = 0.0;
-//     for(unsigned int i = 0; i < alpha.size(); i++){
-//         temp_obj += alpha[i] * graph.Node_id2ptr(i)->get_memory_cnt();
-//     }
-    
-//     for(auto it : beta){
-//         temp_obj += it.second * graph.get_channel_size(it.first.first, it.first.second);
-//     }
-
-//     for(unsigned int i = 0;i < requests.size(); i++){
-//         temp_obj += tau[i] * requests[i].get_send_limit();
-//     }
-//     return temp_obj;
+        for(auto &it : used_uv){
+            obj += (beta[{it.first.first, it.first.second}] * (1 + epsilon * s / s_uv[{it.first.first, it.first.second}]) -  beta[{it.first.first, it.first.second}]) * graph.get_channel_size(it.first.first, it.first.second);;
+            beta[{it.first.first, it.first.second}] = beta[{it.first.first, it.first.second}] * (1 + epsilon * s / s_uv[{it.first.first, it.first.second}]);
+            beta[{it.first.second, it.first.first}] = beta[{it.first.second, it.first.first}] * (1 + epsilon * s / s_uv[{it.first.second, it.first.first}]);
+        }
+        obj += (tau[req_no] * (1 + epsilon * s / 1) - tau[req_no]) * 1;                            //request limit = 1?
+        tau[req_no] = tau[req_no] * (1 + epsilon * s / 1);    
+    }
 }
 
 void MyAlgo::find_violate(){
-    // vector<double> used_memory(graph.get_size());
-    // map<vector<int>, double> used_channel;
-    // map<pair<int, int>, double> used_request;
+    vector<double> used_memory(graph.get_size());
+    map<vector<int>, double> used_channel;
+    map<tuple<int, int, int>, double> used_request;
 
-    // for(auto &it : x_i_p){
-    //     vector<int> path = it.first;
-    //     int src = path[0];
-    //     int dst = path.back();
-    
-    //     if(used_request.find({src, dst}) != used_request.end())
-    //         used_request[{src, dst}] += it.second;
-    //     else
-    //         used_request[{src, dst}] = it.second;
+    for(int it = 0; it < x_i_t_tree.size() ; it++){
+        vector<vector<int>> tree = x_i_t_tree[it];
+        int node1 = tree[0][0];
+        int node2 = tree[1][0];
+        int node3 = tree[2][0];
+        if(used_request.find({node1, node2, node3}) != used_request.end())
+            used_request[{node1, node2, node3}] += x_i_t[it];
+        else
+            used_request[{node1, node2, node3}] = x_i_t[it];
         
-    //     for(unsigned int i = 0; i < path.size() - 1; i++){
-    //         used_memory[path[i]] += it.second;                         //memory add
-    //         used_memory[path[i+1]] += it.second;
-    //         if(path[i] < path[i+1]){
-    //             auto iter = used_channel.find({path[i], path[i+1]});
-    //             if(iter != used_channel.end()){    //channel add
-    //                 used_channel[{path[i], path[i+1]}] += it.second;
-    //             }
-    //             else{
-    //                 used_channel[{path[i], path[i+1]}] = it.second;
-    //             }
-    //         }
-    //         else{
-    //             auto iter = used_channel.find({path[i+1], path[i]});
-    //             if(iter != used_channel.end()){
-    //                 used_channel[{path[i+1], path[i]}] += it.second;
-    //             }
-    //             else{
-    //                 used_channel[{path[i+1], path[i]}] = it.second;
-    //             }  
-    //         }
-    //     }
-    // }
+        for(int path_id = 0; path_id < 3; path_id ++){
+            for(unsigned int i = 0; i < x_i_t_tree[it][path_id].size() - 1; i++){
+                used_memory[x_i_t_tree[it][path_id][i]] += x_i_t[it];                         //memory add
+                used_memory[x_i_t_tree[it][path_id][i+1]] += x_i_t[it];
+                if(x_i_t_tree[it][path_id][i] < x_i_t_tree[it][path_id][i+1]){
+                    auto iter = used_channel.find({x_i_t_tree[it][path_id][i], x_i_t_tree[it][path_id][i+1]});
+                    if(iter != used_channel.end()){    //channel add
+                        used_channel[{x_i_t_tree[it][path_id][i], x_i_t_tree[it][path_id][i+1]}] += x_i_t[it];
+                    }
+                    else{
+                        used_channel[{x_i_t_tree[it][path_id][i], x_i_t_tree[it][path_id][i+1]}] = x_i_t[it];
+                    }
+                }
+                else{
+                    auto iter = used_channel.find({x_i_t_tree[it][path_id][i+1], x_i_t_tree[it][path_id][i]});
+                    if(iter != used_channel.end()){
+                        used_channel[{x_i_t_tree[it][path_id][i+1], x_i_t_tree[it][path_id][i]}] += x_i_t[it];
+                    }
+                    else{
+                        used_channel[{x_i_t_tree[it][path_id][i+1], x_i_t_tree[it][path_id][i]}] = x_i_t[it];
+                    }  
+                }
+            }
+        }
+    }
 
 
-    // double max_magni = 0.0;
-    // double cur_magni;
+    double max_magni = 0.0;
+    double cur_magni;
 
-    // for(auto it : used_request){
-    //     int src = it.first.first;
-    //     int dst = it.first.second;
-    //     int req_no = -1;
-    //     for(unsigned int i = 0; i < requests.size();i ++){
-    //         if(requests[i].get_source() == src && requests[i].get_destination() == dst){
-    //             req_no = i;
-    //             break;
-    //         }
-    //     }
-    //     cur_magni = it.second / requests[req_no].get_send_limit();
-    //     if(cur_magni > max_magni){
-    //         max_magni = cur_magni;
-    //     }
-    // }
+    for(auto &it : used_request){
+        cur_magni = it.second / 1;
+        if(cur_magni > max_magni){
+            max_magni = cur_magni;
+        }
+    }
 
-    // for(auto it : used_channel){
-    //     cur_magni = it.second / graph.get_channel_size(it.first[0],it.first[1]);
-    //     if(cur_magni > max_magni){
-    //         max_magni = cur_magni;
-    //     }
-    // }
+    for(auto &it : used_channel){
+        cur_magni = it.second / graph.get_channel_size(it.first[0],it.first[1]);
+        if(cur_magni > max_magni){
+            max_magni = cur_magni;
+        }
+    }
 
-    // for(int i = 0; i < graph.get_size(); i++){
-    //     cur_magni = used_memory[i] / graph.Node_id2ptr(i)->get_memory_cnt();
-    //     if(cur_magni > max_magni){
-    //         max_magni = cur_magni;
-    //     }
-    // }
+    for(int i = 0; i < graph.get_size(); i++){
+        cur_magni = used_memory[i] / graph.Node_id2ptr(i)->get_memory_cnt();
+        if(cur_magni > max_magni){
+            max_magni = cur_magni;
+        }
+    }
 
 
     
 
-    // //cout << "Magnification:" << max_magni << endl;
+    cout << "Magnification:" << max_magni << endl;
 
-    // for(auto &x : x_i_p){
-
-    //     x.second /= max_magni;
-    // }
-    // //check memory_and_channel
-    // /*
-    // for(unsigned int i=0;i<used_memory.size();i++){
-    //     cout<<i<<" with memory "<<used_memory[i]<<endl;
-    // }
-    // for(auto it:used_channel){
-    //     cout<<"["<<it.first[0]<<","<<it.first[1]<<"]:"<<it.second<<endl;
-    // }
-    // */
+    for(auto &x : x_i_t){
+        x /= max_magni;
+    }
 }
 
 
@@ -916,36 +727,36 @@ void MyAlgo::dfs(int src, int dst, vector<vector<int>> &ans, vector<int> &path, 
 
 
 void MyAlgo::calculate(){
-    double sum=0.0;
+    // double sum=0.0;
 
-    int t = 1;
+    // int t = 1;
 
-    for(auto it:x_i_p){
-        double prob=1;
-        vector<int>path=it.first;
-        for(unsigned int i=0;i < it.first.size() - 1;i++){
-            prob*=exp(graph.Node_id2ptr(path[i])->distance(*graph.Node_id2ptr(path[i+1]))*(-graph.get_entangle_alpha()));
-        }
-        for(unsigned int i=1;i<it.first.size()-1;i++){
-            prob*=graph.Node_id2ptr(path[i])->get_swap_prob();  
-        }
-        sum+=it.second*prob;
+    // for(auto it:x_i_p){
+    //     double prob=1;
+    //     vector<int>path=it.first;
+    //     for(unsigned int i=0;i < it.first.size() - 1;i++){
+    //         prob*=exp(graph.Node_id2ptr(path[i])->distance(*graph.Node_id2ptr(path[i+1]))*(-graph.get_entangle_alpha()));
+    //     }
+    //     for(unsigned int i=1;i<it.first.size()-1;i++){
+    //         prob*=graph.Node_id2ptr(path[i])->get_swap_prob();  
+    //     }
+    //     sum+=it.second*prob;
 
-        t++;
-    }
-    cerr << "sum = " << sum << endl;
-    res["primal"] = sum / (1 - epsilon) / (1 - epsilon);
+    //     t++;
+    // }
+    // cerr << "sum = " << sum << endl;
+    // res["primal"] = sum / (1 - epsilon) / (1 - epsilon);
 }
 
 vector<vector<int>> MyAlgo::allPathsSourceTarget(int src, int dst){
-    vector<vector<int>> ans;
-    vector<int> path;
-    vector<bool> visited(graph.get_size());
-    for(int i = 0; i < graph.get_size(); i++){
-        visited[i] = false;
-    }
-    dfs(src, dst, ans, path, visited);
-    return ans;
+    // vector<vector<int>> ans;
+    // vector<int> path;
+    // vector<bool> visited(graph.get_size());
+    // for(int i = 0; i < graph.get_size(); i++){
+    //     visited[i] = false;
+    // }
+    // dfs(src, dst, ans, path, visited);
+    // return ans;
 }
 
 vector<map<vector<int>, int>> MyAlgo::Greedy_rounding(){
@@ -1131,42 +942,225 @@ void MyAlgo::path_assignment(){
                             }
                         }
                     } 
-                    cout<<"Request "<<i<<" with : "<<smallest_U <<" \n";
-                    for(auto it:best_tree){
-                        for(auto it1:it){
-                            cout<<it1<<" ";
-                        }
-                        cout<<endl;
-                    }
-                    cout<<"--------------------------"<<endl;
+                    // cout<<"Request "<<i<<" with : "<<smallest_U <<" \n";
+                    // for(auto it:best_tree){
+                    //     for(auto it1:it){
+                    //         cout<<it1<<" ";
+                    //     }
+                    //     cout<<endl;
+                    // }
+                    // cout<<"--------------------------"<<endl;
                 }
 
             }
         }
-        cout<<"THIS ROUND ANS: "<<global_U<<endl;
-        for(auto it:best_tree){
-            for(auto it2:it){
-                cout<<it2<<" ";
+        // cout<<"THIS ROUND ANS: "<<global_U<<endl;
+        // for(auto it:best_tree){
+        //     for(auto it2:it){
+        //         cout<<it2<<" ";
+        //     }
+        //     cout<<endl;
+        // }
+        // cout<<endl;
+        find_bottleneck(best_tree, req_no);
+        //cout <<"OBJ : "<< obj << endl;
+    }
+    find_violate();
+    for(int i = 0; i < x_i_t_tree.size(); i++){
+        cout<<"\nTree with "<<x_i_t[i]<<endl;
+        for(auto &it2:x_i_t_tree[i]){
+            for(auto &it3:it2){
+                cout<<it3<<" ";
             }
             cout<<endl;
         }
-        cout<<endl;
-        break;
-        // find_bottleneck(best_path, req_no);
-        
-        // cout << obj << endl;
-        // // obj = changing_obj();
-        // // cout<<"changing_obj obj: " << obj << endl ;
     }
 }
     
-
-
-
-//     // calculate();
-//     find_violate();
 //     calculate();
 //     vector<map<vector<int>, int>>path = Greedy_rounding();
 //     res["change_edge_num"] = change_edge_num;
 //     res["diff_edge_num"] = diff_num;
 // }   
+
+
+// //                   Our Old Friend                                //
+// vector<int> MyAlgo::Dijkstra_ori(int src, int dst, int req_no){ 
+//     const double INF = numeric_limits<double>::infinity();
+//     //const double INF = 100;
+//     int n = graph.get_size();
+//     vector<double> distance(n, INF);
+//     vector<int> parent(n, -1);
+//     vector<bool> used(n, false);
+//     priority_queue<pair<double, int>, vector<pair<double, int>>, greater<pair<double, int>>> pq;
+
+//     distance[dst] = 0;
+//     pq.push({0, dst});
+//     while(!pq.empty()) {
+//         int cur_node = pq.top().second;
+//         pq.pop();
+//         if(used[cur_node]) continue;
+//         used[cur_node] = true;
+//         for(int neighbor : graph.get_neighbors_id(cur_node)) {
+//             if(distance[cur_node] + X(cur_node, neighbor) < distance[neighbor]) {
+//                 distance[neighbor] = distance[cur_node] + X(cur_node, neighbor);
+//                 parent[neighbor] = cur_node;
+//                 pq.push({distance[neighbor], neighbor});
+//             }
+//         }
+//     }
+
+//     if(distance[src] >= INF) return{};
+// /*
+//     int cur_node = src;
+//     vector<int> path;
+//     while(cur_node != -1) {
+//         path.push_back(cur_node);
+//         cur_node = parent[cur_node];
+//     }
+
+//     reverse(path.begin(), path.end());
+// */
+//     return parent;
+// }
+
+// void MyAlgo::separation_oracle_ori(int src,int dst,int req_no){     
+//     vector<int> SPT;                  //nodes' parent in the spanning tree
+//     vector<int> best_path;
+//     double best_len; 
+//     SPT = Dijkstra_ori(src, dst, req_no);                               //the first SPT is get by dijkstra
+//     int cur_node = src;                                     //counting the first path's U(X,Y)=c* e^r
+//     double c = 0;                                           //c=SUM[u,v]:alpha(u)+alpha(v)+beta(u,v)==X[u,v]
+//     double r = 0;                                           //r=SUM[u,v]:-ln(Pr(u,v))==Y[u,v]
+//     while(cur_node != dst){
+//         // if(cur_node < SPT[cur_node]){                       //[can alter]no need if else
+//         //     c += X[{cur_node,SPT[cur_node]}][req_no];               
+//         //     r += Y[req_no][{cur_node,SPT[cur_node]}];
+//         // }
+//         // else{
+//         //     c += X[{SPT[cur_node],cur_node}][req_no];  
+//         //     r += Y[req_no][{SPT[cur_node],cur_node}];           
+//         // }
+//         c += X(SPT[cur_node], cur_node);  
+//         r += Y[dst][req_no][{SPT[cur_node],cur_node}];  
+//         best_path.push_back(cur_node);
+//         cur_node = SPT[cur_node];
+//     } 
+//     best_path.push_back(dst);
+//     best_len = c * exp(r);
+
+//     cout << "\nBegin path: ";
+//     for(auto p : best_path){
+//             cout << p << "->";
+//     }
+//     cout << endl;
+//     cout << "U = "<< best_len<<endl;
+//     map<pair<int, int>, bool> used_edge;
+//     vector<int> new_path;   
+//     pair<int,int> new_edge;
+
+//     for(unsigned int i = 0; i < SPT.size(); i++){
+//         int cur_node=i;
+//         while(cur_node!=dst){
+//             if(used_edge.find({cur_node,SPT[cur_node]})!=used_edge.end() && used_edge[{cur_node,SPT[cur_node]}] != false){
+//                 break;
+//             }
+//             used_edge[{cur_node,SPT[cur_node]}] = true;
+//             used_edge[{SPT[cur_node],cur_node}] = true;
+//             cur_node=SPT[cur_node];
+//         }
+//     }
+
+//     while(1){
+//         double minimum = numeric_limits<double>::infinity();
+//         for(int i = 0; i < graph.get_size(); i++){                 //creating many new SPT
+//             vector<int> neighbors = graph.get_neighbors_id(i);  
+//             for(auto neighbor : neighbors){
+//                 double temp1 = 0, temp2 = 0;
+//                 if(SPT[i] == neighbor || SPT[neighbor] == i){      // checking used edge or unused
+//                     continue;   
+//                 }else{                                             // if unused
+//                     temp1 = X(i, neighbor);
+//                     temp2 = Y[dst][req_no][{i, neighbor}];
+//                     int cur_node = i;
+//                     while(cur_node != dst){
+//                         temp1 += X(cur_node, SPT[cur_node]);
+//                         temp2 += Y[dst][req_no][{cur_node, SPT[cur_node]}];
+//                         cur_node = SPT[cur_node];
+//                     } 
+
+//                     cur_node = neighbor;
+//                     while(cur_node != dst){
+//                         temp1 -= X(cur_node, SPT[cur_node]);
+//                         temp2 -= Y[dst][req_no][{cur_node, SPT[cur_node]}];
+//                         cur_node = SPT[cur_node];
+//                     }       
+//                     if(temp2 < 0 && temp1 > 0 ) {               // we need the smallest edge to change the SPT
+//                         if(i<neighbor){
+//                             if(used_edge.find({i, neighbor}) != used_edge.end() && used_edge[{i, neighbor}] != false){
+//                                 continue;
+//                             }
+//                         }
+//                         else{
+//                             if(used_edge.find({neighbor ,i}) != used_edge.end() && used_edge[{neighbor ,i}] != false){
+//                                 continue;
+//                             }
+//                         }
+//                         if(minimum > - temp1 / temp2){
+//                             new_edge = {i, neighbor};
+//                             minimum = - temp1 / temp2;
+//                         }
+//                     }
+//                 }
+//             }
+//         }        // 找到最小的 edge 
+
+//         if(minimum == numeric_limits<double>::infinity()){   //原本設計是有break,但之後用不到
+//             break;
+//         }else{
+//             new_path.clear();
+//         }
+//         used_edge[{new_edge.second,SPT[new_edge.second]}] = false;
+//         used_edge[{SPT[new_edge.second],new_edge.second}] = false;
+//         used_edge[new_edge] = true;
+//         used_edge[{new_edge.second,new_edge.first}] = true;
+//         change_edge_num++;
+//         SPT[new_edge.second]=new_edge.first;
+
+//         cur_node = src;                                   
+//         while(cur_node != dst) {
+//             new_path.push_back(cur_node);
+//             cur_node = SPT[cur_node];
+//         }       
+//         new_path.push_back(dst);
+        
+//         double new_len = 0;                                         //counting the new path's U(X,Y)=c* e^r
+//         c = 0;
+//         r = 0;
+//         for(unsigned int i = 0; i < new_path.size() - 1; i++){
+//             if(new_path[i] < new_path[i+1]){                        //[can alter]no need if else
+//                 c += X(new_path[i], new_path[i+1]);
+//                 r += Y[dst][req_no][{new_path[i], new_path[i+1]}];
+//             }
+//             else{
+//                 c += X(new_path[i+1], new_path[i]);  
+//                 r += Y[dst][req_no][{new_path[i+1], new_path[i]}];           
+//             }
+//             //cout<<"PATH:["<<new_path[i]<<" "<<new_path[i+1]<<"] with tot "<< c <<" / " << r <<endl;
+//         }
+//         new_len =  c * exp(r);
+//         if(new_len < best_len){
+//             cout<<"find new\n";
+//             best_len = new_len;
+//             best_path = new_path;                                            //路線修改,新的spt產生
+//         } 
+        
+       
+//     }
+//     cout << "Best path: ";
+//     for(auto p : best_path){
+//         cout <<p << " ";
+//     }
+//     cout << endl;
+//     cout << "U: " << best_len << endl;                                         
+// }
