@@ -428,7 +428,6 @@ void MyAlgo::find_violate(){
     }
 }
 
-
 vector<map<vector<int>, int>> MyAlgo::rounding(){
     // vector<map<vector<int>, double>> each_request(requests.size());
     // vector<map<vector<int>, int>> I_request(requests.size());
@@ -748,100 +747,103 @@ void MyAlgo::calculate(){
     // res["primal"] = sum / (1 - epsilon) / (1 - epsilon);
 }
 
-vector<vector<int>> MyAlgo::allPathsSourceTarget(int src, int dst){
-    // vector<vector<int>> ans;
-    // vector<int> path;
-    // vector<bool> visited(graph.get_size());
-    // for(int i = 0; i < graph.get_size(); i++){
-    //     visited[i] = false;
-    // }
-    // dfs(src, dst, ans, path, visited);
-    // return ans;
-}
+vector<map<vector<vector<int>>, double>> MyAlgo::Greedy_rounding(){
+    vector<map<vector<vector<int>>, double>> each_request(requests.size());
+    vector<map<vector<vector<int>>, int>> I_request(requests.size());
+    for(int i = 0; i < x_i_t_tree.size(); i++){
+        vector<vector<int>> tree = x_i_t_tree[i];
+        int node1 = tree[0][0];
+        int node2 = tree[1][0];
+        int node3 = tree[2][0];
+        for(unsigned int j = 0; j < requests.size(); j++){
+            if(node1 == requests[j].get_node1() && node2 == requests[j].get_node2() && node3 == requests[j].get_node3()){
+                each_request[j][tree] = x_i_t[i];
+                break;
+            }
+        }
+    }
+    for(auto &it:each_request){
+        cout<<"Request ------"<<endl;
+        for(auto &it2:it){
+            cout<<"Value : "<<it2.second<<endl;;
+            for(auto &it3:it2.first){
+                for(auto &it4:it3){
+                    cout<<it4<<" ";
+                }
+                cout<<endl;
+            }
+        }
+    }
+/*
+    for(unsigned int i = 0; i < each_request.size(); i++){
+        for(auto it:each_request[i]){
+            vector<int>undistri_path =it.first;
+        }
+    }
+	vector<int> used_I(requests.size());										//第 i 個 request 目前用了幾調 path
+	vector< tuple<double, int, vector<int>> > fractional_xip;	
+    for(unsigned int i = 0; i < requests.size(); i++){
+        used_I[i] = 0;
+		for(auto it : each_request[i]){                    
+            double frac_prob;
 
-vector<map<vector<int>, int>> MyAlgo::Greedy_rounding(){
-    // vector<map<vector<int>, double>> each_request(requests.size());
-    // vector<map<vector<int>, int>> I_request(requests.size());
-    // for(auto it : x_i_p){
-    //     vector<int> path = it.first;
-    //     int src = path[0];
-    //     int dst = path.back();
-    //     for(unsigned int i = 0; i < requests.size(); i++){
-    //         if(src == requests[i].get_source() && dst == requests[i].get_destination()){
-    //             each_request[i][path] = it.second;
-    //             break;
-    //         }
-    //     }
-    // }
+            int i_prob = it.second;                                             //每個path先取整數部分=>確定分配
+            I_request[i][it.first] = i_prob;
+            used_I[i] += i_prob;
+			assign_resource(it.first, i_prob, i);
+            frac_prob = it.second - i_prob;                                     //total_prob代表random區間,丟進accumulate
+			fractional_xip.emplace_back(frac_prob*graph.find_success_probability(it.first), i, it.first);
+        }                                                   //unused_I=取底[ri - sum(request.I) - (unused.I)]
+    }
 
-    // for(unsigned int i = 0; i < each_request.size(); i++){
-    //     for(auto it:each_request[i]){
-    //         vector<int>undistri_path =it.first;
-    //     }
-    // }
-	// vector<int> used_I(requests.size());										//第 i 個 request 目前用了幾調 path
-	// vector< tuple<double, int, vector<int>> > fractional_xip;	
-    // for(unsigned int i = 0; i < requests.size(); i++){
-    //     used_I[i] = 0;
-	// 	for(auto it : each_request[i]){                    
-    //         double frac_prob;
+	// 對 x^i_p 由小到大排序
+	sort(fractional_xip.begin(), fractional_xip.end());
+	reverse(fractional_xip.begin(), fractional_xip.end());
 
-    //         int i_prob = it.second;                                             //每個path先取整數部分=>確定分配
-    //         I_request[i][it.first] = i_prob;
-    //         used_I[i] += i_prob;
-	// 		assign_resource(it.first, i_prob, i);
-    //         frac_prob = it.second - i_prob;                                     //total_prob代表random區間,丟進accumulate
-	// 		fractional_xip.emplace_back(frac_prob*graph.find_success_probability(it.first), i, it.first);
-    //     }                                                   //unused_I=取底[ri - sum(request.I) - (unused.I)]
-    // }
-
-	// // 對 x^i_p 由小到大排序
-	// sort(fractional_xip.begin(), fractional_xip.end());
-	// reverse(fractional_xip.begin(), fractional_xip.end());
-
-	// // 如果資源足夠讓 x 變成 1 ，就直接讓 x 變成 1 
-	// for(auto it:fractional_xip){
-	// 	vector<int> extra_path;
-	// 	double x_prob;
-	// 	int request_id;
-	// 	tie(x_prob, request_id, extra_path) = it;
-	// 	if(find_width(extra_path) >= 1 && used_I[request_id] < requests[request_id].get_send_limit()){
-	// 		assign_resource(extra_path, 1, request_id);
-	// 		used_I[request_id] += 1;
-    //         I_request[request_id][extra_path]++;
-	// 	}
-	// }
-	// // 如果還有剩下資源的話，盡量塞爆
-	// for(auto it:fractional_xip){
-	// 	vector<int> extra_path;
-	// 	double x_prob;
-	// 	int request_id;
-	// 	tie(x_prob, request_id, extra_path) = it;
-	// 	int width = 0;
-	// 	int extra_send_limit = requests[request_id].get_send_limit() - used_I[request_id];
-	// 	width = min(find_width(extra_path), extra_send_limit);
-	// 	if(width >= 1){
-	// 		assign_resource(extra_path, width, request_id);
-    //         used_I[request_id] += width;
-	// 		I_request[request_id][extra_path]++;
-	// 	}
-	// }
-	// for(int request_id=0;request_id<(int)requests.size();request_id++){
-	// 	// cerr<<"GG: It work?"<<endl;
-	// 	while(requests[request_id].get_send_limit() - used_I[request_id] > 0){
-	// 		vector<int> extra_path = BFS(requests[request_id].get_source(), requests[request_id].get_destination());
-	// 		int width = 0;
-	// 		if(extra_path.size() != 0){
-	// 			width = min(find_width(extra_path), requests[request_id].get_send_limit() - used_I[request_id]);
-	// 			assign_resource(extra_path, width, request_id);
-	// 			used_I[request_id] += width;
-	// 		}
-	// 		if(width == 0){
-	// 			break;
-	// 		}
-	// 	}
-	// }
-    // return I_request;
+	// 如果資源足夠讓 x 變成 1 ，就直接讓 x 變成 1 
+	for(auto it:fractional_xip){
+		vector<int> extra_path;
+		double x_prob;
+		int request_id;
+		tie(x_prob, request_id, extra_path) = it;
+		if(find_width(extra_path) >= 1 && used_I[request_id] < requests[request_id].get_send_limit()){
+			assign_resource(extra_path, 1, request_id);
+			used_I[request_id] += 1;
+            I_request[request_id][extra_path]++;
+		}
+	}
+	// 如果還有剩下資源的話，盡量塞爆
+	for(auto it:fractional_xip){
+		vector<int> extra_path;
+		double x_prob;
+		int request_id;
+		tie(x_prob, request_id, extra_path) = it;
+		int width = 0;
+		int extra_send_limit = requests[request_id].get_send_limit() - used_I[request_id];
+		width = min(find_width(extra_path), extra_send_limit);
+		if(width >= 1){
+			assign_resource(extra_path, width, request_id);
+            used_I[request_id] += width;
+			I_request[request_id][extra_path]++;
+		}
+	}
+	for(int request_id=0;request_id<(int)requests.size();request_id++){
+		// cerr<<"GG: It work?"<<endl;
+		while(requests[request_id].get_send_limit() - used_I[request_id] > 0){
+			vector<int> extra_path = BFS(requests[request_id].get_source(), requests[request_id].get_destination());
+			int width = 0;
+			if(extra_path.size() != 0){
+				width = min(find_width(extra_path), requests[request_id].get_send_limit() - used_I[request_id]);
+				assign_resource(extra_path, width, request_id);
+				used_I[request_id] += width;
+			}
+			if(width == 0){
+				break;
+			}
+		}
+	}
+*/
+    return each_request;
 
 }
 
@@ -975,10 +977,11 @@ void MyAlgo::path_assignment(){
             cout<<endl;
         }
     }
+    vector<map<vector<vector<int>>, double>>path = Greedy_rounding();
 }
     
 //     calculate();
-//     vector<map<vector<int>, int>>path = Greedy_rounding();
+
 //     res["change_edge_num"] = change_edge_num;
 //     res["diff_edge_num"] = diff_num;
 // }   
