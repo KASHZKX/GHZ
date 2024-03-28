@@ -773,10 +773,11 @@ vector<map<vector<vector<int>>, int>> MyAlgo::Greedy_rounding(){
         cout<<it<<" ";
     }
     cout<<endl;
+    sort(each_request.begin(),each_request.end(),greater<tuple<double, int, vector<vector<int>>>>());
     for(auto &it:each_request){
         double prob; int req;
         tie(prob,req,temp) = it;
-        cout<<"Request :"<<req<<" -----------------------"<<endl;
+        cout<<"Request :"<<req<<" ----------------------- "<<prob<<endl;
         for(auto &it2:temp){
             for(auto &it3:it2){
                 cout<<it3<<" ";
@@ -784,73 +785,93 @@ vector<map<vector<vector<int>>, int>> MyAlgo::Greedy_rounding(){
             cout<<endl;
         }
     }
-/*
-    for(unsigned int i = 0; i < each_request.size(); i++){
-        for(auto it:each_request[i]){
-            vector<int>undistri_path =it.first;
-        }
-    }
-	vector<int> used_I(requests.size());										//第 i 個 request 目前用了幾調 path
-	vector< tuple<double, int, vector<int>> > fractional_xip;	
-    for(unsigned int i = 0; i < requests.size(); i++){
-        used_I[i] = 0;
-		for(auto it : each_request[i]){                    
-            double frac_prob;
-
-            int i_prob = it.second;                                             //每個path先取整數部分=>確定分配
-            I_request[i][it.first] = i_prob;
-            used_I[i] += i_prob;
-			assign_resource(it.first, i_prob, i);
-            frac_prob = it.second - i_prob;                                     //total_prob代表random區間,丟進accumulate
-			fractional_xip.emplace_back(frac_prob*graph.find_success_probability(it.first), i, it.first);
-        }                                                   //unused_I=取底[ri - sum(request.I) - (unused.I)]
-    }
-
-	// 對 x^i_p 由小到大排序
-	sort(fractional_xip.begin(), fractional_xip.end());
-	reverse(fractional_xip.begin(), fractional_xip.end());
 
 	// 如果資源足夠讓 x 變成 1 ，就直接讓 x 變成 1 
-	for(auto it:fractional_xip){
-		vector<int> extra_path;
-		double x_prob;
+	for(auto &it:each_request){
+		double prob;
 		int request_id;
-		tie(x_prob, request_id, extra_path) = it;
-		if(find_width(extra_path) >= 1 && used_I[request_id] < requests[request_id].get_send_limit()){
-			assign_resource(extra_path, 1, request_id);
-			used_I[request_id] += 1;
-            I_request[request_id][extra_path]++;
-		}
+        vector<vector<int>> tree;
+		tie(prob, request_id, tree) = it;
+
+        if(request_id == -1){continue;}                                                //代表有請求沒有tree QQ
+        vector<int> memory_use(graph.get_size(), 0);
+        map<pair<int,int>,int> channel_use;
+  
+        for(int i = 0; i < 3; i++){
+            for(int j = 0; j < tree[i].size() - 1; j++){
+                memory_use[tree[i][j]]++;
+                memory_use[tree[i][j+1]]++;
+                if(channel_use.find({memory_use[tree[i][j]],memory_use[tree[i][j+1]]}) != channel_use.end()){
+                    channel_use[{tree[i][j],tree[i][j+1]}]++;
+                    channel_use[{tree[i][j+1],tree[i][j]}]++;
+                }
+                else{
+                    channel_use[{tree[i][j],tree[i][j+1]}] = 1;
+                    channel_use[{tree[i][j+1],tree[i][j]}] = 1;
+                }
+            }
+        }
+
+        //is_assinable get_remain
+        bool enough=true;
+        for(int i = 0; i < graph.get_size(); i++){
+            if(graph.Node_id2ptr(i)->get_remain() < memory_use[i]){
+                enough = false;
+                break;
+            }
+        }
+        for(auto &it:channel_use){
+            if(graph.remain_channel(it.first.first,it.first.second) < it.second){
+                enough = false;
+                break;
+            }
+        }
+        if(enough){
+            cout<<"Hi~~~~~~~~"<<endl;
+            assign_resource(tree, 1, request_id);
+            I_request[request_id][tree]=1;
+        }
 	}
+/*
 	// 如果還有剩下資源的話，盡量塞爆
-	for(auto it:fractional_xip){
-		vector<int> extra_path;
+	for(auto it:each_request){
+		vector<int> tree;
 		double x_prob;
 		int request_id;
-		tie(x_prob, request_id, extra_path) = it;
-		int width = 0;
-		int extra_send_limit = requests[request_id].get_send_limit() - used_I[request_id];
-		width = min(find_width(extra_path), extra_send_limit);
-		if(width >= 1){
-			assign_resource(extra_path, width, request_id);
-            used_I[request_id] += width;
-			I_request[request_id][extra_path]++;
-		}
+		tie(x_prob, request_id, tree) = it;
+        if(tree.size()<=2){
+            break;
+        }
+        for(unsigned int i = 1; i < tree.size()-1 ; i++){
+            vector<int> extra_path = all_given_path[request_id][tree[i] % path_num - 1];
+            int width = find_width(extra_path);
+            if(width >= 1){
+                assign_resource(extra_path, width, request_id);
+                I_request[request_id][extra_path]+=width;
+            }
+        }
 	}
-	for(int request_id=0;request_id<(int)requests.size();request_id++){
+    while(1){
+        bool keep_run=false;
+	    for(unsigned int request_id=0;request_id<requests.size();request_id++){
 		// cerr<<"GG: It work?"<<endl;
-		while(requests[request_id].get_send_limit() - used_I[request_id] > 0){
 			vector<int> extra_path = BFS(requests[request_id].get_source(), requests[request_id].get_destination());
 			int width = 0;
 			if(extra_path.size() != 0){
-				width = min(find_width(extra_path), requests[request_id].get_send_limit() - used_I[request_id]);
+				width =find_width(extra_path);
 				assign_resource(extra_path, width, request_id);
-				used_I[request_id] += width;
-			}
-			if(width == 0){
-				break;
+				if(I_request[request_id].find(extra_path)!=I_request[request_id].end()){
+                    I_request[request_id][extra_path] += width;
+                }
+                else{
+                    I_request[request_id][extra_path] = width;
+                }
+                keep_run=true;
 			}
 		}
+        if(!keep_run){
+            break;
+        }
 	}
 */
     return I_request;
