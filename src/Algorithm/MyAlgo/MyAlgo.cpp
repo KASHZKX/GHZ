@@ -30,11 +30,9 @@ void MyAlgo::next_time_slot(){
      AlgorithmBase::base_next_time_slot();
 }
 
-double MyAlgo::X(int u, int v){
+double MyAlgo::X(int u, int v, int req_no){
 	double weight = alpha[u] + alpha[v] + beta[{u, v}];
-	// if(requests[i].get_node1() == u || requests[i].get_node1() == v){            //[unsure] tau is bad!!
-	// 	weight += tau[i];
-	// }
+	weight += tau[req_no];
 	return weight;
 }
 
@@ -96,7 +94,7 @@ void MyAlgo::initialize(int mid){
     }
 }
 
-vector<int> MyAlgo::Dijkstra(int src, int dst, int req, vector<pair<double,double>>&dist){                           
+vector<int> MyAlgo::Dijkstra(int src, int dst, int req_no, vector<pair<double,double>>&dist){                           
     double INF=numeric_limits<double>::infinity();
     vector<bool> used( graph.get_size(), false);
     vector<int> parent( graph.get_size(), -1);
@@ -109,15 +107,15 @@ vector<int> MyAlgo::Dijkstra(int src, int dst, int req, vector<pair<double,doubl
         if(used[cur_node]) continue;
         used[cur_node] = true;
         for(int neigh : graph.get_neighbors_id(cur_node)) {
-            if(dist[cur_node].first + X(cur_node, neigh) < dist[neigh].first) {
-                dist[neigh].first = dist[cur_node].first + X(cur_node, neigh);      //(1)store d
-                dist[neigh].second = dist[cur_node].second + Y[dst][req][{cur_node, neigh}];
+            if(dist[cur_node].first + X(cur_node, neigh,req_no) < dist[neigh].first) {
+                dist[neigh].first = dist[cur_node].first + X(cur_node, neigh,req_no);      //(1)store d
+                dist[neigh].second = dist[cur_node].second + Y[dst][req_no][{cur_node, neigh}];
                 parent[neigh] = cur_node;                                             //(1)store pred
                 pq.push({dist[neigh].first, neigh});
             }
-            if(dist[cur_node].first + X(cur_node, neigh) == dist[neigh].first && dist[neigh].second > (dist[cur_node].second + Y[dst][req][{cur_node, neigh}])) {
-                dist[neigh].first = dist[cur_node].first + X(cur_node, neigh);      //(1)store d
-                dist[neigh].second = dist[cur_node].second + Y[dst][req][{cur_node, neigh}];
+            if(dist[cur_node].first + X(cur_node, neigh,req_no) == dist[neigh].first && dist[neigh].second > (dist[cur_node].second + Y[dst][req_no][{cur_node, neigh}])) {
+                dist[neigh].first = dist[cur_node].first + X(cur_node, neigh,req_no);      //(1)store d
+                dist[neigh].second = dist[cur_node].second + Y[dst][req_no][{cur_node, neigh}];
                 parent[neigh] = cur_node;                                             //(1)store pred
                 pq.push({dist[neigh].first, neigh}); 
             }
@@ -167,17 +165,17 @@ void MyAlgo::separation_oracle(int src, int dst, int req_no, int path_id, vector
         for(auto &neigh:graph.get_neighbors_id(i)){                               
             double cur_obj_bar2 = dist[neigh].second + Y[dst][req_no][{neigh,i}] - dist[i].second;
             if(cur_obj_bar2 < 0){
-                double cur_theta = -(dist[neigh].first + X(neigh,i) - dist[i].first) / cur_obj_bar2 ;
+                double cur_theta = -(dist[neigh].first + X(neigh,i,req_no) - dist[i].first) / cur_obj_bar2 ;
                 if(cur_theta <= theta_table[i]){
                     if(cur_theta < theta_table[i]){
                         theta_table[i] = cur_theta;
-                        obj_bar1_table[i] = dist[neigh].first + X(neigh,i) - dist[i].first;
+                        obj_bar1_table[i] = dist[neigh].first + X(neigh,i,req_no) - dist[i].first;
                         obj_bar2_table[i] = cur_obj_bar2;
                         cpred_table[i] = neigh;
                     }
                     else if(cur_obj_bar2 < obj_bar2_table[i]){
                         theta_table[i] = cur_theta;
-                        obj_bar1_table[i] = dist[neigh].first + X(neigh,i) - dist[i].first;
+                        obj_bar1_table[i] = dist[neigh].first + X(neigh,i,req_no) - dist[i].first;
                         obj_bar2_table[i] = cur_obj_bar2;
                         cpred_table[i] = neigh;
                     }
@@ -232,17 +230,17 @@ void MyAlgo::separation_oracle(int src, int dst, int req_no, int path_id, vector
         for(auto neigh:graph.get_neighbors_id(min_i)){                             
             double cur_obj_bar2 = dist[neigh].second + Y[dst][req_no][{neigh,min_i}] - dist[min_i].second;
             if(cur_obj_bar2 < 0){
-                double cur_theta = -(dist[neigh].first + X(neigh,min_i) - dist[min_i].first) / cur_obj_bar2 ;
+                double cur_theta = -(dist[neigh].first + X(neigh,min_i,req_no) - dist[min_i].first) / cur_obj_bar2 ;
                 if(cur_theta <= theta_table[min_i]){
                     if(cur_theta < theta_table[min_i]){
                         theta_table[min_i] = cur_theta;
-                        obj_bar1_table[min_i] = dist[neigh].first + X(neigh,min_i) - dist[min_i].first;
+                        obj_bar1_table[min_i] = dist[neigh].first + X(neigh,min_i,req_no) - dist[min_i].first;
                         obj_bar2_table[min_i] = cur_obj_bar2;
                         cpred_table[min_i] = neigh;
                     }
                     else if(cur_obj_bar2 < obj_bar2_table[min_i]){
                         theta_table[min_i] = cur_theta;                                                                //no use just for read
-                        obj_bar1_table[min_i] = dist[neigh].first + X(neigh,min_i) - dist[min_i].first;
+                        obj_bar1_table[min_i] = dist[neigh].first + X(neigh,min_i,req_no) - dist[min_i].first;
                         obj_bar2_table[min_i] = cur_obj_bar2;
                         cpred_table[min_i] = neigh;
                     }
@@ -256,7 +254,7 @@ void MyAlgo::separation_oracle(int src, int dst, int req_no, int path_id, vector
         for(auto neigh:graph.get_neighbors_id(min_i)){
             double temp_obj_bar2 = dist[min_i].second + Y[dst][req_no][{min_i,neigh}] - dist[neigh].second;
             if(temp_obj_bar2 < 0){
-                double temp_obj_bar1 = dist[min_i].first + X(min_i,neigh) - dist[neigh].first;
+                double temp_obj_bar1 = dist[min_i].first + X(min_i,neigh,req_no) - dist[neigh].first;
                 if( -(temp_obj_bar1/temp_obj_bar2) < theta_table[neigh] || (-(temp_obj_bar1/temp_obj_bar2) == theta_table[neigh] && temp_obj_bar2 < obj_bar2_table[neigh])){
                     pq.push({-temp_obj_bar1/temp_obj_bar2,temp_obj_bar2,neigh});
                     theta_table[neigh] = -(temp_obj_bar1/temp_obj_bar2);
@@ -320,8 +318,8 @@ void MyAlgo::find_bottleneck(vector<vector<int>> &tree, int req_no){
             min_s_uv = s_uv[{it.first.first, it.first.second}];
     }
 
-    int rate = 1;
-    double s = min(min_s_u, min_s_uv);                                      //request limit=1?
+    int rate = 10;
+    double s = min(min_s_u, min(min_s_uv, 1.0));                                      //request limit=1?
     for(int i = 0; i < rate; i++){
         bool find = false;
         for(int j = 0; j < x_i_t_tree.size(); j++){                                                   //add flow to path
@@ -347,7 +345,7 @@ void MyAlgo::find_bottleneck(vector<vector<int>> &tree, int req_no){
             beta[{it.first.first, it.first.second}] = beta[{it.first.first, it.first.second}] * (1 + epsilon * s / s_uv[{it.first.first, it.first.second}]);
             beta[{it.first.second, it.first.first}] = beta[{it.first.second, it.first.first}] * (1 + epsilon * s / s_uv[{it.first.second, it.first.first}]);
         }
-        obj += (tau[req_no] * (1 + epsilon * s / 1) - tau[req_no]) * 1;                            //request limit = 1?
+        obj += (tau[req_no] * (1 + epsilon * s / 1) - tau[req_no]);                            //request limit = 1?
         tau[req_no] = tau[req_no] * (1 + epsilon * s / 1);    
     }
 }
@@ -747,31 +745,43 @@ void MyAlgo::calculate(){
     // res["primal"] = sum / (1 - epsilon) / (1 - epsilon);
 }
 
-vector<map<vector<vector<int>>, double>> MyAlgo::Greedy_rounding(){
-    vector<map<vector<vector<int>>, double>> each_request(requests.size());
+vector<map<vector<vector<int>>, int>> MyAlgo::Greedy_rounding(){
+    vector<vector<int>> temp;
+    vector<tuple<double, int, vector<vector<int>>>> each_request(requests.size(),{-1,-1,temp});
     vector<map<vector<vector<int>>, int>> I_request(requests.size());
+    vector<int>num(requests.size(),0);
     for(int i = 0; i < x_i_t_tree.size(); i++){
         vector<vector<int>> tree = x_i_t_tree[i];
         int node1 = tree[0][0];
         int node2 = tree[1][0];
         int node3 = tree[2][0];
         for(unsigned int j = 0; j < requests.size(); j++){
+            
             if(node1 == requests[j].get_node1() && node2 == requests[j].get_node2() && node3 == requests[j].get_node3()){
-                each_request[j][tree] = x_i_t[i];
+                num[j]++;
+                double prob; int req;
+                tie(prob,req,temp) =  each_request[j];
+                if(x_i_t[i] > prob){
+                    each_request[j] = tie(x_i_t[i], j, tree);
+                }
                 break;
             }
         }
     }
+    cout<<"NUM CHECKING\n";
+    for(auto it:num){
+        cout<<it<<" ";
+    }
+    cout<<endl;
     for(auto &it:each_request){
-        cout<<"Request ------"<<endl;
-        for(auto &it2:it){
-            cout<<"Value : "<<it2.second<<endl;;
-            for(auto &it3:it2.first){
-                for(auto &it4:it3){
-                    cout<<it4<<" ";
-                }
-                cout<<endl;
+        double prob; int req;
+        tie(prob,req,temp) = it;
+        cout<<"Request :"<<req<<" -----------------------"<<endl;
+        for(auto &it2:temp){
+            for(auto &it3:it2){
+                cout<<it3<<" ";
             }
+            cout<<endl;
         }
     }
 /*
@@ -843,7 +853,7 @@ vector<map<vector<vector<int>>, double>> MyAlgo::Greedy_rounding(){
 		}
 	}
 */
-    return each_request;
+    return I_request;
 
 }
 
@@ -878,15 +888,15 @@ void MyAlgo::path_assignment(){
 
     obj = M * delta;
     while(obj < 1){
-        int req_no = 0;
+        int req_no = -1;
         vector<vector<int>> best_tree(3,vector<int>());
         double global_U = numeric_limits<double>::infinity();
         for(int middle = 0; middle < graph.get_size(); middle++){
-            double smallest_U = numeric_limits<double>::infinity();
-            int smallest_index = -1;
-            vector<vector<vector<int>>> cur_tree(3,vector<vector<int>>());                //[path_id][extreme_tree_id][eles]
-            vector<vector<vector<double>>> cur_label(3,vector<vector<double>>());         //[path_id][extreme_tree_id][last_ratio, new_ratio, U]
             for(unsigned int i = 0; i < requests.size(); i++){
+                double smallest_U = numeric_limits<double>::infinity();
+                int smallest_index = -1;
+                vector<vector<vector<int>>> cur_tree(3,vector<vector<int>>());                //[path_id][extreme_tree_id][eles]
+                vector<vector<vector<double>>> cur_label(3,vector<vector<double>>());         //[path_id][extreme_tree_id][last_ratio, new_ratio, U]
                 if(middle == requests[i].get_node1() || middle == requests[i].get_node2() || middle == requests[i].get_node3()){continue;}
                 separation_oracle(requests[i].get_node1(), middle, i, 0, cur_tree, cur_label);
                 separation_oracle(requests[i].get_node2(), middle, i, 1, cur_tree, cur_label);
@@ -936,6 +946,7 @@ void MyAlgo::path_assignment(){
                 }
                 if(smallest_U < global_U){
                     global_U = smallest_U;
+                    req_no = i;
                     for(int fir = 0; fir < cur_label.size(); fir++){
                         for(int sec = 0; sec < cur_label[fir].size(); sec++){
                             if(cur_label[fir][sec][0] <= label_area[smallest_index] &&  label_area[smallest_index+1] <= cur_label[fir][sec][1]){
@@ -944,7 +955,7 @@ void MyAlgo::path_assignment(){
                             }
                         }
                     } 
-                    // cout<<"Request "<<i<<" with : "<<smallest_U <<" \n";
+                    //cout<<"Request "<<i<<" with : "<<smallest_U <<" \n";
                     // for(auto it:best_tree){
                     //     for(auto it1:it){
                     //         cout<<it1<<" ";
@@ -953,10 +964,9 @@ void MyAlgo::path_assignment(){
                     // }
                     // cout<<"--------------------------"<<endl;
                 }
-
             }
         }
-        // cout<<"THIS ROUND ANS: "<<global_U<<endl;
+        //cout<<"THIS ROUND ANS: "<<global_U<<endl;
         // for(auto it:best_tree){
         //     for(auto it2:it){
         //         cout<<it2<<" ";
@@ -965,9 +975,8 @@ void MyAlgo::path_assignment(){
         // }
         // cout<<endl;
         find_bottleneck(best_tree, req_no);
-        //cout <<"OBJ : "<< obj << endl;
+        cout <<"OBJ : "<< obj << endl;
     }
-    find_violate();
     for(int i = 0; i < x_i_t_tree.size(); i++){
         cout<<"\nTree with "<<x_i_t[i]<<endl;
         for(auto &it2:x_i_t_tree[i]){
@@ -977,7 +986,9 @@ void MyAlgo::path_assignment(){
             cout<<endl;
         }
     }
-    vector<map<vector<vector<int>>, double>>path = Greedy_rounding();
+    find_violate();
+
+    vector<map<vector<vector<int>>, int>>path = Greedy_rounding();
 }
     
 //     calculate();

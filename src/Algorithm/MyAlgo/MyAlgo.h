@@ -46,7 +46,7 @@ private:
     double delta;
     double M;
     vector<double> tau;                
-    double X(int u, int v);
+    double X(int u, int v, int req_no);
 public: 
     map<int, int> num_of_path_count;
     map<int, int> path_length_encode;
@@ -63,7 +63,7 @@ public:
     void dfs(int s, int t, vector<vector<int>> &ans, vector<int> &path, vector<bool> &visited);    
     vector<vector<int>> allPathsSourceTarget(int src, int dst);
     void next_time_slot();
-    vector<map<vector<vector<int>>, double>> Greedy_rounding();
+    vector<map<vector<vector<int>>, int>> Greedy_rounding();
     void find_bottleneck(vector<vector<int>> &tree, int req_no);
     void initialize(int mid);
     void init_dual();
