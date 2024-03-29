@@ -22,7 +22,7 @@ protected:
     int status;
     int tree_num = 0;
     vector<vector<Path *>> trees;                                       //休學-[哪個tree][tree的哪個邊]
-    vector<vector<double>> tree_prob_vt;                     
+    vector<double> tree_prob_vt;                     
 public:
     Request(int node1, int node2, int node3);
     ~Request(void);
@@ -34,6 +34,7 @@ public:
     int get_tree_num();
     int get_cur_send();
     void add_cur(int num);
+    vector<double> get_tree_prob_vt();
     vector<vector<Path *>> get_trees();
     void clear_trees();
     void refresh_trees();

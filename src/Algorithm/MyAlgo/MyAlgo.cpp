@@ -768,122 +768,143 @@ vector<map<vector<vector<int>>, int>> MyAlgo::Greedy_rounding(){
             }
         }
     }
-    cout<<"NUM CHECKING\n";
-    for(auto it:num){
-        cout<<it<<" ";
-    }
-    cout<<endl;
     sort(each_request.begin(),each_request.end(),greater<tuple<double, int, vector<vector<int>>>>());
     for(auto &it:each_request){
         double prob; int req;
         tie(prob,req,temp) = it;
-        cout<<"Request :"<<req<<" ----------------------- "<<prob<<endl;
-        for(auto &it2:temp){
-            for(auto &it3:it2){
-                cout<<it3<<" ";
-            }
-            cout<<endl;
-        }
+        // cout<<"Request :"<<req<<" ----------------------- "<<prob<<endl;
+        // for(auto &it2:temp){
+        //     for(auto &it3:it2){
+        //         cout<<it3<<" ";
+        //     }
+        //     cout<<endl;
+        // }
     }
 
 	// 如果資源足夠讓 x 變成 1 ，就直接讓 x 變成 1 
-	for(auto &it:each_request){
-		double prob;
-		int request_id;
-        vector<vector<int>> tree;
-		tie(prob, request_id, tree) = it;
+    bool global_enough;
+    do{
+        global_enough = false;
+        for(auto &it:each_request){
+            double prob;
+            int request_id;
+            vector<vector<int>> tree;
+            tie(prob, request_id, tree) = it;
 
-        if(request_id == -1){continue;}                                                //代表有請求沒有tree QQ
-        vector<int> memory_use(graph.get_size(), 0);
-        map<pair<int,int>,int> channel_use;
-  
-        for(int i = 0; i < 3; i++){
-            for(int j = 0; j < tree[i].size() - 1; j++){
-                memory_use[tree[i][j]]++;
-                memory_use[tree[i][j+1]]++;
-                if(channel_use.find({memory_use[tree[i][j]],memory_use[tree[i][j+1]]}) != channel_use.end()){
-                    channel_use[{tree[i][j],tree[i][j+1]}]++;
-                    channel_use[{tree[i][j+1],tree[i][j]}]++;
+            if(request_id == -1){continue;}                                                //代表有請求沒有tree QQ
+            vector<int> memory_use(graph.get_size(), 0);
+            map<pair<int,int>,int> channel_use;
+    
+            for(int i = 0; i < 3; i++){
+                for(int j = 0; j < tree[i].size() - 1; j++){
+                    memory_use[tree[i][j]]++;
+                    memory_use[tree[i][j+1]]++;
+                    if(channel_use.find({tree[i][j],tree[i][j+1]}) != channel_use.end()){
+                        channel_use[{tree[i][j],tree[i][j+1]}]++;
+                        channel_use[{tree[i][j+1],tree[i][j]}]++;
+                    }
+                    else{
+                        channel_use[{tree[i][j],tree[i][j+1]}] = 1;
+                        channel_use[{tree[i][j+1],tree[i][j]}] = 1;
+                    }
+                }
+            }
+            //is_assinable get_remain
+            bool enough=true;
+            for(int i = 0; i < graph.get_size(); i++){
+                if(graph.Node_id2ptr(i)->get_remain() < memory_use[i]){
+                    enough = false;
+                    break;
+                }
+            }
+            for(auto &it:channel_use){
+                //cout<<"Channel_remain : "<<graph.remain_channel(it.first.first,it.first.second)<<" "<<it.second<<endl;
+                if(graph.remain_channel(it.first.first,it.first.second) < it.second){
+                    enough = false;
+                    break;
+                }
+            }
+            if(enough){
+                //cout<<"hi"<<endl;
+                global_enough = true;
+                assign_resource(tree, 1, request_id);
+                if(I_request[request_id].find(tree) != I_request[request_id].end()){
+                    I_request[request_id][tree]++;
                 }
                 else{
-                    channel_use[{tree[i][j],tree[i][j+1]}] = 1;
-                    channel_use[{tree[i][j+1],tree[i][j]}] = 1;
+                    I_request[request_id][tree] = 1;
                 }
+                
             }
         }
 
-        //is_assinable get_remain
-        bool enough=true;
-        for(int i = 0; i < graph.get_size(); i++){
-            if(graph.Node_id2ptr(i)->get_remain() < memory_use[i]){
-                enough = false;
-                break;
+    }while(global_enough);
+
+    // heuristic algorithm
+    do{
+        global_enough = false;
+        for(auto &tree:x_i_t_tree){
+            vector<int> memory_use(graph.get_size(), 0);
+            map<pair<int,int>,int> channel_use;
+
+            for(int i = 0; i < 3; i++){
+                for(int j = 0; j < tree[i].size() - 1; j++){
+                    memory_use[tree[i][j]]++;
+                    memory_use[tree[i][j+1]]++;
+                    if(channel_use.find({tree[i][j],tree[i][j+1]}) != channel_use.end()){
+                        channel_use[{tree[i][j],tree[i][j+1]}]++;
+                        channel_use[{tree[i][j+1],tree[i][j]}]++;
+                    }
+                    else{
+                        channel_use[{tree[i][j],tree[i][j+1]}] = 1;
+                        channel_use[{tree[i][j+1],tree[i][j]}] = 1;
+                    }
+                }
             }
-        }
-        for(auto &it:channel_use){
-            if(graph.remain_channel(it.first.first,it.first.second) < it.second){
-                enough = false;
-                break;
+            //is_assinable get_remain
+            bool enough=true;
+            for(int i = 0; i < graph.get_size(); i++){
+                if(graph.Node_id2ptr(i)->get_remain() < memory_use[i]){
+                    enough = false;
+                    break;
+                }
             }
-        }
-        if(enough){
-            cout<<"Hi~~~~~~~~"<<endl;
-            assign_resource(tree, 1, request_id);
-            I_request[request_id][tree]=1;
-        }
-	}
-/*
-	// 如果還有剩下資源的話，盡量塞爆
-	for(auto it:each_request){
-		vector<int> tree;
-		double x_prob;
-		int request_id;
-		tie(x_prob, request_id, tree) = it;
-        if(tree.size()<=2){
-            break;
-        }
-        for(unsigned int i = 1; i < tree.size()-1 ; i++){
-            vector<int> extra_path = all_given_path[request_id][tree[i] % path_num - 1];
-            int width = find_width(extra_path);
-            if(width >= 1){
-                assign_resource(extra_path, width, request_id);
-                I_request[request_id][extra_path]+=width;
+            for(auto &it:channel_use){
+                //cout<<"Channel_remain : "<<graph.remain_channel(it.first.first,it.first.second)<<" "<<it.second<<endl;
+                if(graph.remain_channel(it.first.first,it.first.second) < it.second){
+                    enough = false;
+                    break;
+                }
             }
-        }
-	}
-    while(1){
-        bool keep_run=false;
-	    for(unsigned int request_id=0;request_id<requests.size();request_id++){
-		// cerr<<"GG: It work?"<<endl;
-			vector<int> extra_path = BFS(requests[request_id].get_source(), requests[request_id].get_destination());
-			int width = 0;
-			if(extra_path.size() != 0){
-				width =find_width(extra_path);
-				assign_resource(extra_path, width, request_id);
-				if(I_request[request_id].find(extra_path)!=I_request[request_id].end()){
-                    I_request[request_id][extra_path] += width;
+            if(enough){
+                //cout<<"hi"<<endl;
+                global_enough = true;
+                int node1 = tree[0][0];
+                int node2 = tree[1][0];
+                int node3 = tree[2][0];
+                int request_id;
+                for(int i = 0; i < requests.size(); i++){
+                    if(node1 == requests[i].get_node1() && node2 == requests[i].get_node2() && node3 == requests[i].get_node3()){
+                        request_id = i;
+                    }
+                }
+                assign_resource(tree, 1, request_id);
+                if(I_request[request_id].find(tree) != I_request[request_id].end()){
+                    I_request[request_id][tree]++;
                 }
                 else{
-                    I_request[request_id][extra_path] = width;
+                    I_request[request_id][tree] = 1;
                 }
-                keep_run=true;
-			}
-		}
-        if(!keep_run){
-            break;
+            }
         }
-	}
-*/
+	}while(global_enough);
     return I_request;
-
 }
 
 void MyAlgo::path_assignment(){
     double INF=numeric_limits<double>::infinity();
     Y.resize(graph.get_size());
     for(int i = 0; i < graph.get_size(); i++){
-        int mem = graph.Node_id2ptr(i)->get_memory_cnt();
-        graph.Node_id2ptr(i)->revise(mem);
         Y[i].resize(requests.size() + 1);
     }
     init_dual();
@@ -998,15 +1019,15 @@ void MyAlgo::path_assignment(){
         find_bottleneck(best_tree, req_no);
         cout <<"OBJ : "<< obj << endl;
     }
-    for(int i = 0; i < x_i_t_tree.size(); i++){
-        cout<<"\nTree with "<<x_i_t[i]<<endl;
-        for(auto &it2:x_i_t_tree[i]){
-            for(auto &it3:it2){
-                cout<<it3<<" ";
-            }
-            cout<<endl;
-        }
-    }
+    // for(int i = 0; i < x_i_t_tree.size(); i++){
+    //     cout<<"\nTree with "<<x_i_t[i]<<endl;
+    //     for(auto &it2:x_i_t_tree[i]){
+    //         for(auto &it3:it2){
+    //             cout<<it3<<" ";
+    //         }
+    //         cout<<endl;
+    //     }
+    // }
     find_violate();
 
     vector<map<vector<vector<int>>, int>>path = Greedy_rounding();

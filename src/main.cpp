@@ -65,7 +65,7 @@ int main(int argc, char *argv[]){
 
     default_setting["swap_prob"] = 0.9;
     default_setting["entangle_alpha"] = 0.0002;
-    default_setting["new_request_cnt"] = 3;
+    default_setting["new_request_cnt"] = 10;
     default_setting["total_time_slot"] = 1;
     default_setting["epsilon"] = 0.2;    
 
@@ -90,12 +90,12 @@ int main(int argc, char *argv[]){
     change_parameter["memory_cnt_avg"] = { 3, 5, 7, 9, 11};
 
     vector<string> X_names =  { /*"num_of_node","swap_prob",*/"entangle_alpha"/*, "resource_ratio",  "new_request_cnt" ,  "memory_cnt_avg" , "area_alpha"*/}; 
-    vector<string> Y_names =  { /*"max_over_ratio",*/"throughputs"
+    vector<string> Y_names =  { /*"max_over_ratio",*/"total_earn"
                              /*,"use_channel_ratio",  "use_memory_ratio", "use_memory", "use_channel", "total_channel", "total_memory" "throughput_memory_ratio", "throughput_channel_ratio",
                              "S_D_complete_ratio_difference", "path_success_avg" ,
                              "path_success_avg_before_ent", "new_success_ratio",
 			                 "divide_cnt", "change_edge_num", "diff_edge_num", "diff_rate","edge_difference"*/};
-    vector<string> algo_names = { "MyAlgo"/* "Greedy" */}; 
+    vector<string> algo_names = { "MyAlgo", "Greedy" }; 
 
     // init result
     for(string X_name : X_names) {
@@ -106,7 +106,7 @@ int main(int argc, char *argv[]){
     }
     
 
-    int round = 1;
+    int round = 100;
     for(string X_name : X_names) {
         map<string, double> input_parameter = default_setting;
         for(double change_value : change_parameter[X_name]) {         
@@ -137,7 +137,7 @@ int main(int argc, char *argv[]){
             int total_time_slot = input_parameter["total_time_slot"];
             // python generate graph
 
-            //#pragma omp parallel for
+            #pragma omp parallel for
             for(int T = 0; T < round; T++){
                 string round_str = to_string(T);
                 ofstream ofs;
@@ -160,7 +160,7 @@ int main(int argc, char *argv[]){
                 
                 vector<AlgorithmBase*> algorithms;
                 algorithms.emplace_back(new MyAlgo(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha));
-                //algorithms.emplace_back(new Greedy(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha, 0));
+                algorithms.emplace_back(new Greedy(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha, 0));
 
                 // 建完圖，刪除 input 檔避免佔太多空間
                 // command = "rm -f " + file_path + "input/round_" + round_str + ".input";
@@ -206,13 +206,13 @@ int main(int argc, char *argv[]){
                     cout<< "---------generating requests in main.cpp----------end" << endl;
                     
 
-                    //#pragma omp parallel for 
+                    #pragma omp parallel for 
                     for(int i = 0; i < (int)algorithms.size(); i++){
                         auto &algo = algorithms[i];
                         ofs<<"-----------run "<< algo->get_name() << " ---------"<<endl;
                         algo->run();
 
-                        ofs<<"total_throughputs : "<<algo->get_res("throughputs")<<endl;
+                        ofs<<"total_earn : "<<algo->get_res("total_earn")<<endl;
                         ofs<<"-----------run "<<algo->get_name() << " ---------end"<<endl;
                     }
                     
@@ -220,20 +220,20 @@ int main(int argc, char *argv[]){
                 ofs<<"---------------in round " <<T<<" -------------end" <<endl;
                 ofs << endl;
                 for(auto &algo:algorithms){
-                    ofs<<"("<<algo->get_name()<<")total throughput = "<<algo->get_res("throughputs")<<endl;
+                    ofs<<"("<<algo->get_name()<<")total earn = "<<algo->get_res("total_earn")<<endl;
                 }
                 cout<<"---------------in round " <<T<<" -------------end" <<endl;
                 cout << endl;
                 for(auto &algo:algorithms){
-                    cout<<"("<<algo->get_name()<<")total throughput = "<<algo->get_res("throughputs")<<endl;
+                    cout<<"("<<algo->get_name()<<")total earn = "<<algo->get_res("total_earn")<<endl;
                 }
                 
                 for(auto &algo:algorithms){
                     for(string Y_name : Y_names) {
                         result[T][algo->get_name()][Y_name] = algo->get_res(Y_name);
-                        if(Y_name == "throughputs" && (algo->get_name() == "MyAlgo") ){
-                            result[T][algo->get_name()]["primal"] = algo->get_res("primal");
-                        }
+                        // if(Y_name == "throughputs" && (algo->get_name() == "MyAlgo") ){
+                        //     result[T][algo->get_name()]["primal"] = algo->get_res("primal");
+                        // }
                     }
                 }
                 
@@ -264,32 +264,30 @@ int main(int argc, char *argv[]){
             map<string, map<string, double>> sum_res;
              for(string algo_name : algo_names){
                  for(int T = 0; T < round; T++){
-            //         result[T][algo_name]["waiting_time"] /= result[T][algo_name]["total_request"];
-            //         result[T][algo_name]["encode_ratio"] = result[T][algo_name]["encode_cnt"] / (result[T][algo_name]["encode_cnt"] + result[T][algo_name]["unencode_cnt"]);
-            //         result[T][algo_name]["succ-finished_ratio"] = result[T][algo_name]["throughputs"] / result[T][algo_name]["finished_throughputs"];
-            //         result[T][algo_name]["fail-finished_ratio"] = 1 - result[T][algo_name]["succ-finished_ratio"];
-            //         result[T][algo_name]["path_length"] = result[T][algo_name]["path_length"] / result[T][algo_name]["finished_throughputs"];
-            //         result[T][algo_name]["divide_cnt"] = result[T][algo_name]["divide_cnt"] / result[T][algo_name]["finished_throughputs"];
-                     result[T][algo_name]["use_memory_ratio"] = result[T][algo_name]["use_memory"] / result[T][algo_name]["total_memory"];
-                     result[T][algo_name]["use_channel_ratio"] = result[T][algo_name]["use_channel"] / result[T][algo_name]["total_channel"];
-                     result[T][algo_name]["throughput_memory_ratio"] = result[T][algo_name]["throughputs"] / result[T][algo_name]["use_memory"];
-                     result[T][algo_name]["throughput_channel_ratio"] = result[T][algo_name]["throughputs"] /  result[T][algo_name]["use_channel"];
+                    // result[T][algo_name]["waiting_time"] /= result[T][algo_name]["total_request"];
+                    // result[T][algo_name]["encode_ratio"] = result[T][algo_name]["encode_cnt"] / (result[T][algo_name]["encode_cnt"] + result[T][algo_name]["unencode_cnt"]);
+                    // result[T][algo_name]["succ-finished_ratio"] = result[T][algo_name]["throughputs"] / result[T][algo_name]["finished_throughputs"];
+                    // result[T][algo_name]["fail-finished_ratio"] = 1 - result[T][algo_name]["succ-finished_ratio"];
+                    // result[T][algo_name]["path_length"] = result[T][algo_name]["path_length"] / result[T][algo_name]["finished_throughputs"];
+                    // result[T][algo_name]["divide_cnt"] = result[T][algo_name]["divide_cnt"] / result[T][algo_name]["finished_throughputs"];
+                    //  result[T][algo_name]["use_memory_ratio"] = result[T][algo_name]["use_memory"] / result[T][algo_name]["total_memory"];
+                    //  result[T][algo_name]["use_channel_ratio"] = result[T][algo_name]["use_channel"] / result[T][algo_name]["total_channel"];
+                    //  result[T][algo_name]["throughput_memory_ratio"] = result[T][algo_name]["throughputs"] / result[T][algo_name]["use_memory"];
+                    //  result[T][algo_name]["throughput_channel_ratio"] = result[T][algo_name]["throughputs"] /  result[T][algo_name]["use_channel"];
                  }
              }
             for(int T = 0; T < round; T++){
                 // result[T]["MyAlgo"]["diff_rate"] = result[T]["MyAlgo"]["change_edge_num"] / result[T]["MyAlgo"]["diff_edge_num"];
-                result[T]["MyAlgo"]["edge_difference"] = result[T]["MyAlgo"]["change_edge_num"] - result[T]["MyAlgo"]["change_edge_num"];
+                // result[T]["MyAlgo"]["edge_difference"] = result[T]["MyAlgo"]["change_edge_num"] - result[T]["MyAlgo"]["change_edge_num"];
             }
 
             double min_UB;
             for(int T = 0; T < round; T++){
                 //cout<<result[T]["MyAlgo"]["primal"]<<endl;
-                min_UB=result[T]["MyAlgo"]["primal"];
-                sum_res["MyAlgo"]["primal"] += min_UB;
+                // min_UB=result[T]["MyAlgo"]["primal"];
+                // sum_res["MyAlgo"]["primal"] += min_UB;
             }
             
-                
-
             for(string Y_name : Y_names) {
                 string filename = "ans/" + X_name + "_" + Y_name + ".ans";
                 ofstream ofs;
@@ -301,7 +299,6 @@ int main(int argc, char *argv[]){
                         sum_res[algo_name][Y_name] += result[T][algo_name][Y_name];
                     }
                     ofs << sum_res[algo_name][Y_name] / round << ' ';
-                    
                 }
                 if(Y_name == "throughputs"){
                     ofs << sum_res["MyAlgo"]["primal"] / round << " ";

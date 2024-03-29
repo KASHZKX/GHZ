@@ -14,6 +14,7 @@ private:
 
 public:
     Greedy(string filename, int request_time_limit, int node_time_limit, double swap_prob, double entangle_alpha , bool limit_r_or_not);
+    vector<int> Dijkstra(int src, int dst);
     void path_assignment();
     void entangle();
     void swap();

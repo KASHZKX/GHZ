@@ -48,6 +48,10 @@ int Request::get_cur_send(){
     return cur_send;
 }
 
+vector<double> Request::get_tree_prob_vt(){
+    return tree_prob_vt;
+}
+
 void Request::add_cur(int num){
     cur_send += num;
 }
@@ -87,8 +91,14 @@ void Request::entangle(){
 }
 
 void Request::swap(){
+    tree_prob_vt.clear();
     for(auto &tree:trees){
+        double tree_prob = 1;
         throughput ++;
+        for(auto &path:tree){
+            tree_prob *= path->get_prob();
+        }
+        tree_prob_vt.push_back(tree_prob);
     }
 }
 

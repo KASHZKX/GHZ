@@ -231,17 +231,24 @@ void Graph::set_weight(int node1_id, int node2_id, double value){
 }
 
 int Graph::remain_channel(int node1_id,int node2_id){
-    if(nodes[node1_id] > nodes[node2_id]){
-        swap(node1_id, node2_id);
-    } 
     int cnt=0;
     const Node &node1 = nodes[node1_id];
     const Node &node2 = nodes[node2_id];
-    for(Channel &channel: channels[make_pair(node1, node2)]){
-        if(channel.is_assignable()){
-            cnt++;
+    if(node1 > node2){
+        for(Channel &channel: channels[make_pair(node2, node1)]){
+            if(channel.is_assignable()){
+                cnt++;
+            }
         }
     }
+    else{
+        for(Channel &channel: channels[make_pair(node1, node2)]){
+            if(channel.is_assignable()){
+                cnt++;
+            }
+        }        
+    }
+
     return cnt;
 }
 

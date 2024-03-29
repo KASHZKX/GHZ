@@ -33,6 +33,7 @@ void AlgorithmBase::base_next_time_slot(){
     // double max_req_success_ratio = 0;
     // double total_req_success_ratio = 0;
     // double max_over_ratio = 0;
+    double total_earn = 0;
     graph.refresh();
     graph.release();
     for(auto &request: requests){
@@ -43,49 +44,17 @@ void AlgorithmBase::base_next_time_slot(){
     vector<int> finished_reqno;
     res_vt.clear();
     for(int reqno = 0; reqno < (int)requests.size(); reqno++) {
-    //     double req_success_ratio;
-    //     total_path_num += requests[reqno].get_tree_num();
-    //     before_ent_path_num += requests[reqno].get_before_ent_path_num();
-    //     total_success_prob += requests[reqno].get_total_prob();
-    //     before_ent_total_success_prob += requests[reqno].get_before_ent_total_prob();
-        
-    //     for(auto it:requests[reqno].get_before_ent_path_prob_vt()){
-    //         res_vt.push_back(it);
-    //     }
-        
-    //     if(requests[reqno].get_throughput() == 0){
-    //         req_success_ratio = 0.0;
-    //     }else{
-    //         req_success_ratio = (double)requests[reqno].get_throughput() / (double)requests[reqno].get_send_limit();
-    //         if(max_over_ratio <= req_success_ratio){
-    //             max_over_ratio = req_success_ratio;
-    //         }
-    //         if(req_success_ratio >= 1){
-    //             req_success_ratio = 1;
-    //         }
-    //     }
-
-    //     if(min_req_success_ratio > req_success_ratio){
-    //         min_req_success_ratio = req_success_ratio;
-    //     }
-    //     if(max_req_success_ratio < req_success_ratio){
-    //         max_req_success_ratio = req_success_ratio;
-    //     }
-    //     total_req_success_ratio += (1 - req_success_ratio);
-    //     if(!requests[reqno].is_finished()) {
-    //         continue;
-    //     }
-    //     res["finished_throughputs"]++;
-    //     res["path_length"] += requests[reqno].get_send_path_length();
-    //     res["fidelity"] += requests[reqno].get_fidelity();
-        
-    //     finished_reqno.push_back(reqno);
-        if(requests[reqno].get_throughput() != 0){
-            //cout << "reqno: " << reqno << " " <<  requests[reqno].get_throughput() << endl;
-            res["throughputs"]+= requests[reqno].get_throughput();
+        double min_prob = numeric_limits<double>::infinity();
+        for(auto it:requests[reqno].get_tree_prob_vt()){
+            if(it < min_prob){
+                min_prob = it;
+            }
+        }
+        if(min_prob != numeric_limits<double>::infinity()){
+            total_earn += min_prob;
         }
     }
-   
+    res["total_earn"] = total_earn;
     // res["path_success_avg"] = total_success_prob / total_path_num;
     // res["path_success_avg_before_ent"] = before_ent_total_success_prob / before_ent_path_num;
     // res["S_D_complete_ratio_difference"] = max_req_success_ratio - min_req_success_ratio;

@@ -41,6 +41,40 @@ void Greedy::cal_need(vector<int>path, vector<int>& need_memory, map<pair<int,in
     // }
 }
 
+vector<int> Greedy::Dijkstra(int src, int dst){                          
+    double INF = numeric_limits<double>::infinity();
+    vector<bool> used( graph.get_size(), false);
+    vector<int> parent( graph.get_size(), -1);
+    vector<double> dist(graph.get_size(), INF);
+    priority_queue<pair<double, int>, vector<pair<double, int>>, greater<pair<double, int>>> pq;
+    pq.push({0, src});
+    dist[src] = 0;
+    while(!pq.empty()) {
+        int cur_node = pq.top().second;
+        pq.pop();
+        if(cur_node == dst) break;
+        if(used[cur_node]) continue;
+        used[cur_node] = true;
+        for(int &neigh : graph.get_neighbors_id(cur_node)) {
+            double tmep_prob =-log(exp(graph.Node_id2ptr(cur_node)->distance(*graph.Node_id2ptr(neigh))*(-graph.get_entangle_alpha())));
+            if(dist[cur_node] + tmep_prob < dist[neigh]) {
+                dist[neigh] = dist[cur_node] + tmep_prob;
+                parent[neigh] = cur_node;                                        
+                pq.push({dist[neigh], neigh});
+            }
+        }
+    }
+    if(dist[dst] == INF) return{};
+    int cur_node = dst;
+    vector<int>path;
+    while(cur_node != -1){
+        //cout<<cur_node<<endl;
+        path.push_back(cur_node);
+        cur_node = parent[cur_node];
+    }
+    return path;
+}     
+
 void Greedy::path_assignment(){
     // base_test_active();
     vector<int>used_memory(graph.get_size(),0);
@@ -69,9 +103,21 @@ void Greedy::path_assignment(){
                 }
             }
             if(smallest_fermat == numeric_limits<double>::infinity()){continue;}    //單獨找只能確保一條路徑有足夠資源，不能保證整個tree有資源(但已經盡量讓它不會continue了)
-            vector<int> path1 = BFS(request.get_node1(), smallest_middle);          //狠一點 別給它dij
-            vector<int> path2 = BFS(request.get_node2(), smallest_middle);
-            vector<int> path3 = BFS(request.get_node3(), smallest_middle);
+            vector<int> path1 = Dijkstra(request.get_node1(), smallest_middle);        
+            for(auto it:path1){
+                cout<<it<<" ";
+            }
+            cout<<endl;
+            vector<int> path2 = Dijkstra(request.get_node2(), smallest_middle);
+            for(auto it:path2){
+                cout<<it<<" ";
+            }
+            cout<<endl;
+            vector<int> path3 = Dijkstra(request.get_node3(), smallest_middle);
+            for(auto it:path3){
+                cout<<it<<" ";
+            }
+            cout<<endl;
             if(path1.size() == 0 || path2.size() == 0 || path3.size() == 0 ){continue;}
 
             cal_need(path1,need_memory,need_channel); cal_need(path2,need_memory,need_channel); cal_need(path3,need_memory,need_channel);
