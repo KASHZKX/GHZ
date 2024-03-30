@@ -67,11 +67,8 @@ public:
     void find_bottleneck(vector<vector<int>> &tree, int req_no);
     void initialize(int mid);
     void init_dual();
-    void check_enough(vector<map<vector<int>, int>> &path);
-    void readd(vector<map<vector<int>, int>> &path,vector<int> &over_memory,map<vector<int>,int> &over_channel);
     double changing_obj();
     void find_violate();
-    vector<map<vector<int>, int>> rounding();
     MyAlgo(string filename, int request_time_limit, int node_time_limit, double swap_prob, double entangle_alpha);
     MyAlgo(string filename, int request_time_limit, int node_time_limit, double swap_prob, double entangle_alpha, double epsilon);
     ~MyAlgo();

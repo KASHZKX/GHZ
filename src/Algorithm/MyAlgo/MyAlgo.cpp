@@ -426,283 +426,6 @@ void MyAlgo::find_violate(){
     }
 }
 
-vector<map<vector<int>, int>> MyAlgo::rounding(){
-    // vector<map<vector<int>, double>> each_request(requests.size());
-    // vector<map<vector<int>, int>> I_request(requests.size());
-    // for(auto it : x_i_p){
-    //     vector<int> path = it.first;
-    //     int src = path[0];
-    //     int dst = path.back();
-    //     for(unsigned int i = 0; i < requests.size(); i++){
-    //         if(src == requests[i].get_source() && dst == requests[i].get_destination()){
-    //             each_request[i][path] = it.second;
-    //             break;
-    //         }
-    //     }
-    // }
-
-    // for(unsigned int i = 0; i < requests.size(); i++){
-    //     double total_prob = 0;
-    //     double used_prob = 0;
-    //     int used_I=0;
-    //     int distri_I=0;
-    //     vector<double>accumulate;
-    //     accumulate.push_back(0.0);                                              // [0,a1,a2,...,0]
-    //     for(auto it : each_request[i]){                    
-    //         double frac_prob;
-
-    //         int i_prob = it.second;                                             //每個path先取整數部分=>確定分配
-    //         I_request[i][it.first] = i_prob;
-    //         used_I+=i_prob;
-
-    //         frac_prob = it.second - i_prob;                                     //total_prob代表random區間,丟進accumulate
-    //         total_prob += frac_prob;
-    //         accumulate.push_back(total_prob);
-    //         used_prob += it.second;
-    //     }
-    //     used_I += (int)(requests[i].get_send_limit()- used_prob);               //unused_I=取底[ri - sum(request.I) - (unused.I)]
-    //     distri_I=requests[i].get_send_limit()-used_I;
-
-    //     accumulate.push_back(0.0);
-    //     // cout<<"total_prob:"<<total_prob<<" distri_I:"<<distri_I<<endl;
-    //     // cout<<"accumulate:";
-    //     // for(auto it:accumulate){
-    //     //     cout<<it<<" ";
-    //     // }
-    //     // cout<<endl;
-    //     for(int j = 0; j < distri_I; j++){
-    //         random_device rd;  
-    //         mt19937 gen(rd()); 
-    //         uniform_real_distribution<double> dis(0.0, total_prob);
-    //         double temp = dis(gen);
-    //         for(unsigned int k = 0; k < accumulate.size() - 1; k++){
-    //             // cout<<"ramdom:"<<temp<<endl;
-    //             if(temp > accumulate[k] && temp < accumulate[k+1]){
-    //                 unsigned int index = 0;
-    //                 for(auto it : each_request[i]){
-    //                     if(index == k){
-    //                         I_request[i][it.first]++;
-    //                         //cout<<"random prob="<<temp<<" so "<<k<<" added!\n";
-    //                         break;
-    //                     }
-    //                     index += 1;
-    //                 }
-    //                 break;
-    //             }
-    //         }
-    //     }
-    // }
-
-    // return I_request;
-}
-
-void MyAlgo::check_enough(vector<map<vector<int>, int>> &path){
-    // vector<int> memory_used(graph.get_size());
-    // map<vector<int>,int> channel_used; 
-    // vector<int> over_memory(graph.get_size());
-    // map<vector<int>,int> over_channel;
-    // map<vector<int>,int>::iterator iter;
-    // for(int i = 0; i <(int)path.size(); i++){
-    //     for(auto it : path[i]){
-    //         vector<int> cur_path = it.first;
-    //         for(int j = 0; j < (int)cur_path.size() - 1; j++){
-    //             memory_used[cur_path[j]] += it.second;
-    //             memory_used[cur_path[j+1]] += it.second;
-    //             iter = channel_used.find({cur_path[j],cur_path[j+1]});
-    //             if(iter != channel_used.end()){
-    //                 channel_used[{cur_path[j], cur_path[j+1]}] += it.second;
-    //                 channel_used[{cur_path[j+1], cur_path[j]}] += it.second;
-    //             }
-    //             else{
-    //                 channel_used[{cur_path[j], cur_path[j+1]}] = it.second;
-    //                 channel_used[{cur_path[j+1], cur_path[j]}] = it.second;
-    //             }
-    //         }
-    //     }
-    // }
-
-    // for(int i = 0; i < graph.get_size(); i++){
-    //     over_memory[i] = memory_used[i] - graph.Node_id2ptr(i)->get_memory_cnt();
-    //     for(auto it : graph.get_neighbors_id(i)){
-    //         iter = over_channel.find({i, it});
-    //         if(iter != over_channel.end()){
-    //            over_channel[{i, it}] -= graph.get_channel_size(i, it) / 2;
-    //            over_channel[{it, i}] -= graph.get_channel_size(i, it) / 2; 
-    //         }
-    //         else{
-    //            over_channel[{i, it}] = -graph.get_channel_size(i, it) / 2;
-    //            over_channel[{it, i}] = -graph.get_channel_size(i, it) / 2;
-    //         }
-    //     }
-    // }
-
-    // for(auto &it : over_channel){
-    //     iter = channel_used.find(it.first);
-    //     if(iter != channel_used.end()){
-    //         it.second = channel_used[{it.first}] + it.second ; 
-    //     }
-    // }
-
-    // bool flag;
-    // while(1){
-    //     flag = true;
-    //     for(int i = 0; i < (int)over_memory.size(); i++){
-    //         if(over_memory[i] > 0){
-    //             flag = false;
-    //         }
-    //     }
-    //     for(auto it : over_channel){
-    //         if(it.second > 0){
-    //             flag = false;
-    //         }
-    //     }
-    //     if(flag == true){
-    //         // cout << "before" << endl;
-    //         // for(unsigned int i = 0; i < path.size(); i++){
-    //         //     for(auto it:path[i]){
-    //         //         vector<int>Final_path =it.first;
-    //         //         for(auto it2:Final_path){
-    //         //             cout<<it2<<" ";
-    //         //         }
-    //         //         cout<<"     Qubits:"<<it.second<<endl;
-    //         //         requests[i].add_cur(it.second);
-    //         //     }
-    //         // }
-    //         cout<<"--------------Reduece finish-------------\n";
-    //         readd(path,over_memory,over_channel);  
-    //         break;
-    //     }
-    //     int long_len = 0;
-    //     int long_req = -1;
-    //     vector<int> long_path;
-    //     for(int i = 0; i < (int)path.size(); i++){
-    //         for(auto it : path[i]){
-    //             int associate_flag=false;
-    //             /*
-    //             for(auto temp:it.first){
-    //                 cout<<temp<<" ";
-    //             }
-    //             cout<<"-----------"<<endl;
-    //             */
-    //             for(int j=0;j<(int)it.first.size()-1;j++){
-
-    //                 //cout<<"memory check:"<<j<<"||"<<over_memory[it.first[j]]<<endl;
-    //                 if(over_memory[it.first[j]]>0){
-    //                     associate_flag=true;
-    //                     break;
-    //                 }
-    //                 //cout<<"channel check:"<<j<<"/"<<j+1<<"||"<<over_channel[{it.first[j],it.first[j+1]}]<<endl;
-    //                 iter = over_channel.find({it.first[j],it.first[j+1]});
-    //                 if(iter!=over_channel.end() && over_channel[{it.first[j],it.first[j+1]}]>0){
-    //                     associate_flag=true;
-    //                     break;
-    //                 }
-
-    //             }
-    //             if(over_memory[it.first[it.first.size()-1]]>0){
-    //                 associate_flag=true;
-    //             }
-
-    //             if(associate_flag==true && (int)it.first.size() > long_len && it.second > 0){
-    //                 long_len = it.first.size();
-    //                 long_path = it.first;
-    //                 long_req = i;
-    //             }
-    //         }
-    //     }
-    //     for(int i = 0; i < (int)long_path.size() - 1; i++){
-    //         over_memory[long_path[i]]--;
-    //         over_memory[long_path[i+1]]--;
-    //         over_channel[{long_path[i], long_path[i+1]}]--;
-    //         over_channel[{long_path[i+1], long_path[i]}]--;
-    //     }
-    //     path[long_req][long_path]--;
-    // }  
-}  
-
-void MyAlgo::readd(vector<map<vector<int>, int>> &path,vector<int> &over_memory,map<vector<int>,int> &over_channel){
-    // for(unsigned int i = 0; i < path.size(); i++){
-    //     for(auto it : path[i]){
-    //         requests[i].add_cur(it.second);
-    //     }
-    // }
-    // vector<pair<vector<int>, int>> re;
-    // int max = -1;
-    // for(unsigned int i = 0; i < requests.size(); i++){
-    //     for(auto it : path[i]){
-    //         if(max < it.second){
-    //             max = it.second;
-    //         }
-    //     }
-    // }
-
-    // for(int i = max; i >= 0; i--){
-    //     for(unsigned int j = 0; j < requests.size(); j++){
-    //         for(auto it : path[j]){
-    //             if(i == it.second){
-    //                 re.push_back({it.first, j});
-    //             }
-    //         }
-    //     }
-    // }
-    // bool flag = true;
-    // while(flag){
-    //     flag = false;
-    //     for(unsigned int i = 0; i < re.size(); i++){
-    //         if(requests[re[i].second].get_send_limit() > requests[re[i].second].get_cur_send()){
-    //             vector<int> each_path = re[i].first;
-    //             bool assign = true;
-    //             for(unsigned int j = 0; j < each_path.size() - 1; j++){
-    //                 if(j == 0){
-    //                     if(over_memory[each_path[j]] >= 0){
-    //                         assign = false;
-    //                     }
-    //                 }
-    //                 else{
-    //                     if(over_memory[each_path[j]] >= -1){
-    //                         assign = false;
-    //                     }
-    //                 }
-    //                 if(over_channel[{each_path[j],each_path[j+1]}] >= 0){
-    //                     assign = false;
-    //                 }
-    //             }
-    //             if(over_memory[each_path[each_path.size()-1]] >= 0){
-    //                 assign = false;
-    //             }
-    //             if(assign == true ){
-    //                 requests[re[i].second].add_cur(1);
-    //                 for(auto it : path[re[i].second]){
-    //                     if(it.first == re[i].first){
-    //                         path[re[i].second][it.first] += 1;
-    //                         cout << "!!PATH +++" << endl;
-    //                         flag = true;
-    //                         for(int j = 0; j < (int)each_path.size() - 1; j++){
-    //                             over_memory[each_path[j]]++;
-    //                             over_memory[each_path[j+1]]++;
-    //                             over_channel[{each_path[j], each_path[j+1]}]++;
-    //                             over_channel[{each_path[j+1], each_path[j]}]++;
-    //                         }
-    //                         break;
-    //                     }
-    //                 }
-    //             }
-    //         }
-    //     }
-    // }
-    // // for(auto x : over_memory){
-    // //     cout << "node: " << x << endl;
-    // // }
-    // // for(auto x : over_channel){
-    // //     cout<< "EDGE: ";
-    // //     for(auto a : x.first ){
-    // //         cout<< a << " ";
-    // //     }
-    // //     cout << x.second << endl;
-    // // }
-
-}
-
 void MyAlgo::dfs(int src, int dst, vector<vector<int>> &ans, vector<int> &path, vector<bool> &visited){
         //base case
     visited[src] = true;
@@ -724,25 +447,35 @@ void MyAlgo::dfs(int src, int dst, vector<vector<int>> &ans, vector<int> &path, 
 
 
 void MyAlgo::calculate(){
-    // double sum=0.0;
-
-    // int t = 1;
-
-    // for(auto it:x_i_p){
-    //     double prob=1;
-    //     vector<int>path=it.first;
-    //     for(unsigned int i=0;i < it.first.size() - 1;i++){
-    //         prob*=exp(graph.Node_id2ptr(path[i])->distance(*graph.Node_id2ptr(path[i+1]))*(-graph.get_entangle_alpha()));
-    //     }
-    //     for(unsigned int i=1;i<it.first.size()-1;i++){
-    //         prob*=graph.Node_id2ptr(path[i])->get_swap_prob();  
-    //     }
-    //     sum+=it.second*prob;
-
-    //     t++;
-    // }
-    // cerr << "sum = " << sum << endl;
-    // res["primal"] = sum / (1 - epsilon) / (1 - epsilon);
+    double UB = 0;
+    double entangle_alpha = graph.get_entangle_alpha();
+    for(int i = 0; i < x_i_t_tree.size(); i++){
+        double prob = 1;
+        for(int j = 0; j < 3; j++){
+            for(int k = 0; k < x_i_t_tree[i][j].size() - 1; k++){
+                Node* node1=graph.Node_id2ptr(x_i_t_tree[i][j][k]);
+                Node* node2=graph.Node_id2ptr(x_i_t_tree[i][j][k+1]);
+                prob *= exp(-entangle_alpha * (node1->distance(*node2)));
+            }
+            for(int k = 1; k < x_i_t_tree[i][j].size() - 1; k++){
+                Node* node=graph.Node_id2ptr(x_i_t_tree[i][j][k]);
+                prob *= node->get_swap_prob();
+            }
+            prob *= pow(graph.Node_id2ptr(x_i_t_tree[i][j][x_i_t_tree[i][j].size() - 1])->get_fusion_prob(),(1/3));
+        }
+        bool check_flag = false;
+        for(int j = 0; j < requests.size(); j++){
+            if(requests[j].get_node1() == x_i_t_tree[i][0][0] && requests[j].get_node2() == x_i_t_tree[i][1][0] && requests[j].get_node3() == x_i_t_tree[i][2][0]){
+                check_flag = true;
+                UB += requests[j].get_value() * prob * x_i_t[i] * pow(0.8,-2);
+            }
+        }
+        if(check_flag == false){
+            cout<<"No matching request......."<<endl;
+            exit(1);
+        }
+    }
+    res["UB"] = UB;
 }
 
 vector<map<vector<vector<int>>, int>> MyAlgo::Greedy_rounding(){
@@ -1029,7 +762,7 @@ void MyAlgo::path_assignment(){
     //     }
     // }
     find_violate();
-
+    calculate();
     vector<map<vector<vector<int>>, int>>path = Greedy_rounding();
 }
     

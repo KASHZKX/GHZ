@@ -300,9 +300,10 @@ int main(int argc, char *argv[]){
                 for(auto &algo:algorithms){
                     for(string Y_name : Y_names) {
                         result[T][algo->get_name()][Y_name] = algo->get_res(Y_name);
-                        // if(Y_name == "throughputs" && (algo->get_name() == "MyAlgo") ){
-                        //     result[T][algo->get_name()]["primal"] = algo->get_res("primal");
-                        // }
+                        if(Y_name == "total_earn" && (algo->get_name() == "MyAlgo") ){
+                            result[T][algo->get_name()]["UB"] = algo->get_res("UB");
+                            cout<<"total_earn : "<<algo->get_res("UB")<<endl;
+                        }
                     }
                 }
                 
@@ -350,11 +351,11 @@ int main(int argc, char *argv[]){
                 // result[T]["MyAlgo"]["edge_difference"] = result[T]["MyAlgo"]["change_edge_num"] - result[T]["MyAlgo"]["change_edge_num"];
             }
 
-            double min_UB;
+            double UB;
             for(int T = 0; T < round; T++){
                 //cout<<result[T]["MyAlgo"]["primal"]<<endl;
-                // min_UB=result[T]["MyAlgo"]["primal"];
-                // sum_res["MyAlgo"]["primal"] += min_UB;
+                UB = result[T]["MyAlgo"]["UB"];
+                sum_res["MyAlgo"]["UB"] += UB;
             }
             
             for(string Y_name : Y_names) {
@@ -369,9 +370,9 @@ int main(int argc, char *argv[]){
                     }
                     ofs << sum_res[algo_name][Y_name] / round << ' ';
                 }
-                // if(Y_name == "throughputs"){
-                //     ofs << sum_res["MyAlgo"]["primal"] / round << " ";
-                // }
+                if(Y_name == "total_earn"){
+                    ofs << sum_res["MyAlgo"]["UB"] / round << " ";
+                }
                 ofs << endl;
                 ofs.close();
             }
