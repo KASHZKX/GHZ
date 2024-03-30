@@ -10,13 +10,13 @@ using namespace std;
 
 class Node{
     int id;
-    double swap_prob;
+    double swap_prob, fusion_prob;
     int memory_cnt, time_limit;
     int remain;                 //remain qubit
     pair <double, double> pos;   //唯一決定一個 node
     void release();                              //clean assign status
 public:
-    Node(int id, int memory_cnt, int time_limit, double pos_x, double pos_y, double swap_prob);
+    Node(int id, int memory_cnt, int time_limit, double pos_x, double pos_y, double swap_prob, double fusion_prob);
     // Node(Node & old_node);
     //test
     ~Node();
@@ -24,6 +24,7 @@ public:
     int get_id();
     int get_memory_cnt();
     double get_swap_prob();
+    double get_fusion_prob();
     pair<double, double> get_pos();
     bool swap();                 //release one remain memory
     double distance(const Node &right)const;     //return the distance of two node

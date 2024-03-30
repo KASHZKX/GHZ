@@ -131,11 +131,11 @@ void Graph::generate(string filename){
     neighbor.resize(num_of_node);
     // social.resize(num_of_node);
     // input of nodes
-    double pos_x, pos_y, new_swap_prob;
+    double pos_x, pos_y, new_swap_prob, new_fusion_prob;
     int memory_cnt;
     for(int i = 0; i < num_of_node; i++){
-		graph_input >> pos_x >> pos_y >> memory_cnt >> new_swap_prob;
-        nodes.emplace_back(i, memory_cnt, time_limit, pos_x, pos_y, new_swap_prob);
+		graph_input >> pos_x >> pos_y >> memory_cnt >> new_swap_prob >> new_fusion_prob;
+        nodes.emplace_back(i, memory_cnt, time_limit, pos_x, pos_y, new_swap_prob, new_fusion_prob);
 	}
     
     // input of edges

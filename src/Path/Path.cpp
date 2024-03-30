@@ -9,7 +9,7 @@ Path::Path(vector<Node*> nodes, vector<Channel*> channels)
         for(int i = 1; i < (int)nodes.size()-1; i++){ // source and destination no swap
             prob *= nodes[i]->get_swap_prob();
         }
-
+        prob *= pow(nodes[(int)nodes.size()-1]->get_fusion_prob(),(1/3));
         //check if the path is connected
         Node *node1_ptr = nullptr, *node2_ptr = nodes[0];
         for(int i = 1; i < (int)nodes.size(); i++){

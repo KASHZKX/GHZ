@@ -66,18 +66,18 @@ void MyAlgo::initialize(int mid){
                 double ent_p = exp(graph.Node_id2ptr(i)->distance(*graph.Node_id2ptr(it))*(-graph.get_entangle_alpha()));
                 if( i == mid){                                                                                                                                      //if u=x,
                     if( find(three_node.begin() , three_node.end() ,it) != three_node.end() ){                                                                      //and if v={}                           
-                        Y[mid][j][{i, it}] = -log(ent_p) - log(graph.Node_id2ptr(i)->get_swap_prob()) / 3;              
+                        Y[mid][j][{i, it}] = -log(ent_p) - log(graph.Node_id2ptr(i)->get_fusion_prob()) / 3;              
                     }
                     else{                                                                                                                                           //else if v!={}       
-                        Y[mid][j][{i, it}] = -log(ent_p) - (log(graph.Node_id2ptr(it)->get_swap_prob()) / 2) - (log(graph.Node_id2ptr(i)->get_swap_prob()) / 3);               
+                        Y[mid][j][{i, it}] = -log(ent_p) - (log(graph.Node_id2ptr(it)->get_swap_prob()) / 2) - (log(graph.Node_id2ptr(i)->get_fusion_prob()) / 3);               
                     }
                 }
                 else if( it == mid ){                                                                                                                               //if v=x                                            
                     if( find(three_node.begin() , three_node.end() ,i) != three_node.end() ){                                                                       //and if u={}                          
-                        Y[mid][j][{i, it}] = -log(ent_p) - log(graph.Node_id2ptr(it)->get_swap_prob()) / 3;             
+                        Y[mid][j][{i, it}] = -log(ent_p) - log(graph.Node_id2ptr(it)->get_fusion_prob()) / 3;             
                     }
                     else{                                                                                                                                           //else if u!={}
-                        Y[mid][j][{i, it}] = -log(ent_p) - (log(graph.Node_id2ptr(i)->get_swap_prob()) / 2) - (log(graph.Node_id2ptr(it)->get_swap_prob()) / 3);               
+                        Y[mid][j][{i, it}] = -log(ent_p) - (log(graph.Node_id2ptr(i)->get_swap_prob()) / 2) - (log(graph.Node_id2ptr(it)->get_fusion_prob()) / 3);               
                     }
                 }                
                 else if( i != mid && find(three_node.begin() , three_node.end() ,it) != three_node.end()){                                                          //if u!=x and v={}                                           

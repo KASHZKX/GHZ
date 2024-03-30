@@ -78,7 +78,8 @@ max_fidelity = float(sys.argv[8])
 area_alpha = float(sys.argv[9])
 min_swap_prob = float(sys.argv[10])
 max_swap_prob = float(sys.argv[11])
-
+min_fusion_prob = float(sys.argv[12])
+max_fusion_prob = float(sys.argv[13])
 
 print("--------------generating graph--------------", file=sys.stderr)
 print("--------------generating graph--------------")
@@ -121,7 +122,7 @@ positions = nx.get_node_attributes(G, 'pos')
 print(num_of_node, file=f)
 for n in G.nodes():
     (p1, p2) = positions[n]
-    print(str(p1 * 2000) + ' ' + str(p2 * 2000) + " " + str(ceil(random.random()*(max_memory_cnt-min_memory_cnt)) + min_memory_cnt) + " " + str(min(1, random.random()*(max_swap_prob - min_swap_prob) + min_swap_prob)), file=f)
+    print(str(p1 * 2000) + ' ' + str(p2 * 2000) + " " + str(ceil(random.random()*(max_memory_cnt-min_memory_cnt)) + min_memory_cnt) + " " + str(min(1, random.random()*(max_swap_prob - min_swap_prob) + min_swap_prob)) +  " " + str(min(1, random.random()*(max_fusion_prob - min_fusion_prob) + min_fusion_prob)) , file=f)
 cnt = 0
 for e in G.edges():
     if e[0] != e[1]:#file

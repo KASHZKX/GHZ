@@ -1,6 +1,6 @@
 #include "Node.h"
 
-Node::Node(int id, int memory_cnt, int time_limit, double pos_x, double pos_y, double swap_prob) : id(id), swap_prob(swap_prob), memory_cnt(memory_cnt), time_limit(time_limit), remain(memory_cnt)
+Node::Node(int id, int memory_cnt, int time_limit, double pos_x, double pos_y, double swap_prob, double fusion_prob) : id(id), swap_prob(swap_prob), fusion_prob(fusion_prob), memory_cnt(memory_cnt), time_limit(time_limit), remain(memory_cnt)
 {
     pos = make_pair(pos_x, pos_y);
     if (DEBUG)
@@ -28,9 +28,12 @@ int Node::get_memory_cnt()
     return memory_cnt;
 }
 
-double Node::get_swap_prob()
-{
+double Node::get_swap_prob(){
     return swap_prob;
+}
+
+double Node::get_fusion_prob(){
+    return fusion_prob;
 }
 
 pair<double, double> Node::get_pos(){

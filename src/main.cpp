@@ -68,7 +68,7 @@ int main(int argc, char *argv[]){
     default_setting["new_request_cnt"] = 10;
     default_setting["total_time_slot"] = 1;
     default_setting["epsilon"] = 0.2;    
-
+    default_setting["fusion_prob"] =0.75;
 
     // not used in this paper
     default_setting["node_time_limit"] = 1;
@@ -107,7 +107,7 @@ int main(int argc, char *argv[]){
     }
     
 
-    int round = 30;
+    int round = 100;
     for(string X_name : X_names) {
         map<string, double> input_parameter = default_setting;
         for(double change_value : change_parameter[X_name]) {         
@@ -131,6 +131,10 @@ int main(int argc, char *argv[]){
             double swap_prob = input_parameter["swap_prob"], entangle_alpha = input_parameter["entangle_alpha"];
             double min_swap_prob = input_parameter["swap_prob"] - 0.1;
             double max_swap_prob = input_parameter["swap_prob"] + 0.1;
+            double fusion_prob = input_parameter["fusion_prob"];
+            double min_fusion_prob = input_parameter["fusion_prob"] - 0.1;
+            double max_fusion_prob = input_parameter["fusion_prob"] + 0.1;
+
             int node_time_limit = input_parameter["node_time_limit"];
             int new_request_cnt = input_parameter["new_request_cnt"];
             int service_time = input_parameter["service_time"];
@@ -151,7 +155,7 @@ int main(int argc, char *argv[]){
 
                 string filename = file_path + "input/round_" + round_str + ".input";
                 string command = "python3 main.py ";
-                string parameter = to_string(num_of_node) + " " + to_string(min_channel_cnt) + " " + to_string(max_channel_cnt) + " " + to_string(min_memory_cnt) + " " + to_string(max_memory_cnt) + " " + to_string(min_fidelity) + " " + to_string(max_fidelity) + " " + to_string(area_alpha) + " " + to_string(min_swap_prob) + " " +  to_string(max_swap_prob);
+                string parameter = to_string(num_of_node) + " " + to_string(min_channel_cnt) + " " + to_string(max_channel_cnt) + " " + to_string(min_memory_cnt) + " " + to_string(max_memory_cnt) + " " + to_string(min_fidelity) + " " + to_string(max_fidelity) + " " + to_string(area_alpha) + " " + to_string(min_swap_prob) + " " +  to_string(max_swap_prob) + " " + to_string(min_fusion_prob) + " " + to_string(max_fusion_prob);
                 //cout<<command + filename + " " + parameter<<endl;
                 if(system((command + filename + " " + parameter).c_str()) != 0){
                     cerr<<"error:\tsystem proccess python error"<<endl;
