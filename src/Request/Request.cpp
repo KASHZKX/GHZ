@@ -1,10 +1,15 @@
 #include"Request.h"
 
-Request::Request(int node1, int node2, int node3):node1(node1),
-    node2(node2), node3(node3), status(REQUEST_UNFINISHED){
+Request::Request(int node1, int node2, int node3, double value):node1(node1),node2(node2),node3(node3),value(value),status(REQUEST_UNFINISHED){
     if(DEBUG)cerr<<"new Request"<<endl;
 }
-
+Request::Request(const Request& other_req){
+    node1 = other_req.node1;
+    node2 = other_req.node2;
+    node3 = other_req.node3;
+    value = other_req.value;
+    status = REQUEST_UNFINISHED;
+}
 Request::~Request(void){
     if(DEBUG)cerr<<"delete Request"<<endl;
     for(int i=0;i<(int)trees.size();i++){
@@ -24,6 +29,14 @@ void Request::set_path(int path_id, int edge_id,Path *p){
         exit(1);
     }
     trees[path_id][edge_id] = p;
+}
+
+void Request::set_value(double val){
+    value = val;
+}
+
+double Request::get_value(){
+    return value;
 }
 
 int Request::get_node1(){ 

@@ -47,7 +47,7 @@ void AlgorithmBase::base_next_time_slot(){
             }
         }
         if(max_prob != 0){
-            total_earn += max_prob;
+            total_earn += max_prob * requests[reqno].get_value();
         }
     }
     res["total_earn"] = total_earn;
