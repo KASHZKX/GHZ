@@ -419,7 +419,7 @@ void MyAlgo::find_violate(){
 
     
 
-    cout << "Magnification:" << max_magni << endl;
+    //cout << "Magnification:" << max_magni << endl;
 
     for(auto &x : x_i_t){
         x /= max_magni;
@@ -1017,7 +1017,7 @@ void MyAlgo::path_assignment(){
         // }
         // cout<<endl;
         find_bottleneck(best_tree, req_no);
-        cout <<"OBJ : "<< obj << endl;
+        //cout <<"OBJ : "<< obj << endl;
     }
     // for(int i = 0; i < x_i_t_tree.size(); i++){
     //     cout<<"\nTree with "<<x_i_t[i]<<endl;

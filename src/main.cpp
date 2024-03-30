@@ -69,6 +69,7 @@ int main(int argc, char *argv[]){
     default_setting["total_time_slot"] = 1;
     default_setting["epsilon"] = 0.2;    
 
+
     // not used in this paper
     default_setting["node_time_limit"] = 1;
     default_setting["social_density"] = 0.5;
@@ -106,7 +107,7 @@ int main(int argc, char *argv[]){
     }
     
 
-    int round = 100;
+    int round = 30;
     for(string X_name : X_names) {
         map<string, double> input_parameter = default_setting;
         for(double change_value : change_parameter[X_name]) {         
@@ -162,12 +163,12 @@ int main(int argc, char *argv[]){
                 algorithms.emplace_back(new MyAlgo(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha));
                 algorithms.emplace_back(new Greedy(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha, 0));
 
-                // 建完圖，刪除 input 檔避免佔太多空間
-                // command = "rm -f " + file_path + "input/round_" + round_str + ".input";
-                // if(system((command).c_str()) != 0){
-                //     cerr<<"error:\tsystem proccess delete input file error"<<endl;
-                //     exit(1);
-                // }
+                //建完圖，刪除 input 檔避免佔太多空間
+                command = "rm -f " + file_path + "input/round_" + round_str + ".input";
+                if(system((command).c_str()) != 0){
+                    cerr<<"error:\tsystem proccess delete input file error"<<endl;
+                    exit(1);
+                }
 
                 ofs<<"---------------in round " <<T<<" -------------" <<endl;
                 for(int t = 0; t < total_time_slot; t++){
@@ -179,8 +180,11 @@ int main(int argc, char *argv[]){
                         do{
                             check_no_repeat=true;
                             Request new_request = generate_new_request(num_of_node, request_time_limit);
-                            for(auto it:algorithms[0]->get_requests()){
-                                //[space]check no repeat
+                            for(auto &it:algorithms[0]->get_requests()){
+                                if(it.get_node1() == new_request.get_node1() && it.get_node2() == new_request.get_node2() == it.get_node3() == new_request.get_node3()){
+                                    check_no_repeat = false;
+                                    break;
+                                }
                             }
                             if(check_no_repeat==true){
                                 //[space]print three point
@@ -192,20 +196,8 @@ int main(int argc, char *argv[]){
                         }while(check_no_repeat==false);
                     }
                     
-                    // Request new_request = generate_fix_request(0, 3, request_time_limit, 4);
-                    // for(auto &algo:algorithms){
-                    //     result[T][algo->get_name()]["total_request"]++; 
-                    //     algo->add_new_request(new_request);
-                    // }
-                    // new_request = generate_fix_request(0, 2, request_time_limit, 2);
-                    // for(auto &algo:algorithms){
-                    //     result[T][algo->get_name()]["total_request"]++; 
-                    //     algo->add_new_request(new_request);
-                    // }
-
                     cout<< "---------generating requests in main.cpp----------end" << endl;
                     
-
                     #pragma omp parallel for 
                     for(int i = 0; i < (int)algorithms.size(); i++){
                         auto &algo = algorithms[i];
@@ -300,9 +292,9 @@ int main(int argc, char *argv[]){
                     }
                     ofs << sum_res[algo_name][Y_name] / round << ' ';
                 }
-                if(Y_name == "throughputs"){
-                    ofs << sum_res["MyAlgo"]["primal"] / round << " ";
-                }
+                // if(Y_name == "throughputs"){
+                //     ofs << sum_res["MyAlgo"]["primal"] / round << " ";
+                // }
                 ofs << endl;
                 ofs.close();
             }

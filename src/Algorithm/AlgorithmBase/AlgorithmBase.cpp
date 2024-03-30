@@ -4,12 +4,8 @@
 
 AlgorithmBase::AlgorithmBase(string filename, string algorithm_name, int request_time_limit, int node_time_limit, double swap_prob, double entangle_alpha , bool limit_r_or_not)
     :timeslot(0), waiting_time(0), time_limit(request_time_limit), swap_prob(swap_prob), limit_r_or_not(limit_r_or_not) , graph(Graph(filename, node_time_limit, swap_prob, entangle_alpha) ){
-    if(limit_r_or_not==true){
-        this->algorithm_name=algorithm_name;
-    }
-    else{
-       this->algorithm_name=algorithm_name+"_Nonlimit";
-    }
+    this->algorithm_name=algorithm_name;
+
 }
 
 AlgorithmBase::~AlgorithmBase(){
@@ -44,14 +40,14 @@ void AlgorithmBase::base_next_time_slot(){
     vector<int> finished_reqno;
     res_vt.clear();
     for(int reqno = 0; reqno < (int)requests.size(); reqno++) {
-        double min_prob = numeric_limits<double>::infinity();
+        double max_prob = 0;
         for(auto it:requests[reqno].get_tree_prob_vt()){
-            if(it < min_prob){
-                min_prob = it;
+            if(it > max_prob){
+                max_prob = it;
             }
         }
-        if(min_prob != numeric_limits<double>::infinity()){
-            total_earn += min_prob;
+        if(max_prob != 0){
+            total_earn += max_prob;
         }
     }
     res["total_earn"] = total_earn;
@@ -132,8 +128,6 @@ void AlgorithmBase::run(){
 
 void AlgorithmBase::add_new_request(Request new_request){
     requests.push_back(new_request);
-    cout <<"Request:"<<endl;
-    cout <<new_request.get_node1()<<" "<<new_request.get_node2()<<" "<<new_request.get_node3()<<endl;
 }
 
 int AlgorithmBase::find_width(vector<int> path){

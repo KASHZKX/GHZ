@@ -104,35 +104,11 @@ void Greedy::path_assignment(){
             }
             if(smallest_fermat == numeric_limits<double>::infinity()){continue;}    //單獨找只能確保一條路徑有足夠資源，不能保證整個tree有資源(但已經盡量讓它不會continue了)
             vector<int> path1 = Dijkstra(request.get_node1(), smallest_middle);        
-            for(auto it:path1){
-                cout<<it<<" ";
-            }
-            cout<<endl;
             vector<int> path2 = Dijkstra(request.get_node2(), smallest_middle);
-            for(auto it:path2){
-                cout<<it<<" ";
-            }
-            cout<<endl;
             vector<int> path3 = Dijkstra(request.get_node3(), smallest_middle);
-            for(auto it:path3){
-                cout<<it<<" ";
-            }
-            cout<<endl;
             if(path1.size() == 0 || path2.size() == 0 || path3.size() == 0 ){continue;}
 
             cal_need(path1,need_memory,need_channel); cal_need(path2,need_memory,need_channel); cal_need(path3,need_memory,need_channel);
-            for(auto it :path1){
-                cout << it << " ";
-            }
-            cout <<endl;
-            for(auto it :path2){
-                cout << it << " ";
-            }
-            cout <<endl;
-            for(auto it :path3){
-                cout << it << " ";
-            }
-            cout <<endl;
             bool continue_flag = false;
             for(int i = 0; i < graph.get_size(); i++){
                 if(need_memory[i] == 0){continue;}
