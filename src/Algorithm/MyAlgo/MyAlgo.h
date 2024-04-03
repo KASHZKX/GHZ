@@ -33,7 +33,7 @@ public:
 class MyAlgo:public AlgorithmBase {
 private:
     //map<pair<int,int>, vector<double>> X;
-    vector<vector<map<pair<int,int>, double>>> Y;
+    vector<vector<vector<map<pair<int,int>, double>>>> Y;
     vector<double> alpha;
     vector<vector<vector<int>>> x_i_t_tree;
     vector<double> x_i_t;
@@ -46,15 +46,13 @@ private:
     double delta;
     double M;
     vector<double> tau;                
-    double X(int u, int v, int req_no);
+    double X(int u, int v, int req_no, int path_id);
 public: 
     map<int, int> num_of_path_count;
     map<int, int> path_length_encode;
     map<int, int> path_length_cnt;
     void separation_oracle(int src, int dst, int req_no, int path_id, vector<vector<vector<int>>> &cur_tree, vector<vector<vector<double>>> &cur_label);
-    vector<int> Dijkstra(int src, int dst, int req, vector<pair<double,double>>&dist);
-    vector<int> Dijkstra_ori(int src, int dst, int req_no);
-    void separation_oracle_ori(int src,int dst,int req_no);
+    vector<int> Dijkstra(int src, int dst, int req, int path_id, vector<pair<double,double>>&dist);
     void path_assignment();
     void calculate();
     void entangle();

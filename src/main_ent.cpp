@@ -27,11 +27,11 @@ Request generate_new_request(int num_of_node, int time_limit){
     while(node1 == node2) node2 = unif1(generator);
     while(node3 == node2 || node3 == node1) node3 = unif1(generator);
 
-    return Request(node1, node2, node3);
+    return Request(node1, node2, node3, 1.0);
 }
 
 Request generate_fix_request(int node1, int node2, int node3, int time_limit, int request){//demo
-    return Request(node1, node2, node3);
+    return Request(node1, node2, node3 , 1.0);
 }
 
 void create_dir_if_not_exists(const std::string &path) {
@@ -61,15 +61,15 @@ int main(int argc, char *argv[]){
     default_setting["num_of_node"] = 70;
     default_setting["area_alpha"] = 0.1;
     default_setting["memory_cnt_avg"] = 12;
-    default_setting["channel_cnt_avg"] = 4;
+    default_setting["channel_cnt_avg"] = 5;
     default_setting["resource_ratio"] = 1;
 
     default_setting["swap_prob"] = 0.9;
     default_setting["entangle_alpha"] = 0.0002;
-    default_setting["new_request_cnt"] = 10;
+    default_setting["new_request_cnt"] = 1;
     default_setting["total_time_slot"] = 1;
     default_setting["epsilon"] = 0.2;    
-    default_setting["fusion_prob"] =0.75;
+    default_setting["fusion_prob"] =0.85;
 
     // not used in this paper
     default_setting["node_time_limit"] = 1;
@@ -108,7 +108,7 @@ int main(int argc, char *argv[]){
     }
     
 
-    int round = 100;
+    int round = 1;
     for(string X_name : X_names) {
         map<string, double> input_parameter = default_setting;
         for(double change_value : change_parameter[X_name]) {         
@@ -143,7 +143,7 @@ int main(int argc, char *argv[]){
             int total_time_slot = input_parameter["total_time_slot"];
             // python generate graph
 
-            #pragma omp parallel for
+            //#pragma omp parallel for
             for(int T = 0; T < round; T++){
                 string round_str = to_string(T);
                 ofstream ofs;
@@ -166,7 +166,7 @@ int main(int argc, char *argv[]){
                 
                 vector<AlgorithmBase*> algorithms;
                 algorithms.emplace_back(new MyAlgo(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha));
-                algorithms.emplace_back(new Greedy(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha, 0));
+                //algorithms.emplace_back(new Greedy(filename, request_time_limit, node_time_limit, swap_prob, entangle_alpha, 0));
 
                 //建完圖，刪除 input 檔避免佔太多空間
                 command = "rm -f " + file_path + "input/round_" + round_str + ".input";
@@ -203,7 +203,7 @@ int main(int argc, char *argv[]){
                     
                     cout<< "---------generating requests in main.cpp----------end" << endl;
                     
-                    #pragma omp parallel for 
+                    //#pragma omp parallel for 
                     for(int i = 0; i < (int)algorithms.size(); i++){
                         auto &algo = algorithms[i];
                         ofs<<"-----------run "<< algo->get_name() << " ---------"<<endl;

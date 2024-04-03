@@ -30,9 +30,9 @@ void MyAlgo::next_time_slot(){
      AlgorithmBase::base_next_time_slot();
 }
 
-double MyAlgo::X(int u, int v, int req_no){
+double MyAlgo::X(int u, int v, int req_no, int path_id){
 	double weight = alpha[u] + alpha[v] + beta[{u, v}];
-	weight += tau[req_no];
+	if(path_id == 0 && (u == requests[req_no].get_node1() || v == requests[req_no].get_node1())) weight += tau[req_no];                                                         //[Need fix!!!!!!!!!!!!!]
 	return weight;
 }
 
@@ -55,46 +55,51 @@ void MyAlgo::init_dual(){
 }
 
 void MyAlgo::initialize(int mid){
-    for(unsigned  j = 0;j < requests.size(); j++){                       //Y=-ln(edge)-ln(repeater_1^(1/2))-ln(repeater_2^(1/2))
-        int node1 = requests[j].get_node1();
-        int node2 = requests[j].get_node2();
-        int node3 = requests[j].get_node3();
-        vector<int>three_node = {node1 , node2 , node3};
-        for(int i = 0; i < graph.get_size(); i++){
-        vector<int> temp = graph.get_neighbors_id(i);                             
-            for(auto it: temp){
-                double ent_p = exp(graph.Node_id2ptr(i)->distance(*graph.Node_id2ptr(it))*(-graph.get_entangle_alpha()));
-                if( i == mid){                                                                                                                                      //if u=x,
-                    if( find(three_node.begin() , three_node.end() ,it) != three_node.end() ){                                                                      //and if v={}                           
-                        Y[mid][j][{i, it}] = -log(ent_p) - log(graph.Node_id2ptr(i)->get_fusion_prob()) / 3;              
+    for(unsigned  j = 0;j < requests.size(); j++){                      
+        for(int k = 0; k < 3; k++){
+            int node1 = requests[j].get_node1();
+            int node2 = requests[j].get_node2();
+            int node3 = requests[j].get_node3();
+            vector<int>three_node;
+            if(k == 0){  three_node.push_back(node1);}
+            else if(k == 1){ three_node.push_back(node2);}
+            else if(k == 2){ three_node.push_back(node3);}
+            for(int i = 0; i < graph.get_size(); i++){
+            vector<int> temp = graph.get_neighbors_id(i);                             
+                for(auto it: temp){
+                    double ent_p = exp(graph.Node_id2ptr(i)->distance(*graph.Node_id2ptr(it))*(-graph.get_entangle_alpha()));
+                    if( i == mid){                                                                                                                                      //if u=x,
+                        if( find(three_node.begin() , three_node.end() ,it) != three_node.end() ){                                                                      //and if v={}                           
+                            Y[mid][j][k][{i, it}] = -log(ent_p) - log(graph.Node_id2ptr(i)->get_fusion_prob()) / 3;              
+                        }
+                        else{                                                                                                                                           //else if v!={}       
+                            Y[mid][j][k][{i, it}] = -log(ent_p) - (log(graph.Node_id2ptr(it)->get_swap_prob()) / 2) - (log(graph.Node_id2ptr(i)->get_fusion_prob()) / 3);               
+                        }
                     }
-                    else{                                                                                                                                           //else if v!={}       
-                        Y[mid][j][{i, it}] = -log(ent_p) - (log(graph.Node_id2ptr(it)->get_swap_prob()) / 2) - (log(graph.Node_id2ptr(i)->get_fusion_prob()) / 3);               
+                    else if( it == mid ){                                                                                                                               //if v=x                                            
+                        if( find(three_node.begin() , three_node.end() ,i) != three_node.end() ){                                                                       //and if u={}                          
+                            Y[mid][j][k][{i, it}] = -log(ent_p) - log(graph.Node_id2ptr(it)->get_fusion_prob()) / 3;             
+                        }
+                        else{                                                                                                                                           //else if u!={}
+                            Y[mid][j][k][{i, it}] = -log(ent_p) - (log(graph.Node_id2ptr(i)->get_swap_prob()) / 2) - (log(graph.Node_id2ptr(it)->get_fusion_prob()) / 3);               
+                        }
+                    }                
+                    else if( i != mid && find(three_node.begin() , three_node.end() ,it) != three_node.end()){                                                          //if u!=x and v={}                                           
+                        Y[mid][j][k][{i, it}] = -log(ent_p) - log(graph.Node_id2ptr(i)->get_swap_prob()) / 2;             
+                    } 
+                    else if( it != mid && find(three_node.begin() , three_node.end() ,i) != three_node.end()){                                                          //if v!=x and u={}                                                                                                                                                                                       
+                        Y[mid][j][k][{i, it}] = -log(ent_p) - log(graph.Node_id2ptr(it)->get_swap_prob()) / 2;             
+                    } 
+                    else{                                                                                                                                               //if u、v!=x and v、u!={}
+                        Y[mid][j][k][{i, it}] = -log(ent_p) - log(graph.Node_id2ptr(it)->get_swap_prob()) / 2 - log(graph.Node_id2ptr(i)->get_swap_prob()) / 2;             
                     }
-                }
-                else if( it == mid ){                                                                                                                               //if v=x                                            
-                    if( find(three_node.begin() , three_node.end() ,i) != three_node.end() ){                                                                       //and if u={}                          
-                        Y[mid][j][{i, it}] = -log(ent_p) - log(graph.Node_id2ptr(it)->get_fusion_prob()) / 3;             
-                    }
-                    else{                                                                                                                                           //else if u!={}
-                        Y[mid][j][{i, it}] = -log(ent_p) - (log(graph.Node_id2ptr(i)->get_swap_prob()) / 2) - (log(graph.Node_id2ptr(it)->get_fusion_prob()) / 3);               
-                    }
-                }                
-                else if( i != mid && find(three_node.begin() , three_node.end() ,it) != three_node.end()){                                                          //if u!=x and v={}                                           
-                    Y[mid][j][{i, it}] = -log(ent_p) - log(graph.Node_id2ptr(i)->get_swap_prob()) / 2;             
-                } 
-                else if( it != mid && find(three_node.begin() , three_node.end() ,i) != three_node.end()){                                                          //if v!=x and u={}                                                                                                                                                                                       
-                    Y[mid][j][{i, it}] = -log(ent_p) - log(graph.Node_id2ptr(it)->get_swap_prob()) / 2;             
-                } 
-                else{                                                                                                                                               //if u、v!=x and v、u!={}
-                    Y[mid][j][{i, it}] = -log(ent_p) - log(graph.Node_id2ptr(it)->get_swap_prob()) / 2 - log(graph.Node_id2ptr(i)->get_swap_prob()) / 2;             
                 }
             }
         }
     }
 }
 
-vector<int> MyAlgo::Dijkstra(int src, int dst, int req_no, vector<pair<double,double>>&dist){                           
+vector<int> MyAlgo::Dijkstra(int src, int dst, int req_no, int path_id, vector<pair<double,double>>&dist){                           
     double INF=numeric_limits<double>::infinity();
     vector<bool> used( graph.get_size(), false);
     vector<int> parent( graph.get_size(), -1);
@@ -107,15 +112,15 @@ vector<int> MyAlgo::Dijkstra(int src, int dst, int req_no, vector<pair<double,do
         if(used[cur_node]) continue;
         used[cur_node] = true;
         for(int neigh : graph.get_neighbors_id(cur_node)) {
-            if(dist[cur_node].first + X(cur_node, neigh,req_no) < dist[neigh].first) {
-                dist[neigh].first = dist[cur_node].first + X(cur_node, neigh,req_no);      //(1)store d
-                dist[neigh].second = dist[cur_node].second + Y[dst][req_no][{cur_node, neigh}];
+            if(dist[cur_node].first + X(cur_node, neigh,req_no,path_id) < dist[neigh].first) {
+                dist[neigh].first = dist[cur_node].first + X(cur_node, neigh,req_no,path_id);      //(1)store d
+                dist[neigh].second = dist[cur_node].second + Y[dst][req_no][path_id][{cur_node, neigh}];
                 parent[neigh] = cur_node;                                             //(1)store pred
                 pq.push({dist[neigh].first, neigh});
             }
-            if(dist[cur_node].first + X(cur_node, neigh,req_no) == dist[neigh].first && dist[neigh].second > (dist[cur_node].second + Y[dst][req_no][{cur_node, neigh}])) {
-                dist[neigh].first = dist[cur_node].first + X(cur_node, neigh,req_no);      //(1)store d
-                dist[neigh].second = dist[cur_node].second + Y[dst][req_no][{cur_node, neigh}];
+            if(dist[cur_node].first + X(cur_node, neigh,req_no,path_id) == dist[neigh].first && dist[neigh].second > (dist[cur_node].second + Y[dst][req_no][path_id][{cur_node, neigh}])) {
+                dist[neigh].first = dist[cur_node].first + X(cur_node, neigh,req_no,path_id);      //(1)store d
+                dist[neigh].second = dist[cur_node].second + Y[dst][req_no][path_id][{cur_node, neigh}];
                 parent[neigh] = cur_node;                                             //(1)store pred
                 pq.push({dist[neigh].first, neigh}); 
             }
@@ -139,7 +144,7 @@ void MyAlgo::separation_oracle(int src, int dst, int req_no, int path_id, vector
     vector<double> obj_bar2_table(graph.get_size(),INF);
     vector<int> cpred_table(graph.get_size(),-1);                            
     priority_queue<Label,vector<Label>, greater<Label>> pq;                                          
-    pred = Dijkstra(src, dst, req_no, dist);                                    //(1)
+    pred = Dijkstra(src, dst, req_no, path_id, dist);                                    //(1)
 
     double last_ratio = 0;                                              //(2)start
     double d1 = dist[dst].first,d2 = dist[dst].second;                  
@@ -163,19 +168,19 @@ void MyAlgo::separation_oracle(int src, int dst, int req_no, int path_id, vector
     for(int i = 0; i < graph.get_size(); i++){                               //(4)compute lexmin
         if(i == src){continue;}
         for(auto &neigh:graph.get_neighbors_id(i)){                               
-            double cur_obj_bar2 = dist[neigh].second + Y[dst][req_no][{neigh,i}] - dist[i].second;
+            double cur_obj_bar2 = dist[neigh].second + Y[dst][req_no][path_id][{neigh,i}] - dist[i].second;
             if(cur_obj_bar2 < 0){
-                double cur_theta = -(dist[neigh].first + X(neigh,i,req_no) - dist[i].first) / cur_obj_bar2 ;
+                double cur_theta = -(dist[neigh].first + X(neigh,i,req_no,path_id) - dist[i].first) / cur_obj_bar2 ;
                 if(cur_theta <= theta_table[i]){
                     if(cur_theta < theta_table[i]){
                         theta_table[i] = cur_theta;
-                        obj_bar1_table[i] = dist[neigh].first + X(neigh,i,req_no) - dist[i].first;
+                        obj_bar1_table[i] = dist[neigh].first + X(neigh,i,req_no,path_id) - dist[i].first;
                         obj_bar2_table[i] = cur_obj_bar2;
                         cpred_table[i] = neigh;
                     }
                     else if(cur_obj_bar2 < obj_bar2_table[i]){
                         theta_table[i] = cur_theta;
-                        obj_bar1_table[i] = dist[neigh].first + X(neigh,i,req_no) - dist[i].first;
+                        obj_bar1_table[i] = dist[neigh].first + X(neigh,i,req_no,path_id) - dist[i].first;
                         obj_bar2_table[i] = cur_obj_bar2;
                         cpred_table[i] = neigh;
                     }
@@ -228,19 +233,19 @@ void MyAlgo::separation_oracle(int src, int dst, int req_no, int path_id, vector
 
         theta_table[min_i] = INF,cpred_table[min_i] = -1,obj_bar1_table[min_i] = INF,obj_bar2_table[min_i] = INF;       //(13)
         for(auto neigh:graph.get_neighbors_id(min_i)){                             
-            double cur_obj_bar2 = dist[neigh].second + Y[dst][req_no][{neigh,min_i}] - dist[min_i].second;
+            double cur_obj_bar2 = dist[neigh].second + Y[dst][req_no][path_id][{neigh,min_i}] - dist[min_i].second;
             if(cur_obj_bar2 < 0){
-                double cur_theta = -(dist[neigh].first + X(neigh,min_i,req_no) - dist[min_i].first) / cur_obj_bar2 ;
+                double cur_theta = -(dist[neigh].first + X(neigh,min_i,req_no,path_id) - dist[min_i].first) / cur_obj_bar2 ;
                 if(cur_theta <= theta_table[min_i]){
                     if(cur_theta < theta_table[min_i]){
                         theta_table[min_i] = cur_theta;
-                        obj_bar1_table[min_i] = dist[neigh].first + X(neigh,min_i,req_no) - dist[min_i].first;
+                        obj_bar1_table[min_i] = dist[neigh].first + X(neigh,min_i,req_no,path_id) - dist[min_i].first;
                         obj_bar2_table[min_i] = cur_obj_bar2;
                         cpred_table[min_i] = neigh;
                     }
                     else if(cur_obj_bar2 < obj_bar2_table[min_i]){
                         theta_table[min_i] = cur_theta;                                                                //no use just for read
-                        obj_bar1_table[min_i] = dist[neigh].first + X(neigh,min_i,req_no) - dist[min_i].first;
+                        obj_bar1_table[min_i] = dist[neigh].first + X(neigh,min_i,req_no,path_id) - dist[min_i].first;
                         obj_bar2_table[min_i] = cur_obj_bar2;
                         cpred_table[min_i] = neigh;
                     }
@@ -252,9 +257,9 @@ void MyAlgo::separation_oracle(int src, int dst, int req_no, int path_id, vector
             //cout<<"Push2: "<<theta_table[min_i]<<" "<<obj_bar2_table[min_i]<<" "<<min_i<<"\n";
         }
         for(auto neigh:graph.get_neighbors_id(min_i)){
-            double temp_obj_bar2 = dist[min_i].second + Y[dst][req_no][{min_i,neigh}] - dist[neigh].second;
+            double temp_obj_bar2 = dist[min_i].second + Y[dst][req_no][path_id][{min_i,neigh}] - dist[neigh].second;
             if(temp_obj_bar2 < 0){
-                double temp_obj_bar1 = dist[min_i].first + X(min_i,neigh,req_no) - dist[neigh].first;
+                double temp_obj_bar1 = dist[min_i].first + X(min_i,neigh,req_no,path_id) - dist[neigh].first;
                 if( -(temp_obj_bar1/temp_obj_bar2) < theta_table[neigh] || (-(temp_obj_bar1/temp_obj_bar2) == theta_table[neigh] && temp_obj_bar2 < obj_bar2_table[neigh])){
                     pq.push({-temp_obj_bar1/temp_obj_bar2,temp_obj_bar2,neigh});
                     theta_table[neigh] = -(temp_obj_bar1/temp_obj_bar2);
@@ -419,7 +424,7 @@ void MyAlgo::find_violate(){
 
     
 
-    //cout << "Magnification:" << max_magni << endl;
+    cout << "Magnification:" << max_magni << endl;
 
     for(auto &x : x_i_t){
         x /= max_magni;
@@ -639,6 +644,9 @@ void MyAlgo::path_assignment(){
     Y.resize(graph.get_size());
     for(int i = 0; i < graph.get_size(); i++){
         Y[i].resize(requests.size() + 1);
+        for(int j = 0; j < requests.size() + 1; j++){
+            Y[i][j].resize(3);
+        }
     }
     init_dual();
     for(int i = 0; i < graph.get_size(); i++){
@@ -684,7 +692,6 @@ void MyAlgo::path_assignment(){
                 //         }
                 //         cout<<"\n-----------------------"<<endl;
                 //     }
-                //     cout<<"\nNEXT\n";
                 // }
                 vector<double>label_area;
                 label_area.push_back(0);
@@ -750,7 +757,7 @@ void MyAlgo::path_assignment(){
         // }
         // cout<<endl;
         find_bottleneck(best_tree, req_no);
-        //cout <<"OBJ : "<< obj << endl;
+        cout <<"OBJ : "<< obj << endl;
     }
     // for(int i = 0; i < x_i_t_tree.size(); i++){
     //     cout<<"\nTree with "<<x_i_t[i]<<endl;
@@ -766,190 +773,3 @@ void MyAlgo::path_assignment(){
     vector<map<vector<vector<int>>, int>>path = Greedy_rounding();
 }
     
-//     calculate();
-
-//     res["change_edge_num"] = change_edge_num;
-//     res["diff_edge_num"] = diff_num;
-// }   
-
-
-// //                   Our Old Friend                                //
-// vector<int> MyAlgo::Dijkstra_ori(int src, int dst, int req_no){ 
-//     const double INF = numeric_limits<double>::infinity();
-//     //const double INF = 100;
-//     int n = graph.get_size();
-//     vector<double> distance(n, INF);
-//     vector<int> parent(n, -1);
-//     vector<bool> used(n, false);
-//     priority_queue<pair<double, int>, vector<pair<double, int>>, greater<pair<double, int>>> pq;
-
-//     distance[dst] = 0;
-//     pq.push({0, dst});
-//     while(!pq.empty()) {
-//         int cur_node = pq.top().second;
-//         pq.pop();
-//         if(used[cur_node]) continue;
-//         used[cur_node] = true;
-//         for(int neighbor : graph.get_neighbors_id(cur_node)) {
-//             if(distance[cur_node] + X(cur_node, neighbor) < distance[neighbor]) {
-//                 distance[neighbor] = distance[cur_node] + X(cur_node, neighbor);
-//                 parent[neighbor] = cur_node;
-//                 pq.push({distance[neighbor], neighbor});
-//             }
-//         }
-//     }
-
-//     if(distance[src] >= INF) return{};
-// /*
-//     int cur_node = src;
-//     vector<int> path;
-//     while(cur_node != -1) {
-//         path.push_back(cur_node);
-//         cur_node = parent[cur_node];
-//     }
-
-//     reverse(path.begin(), path.end());
-// */
-//     return parent;
-// }
-
-// void MyAlgo::separation_oracle_ori(int src,int dst,int req_no){     
-//     vector<int> SPT;                  //nodes' parent in the spanning tree
-//     vector<int> best_path;
-//     double best_len; 
-//     SPT = Dijkstra_ori(src, dst, req_no);                               //the first SPT is get by dijkstra
-//     int cur_node = src;                                     //counting the first path's U(X,Y)=c* e^r
-//     double c = 0;                                           //c=SUM[u,v]:alpha(u)+alpha(v)+beta(u,v)==X[u,v]
-//     double r = 0;                                           //r=SUM[u,v]:-ln(Pr(u,v))==Y[u,v]
-//     while(cur_node != dst){
-//         // if(cur_node < SPT[cur_node]){                       //[can alter]no need if else
-//         //     c += X[{cur_node,SPT[cur_node]}][req_no];               
-//         //     r += Y[req_no][{cur_node,SPT[cur_node]}];
-//         // }
-//         // else{
-//         //     c += X[{SPT[cur_node],cur_node}][req_no];  
-//         //     r += Y[req_no][{SPT[cur_node],cur_node}];           
-//         // }
-//         c += X(SPT[cur_node], cur_node);  
-//         r += Y[dst][req_no][{SPT[cur_node],cur_node}];  
-//         best_path.push_back(cur_node);
-//         cur_node = SPT[cur_node];
-//     } 
-//     best_path.push_back(dst);
-//     best_len = c * exp(r);
-
-//     cout << "\nBegin path: ";
-//     for(auto p : best_path){
-//             cout << p << "->";
-//     }
-//     cout << endl;
-//     cout << "U = "<< best_len<<endl;
-//     map<pair<int, int>, bool> used_edge;
-//     vector<int> new_path;   
-//     pair<int,int> new_edge;
-
-//     for(unsigned int i = 0; i < SPT.size(); i++){
-//         int cur_node=i;
-//         while(cur_node!=dst){
-//             if(used_edge.find({cur_node,SPT[cur_node]})!=used_edge.end() && used_edge[{cur_node,SPT[cur_node]}] != false){
-//                 break;
-//             }
-//             used_edge[{cur_node,SPT[cur_node]}] = true;
-//             used_edge[{SPT[cur_node],cur_node}] = true;
-//             cur_node=SPT[cur_node];
-//         }
-//     }
-
-//     while(1){
-//         double minimum = numeric_limits<double>::infinity();
-//         for(int i = 0; i < graph.get_size(); i++){                 //creating many new SPT
-//             vector<int> neighbors = graph.get_neighbors_id(i);  
-//             for(auto neighbor : neighbors){
-//                 double temp1 = 0, temp2 = 0;
-//                 if(SPT[i] == neighbor || SPT[neighbor] == i){      // checking used edge or unused
-//                     continue;   
-//                 }else{                                             // if unused
-//                     temp1 = X(i, neighbor);
-//                     temp2 = Y[dst][req_no][{i, neighbor}];
-//                     int cur_node = i;
-//                     while(cur_node != dst){
-//                         temp1 += X(cur_node, SPT[cur_node]);
-//                         temp2 += Y[dst][req_no][{cur_node, SPT[cur_node]}];
-//                         cur_node = SPT[cur_node];
-//                     } 
-
-//                     cur_node = neighbor;
-//                     while(cur_node != dst){
-//                         temp1 -= X(cur_node, SPT[cur_node]);
-//                         temp2 -= Y[dst][req_no][{cur_node, SPT[cur_node]}];
-//                         cur_node = SPT[cur_node];
-//                     }       
-//                     if(temp2 < 0 && temp1 > 0 ) {               // we need the smallest edge to change the SPT
-//                         if(i<neighbor){
-//                             if(used_edge.find({i, neighbor}) != used_edge.end() && used_edge[{i, neighbor}] != false){
-//                                 continue;
-//                             }
-//                         }
-//                         else{
-//                             if(used_edge.find({neighbor ,i}) != used_edge.end() && used_edge[{neighbor ,i}] != false){
-//                                 continue;
-//                             }
-//                         }
-//                         if(minimum > - temp1 / temp2){
-//                             new_edge = {i, neighbor};
-//                             minimum = - temp1 / temp2;
-//                         }
-//                     }
-//                 }
-//             }
-//         }        // 找到最小的 edge 
-
-//         if(minimum == numeric_limits<double>::infinity()){   //原本設計是有break,但之後用不到
-//             break;
-//         }else{
-//             new_path.clear();
-//         }
-//         used_edge[{new_edge.second,SPT[new_edge.second]}] = false;
-//         used_edge[{SPT[new_edge.second],new_edge.second}] = false;
-//         used_edge[new_edge] = true;
-//         used_edge[{new_edge.second,new_edge.first}] = true;
-//         change_edge_num++;
-//         SPT[new_edge.second]=new_edge.first;
-
-//         cur_node = src;                                   
-//         while(cur_node != dst) {
-//             new_path.push_back(cur_node);
-//             cur_node = SPT[cur_node];
-//         }       
-//         new_path.push_back(dst);
-        
-//         double new_len = 0;                                         //counting the new path's U(X,Y)=c* e^r
-//         c = 0;
-//         r = 0;
-//         for(unsigned int i = 0; i < new_path.size() - 1; i++){
-//             if(new_path[i] < new_path[i+1]){                        //[can alter]no need if else
-//                 c += X(new_path[i], new_path[i+1]);
-//                 r += Y[dst][req_no][{new_path[i], new_path[i+1]}];
-//             }
-//             else{
-//                 c += X(new_path[i+1], new_path[i]);  
-//                 r += Y[dst][req_no][{new_path[i+1], new_path[i]}];           
-//             }
-//             //cout<<"PATH:["<<new_path[i]<<" "<<new_path[i+1]<<"] with tot "<< c <<" / " << r <<endl;
-//         }
-//         new_len =  c * exp(r);
-//         if(new_len < best_len){
-//             cout<<"find new\n";
-//             best_len = new_len;
-//             best_path = new_path;                                            //路線修改,新的spt產生
-//         } 
-        
-       
-//     }
-//     cout << "Best path: ";
-//     for(auto p : best_path){
-//         cout <<p << " ";
-//     }
-//     cout << endl;
-//     cout << "U: " << best_len << endl;                                         
-// }
