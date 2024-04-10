@@ -1,15 +1,16 @@
-#ifndef __BaselineDual
-#define __BaselineDual
+#ifndef __BaselineAllNode
+#define __BaselineAllNode
 #include <iostream>
 #include <algorithm>
 #include <queue>
+#include <cmath>
 #include <set>
 #include "../AlgorithmBase/AlgorithmBase.h"
 #include "../../Network/Graph/Graph.h"
 #include "../../config.h"
 using namespace std;
 
-class BaselineDual : public AlgorithmBase{
+class BaselineAllNode : public AlgorithmBase{
 private:
     vector<double> alpha;
     map<pair<int,int>, double> beta;
@@ -18,13 +19,11 @@ private:
     double obj = 0;
     double delta;
     double M;
+
 public:
-    BaselineDual(string filename, int request_time_limit, int node_time_limit, double swap_prob, double entangle_alpha , bool limit_r_or_not);
-    vector<vector<int>> Dijkstra_Tree(vector<int> &terminal, int req_no);
-    double calculateDual(int u, int v, int req_no, int path_id,int middle);
+    BaselineAllNode(string filename, int request_time_limit, int node_time_limit, double swap_prob, double entangle_alpha , bool limit_r_or_not);
+    vector<vector<int>> Dijkstra_Tree(vector<int> &terminal);
     bool checkResource(vector<vector<int>> &tree);
-    void updateDual(vector<vector<int>> &tree, int req_no);
-    void dual_initialize();
     void path_assignment();
     void entangle();
     void swap();

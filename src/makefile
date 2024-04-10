@@ -10,8 +10,8 @@ all: a.out
 encode_path.out: encode_path_ratio.cpp Network/Node/Node.o Network/Channel/Channel.o Path/Path.o Network/Graph/Graph.o Algorithm/AlgorithmBase/AlgorithmBase.o Request/Request.o config.o Algorithm/MyAlgo/MyAlgo.o Request/WholeRequest.o
 	$(g++) encode_path_ratio.cpp Network/Node/Node.o Network/Channel/Channel.o Path/Path.o Network/Graph/Graph.o Algorithm/AlgorithmBase/AlgorithmBase.o Request/Request.o config.o Algorithm/MyAlgo/MyAlgo.o Request/WholeRequest.o -o encode_path.out
 
-a.out: main.cpp $(dependency) Algorithm/Greedy/Greedy.o Algorithm/MyAlgo/MyAlgo.o Algorithm/BaselineDual/BaselineDual.o Request/Request.o   
-	$(g++) main.cpp $(dependency) Algorithm/Greedy/Greedy.o  Algorithm/MyAlgo/MyAlgo.o  Algorithm/BaselineDual/BaselineDual.o -I$(gurobi_path)/include/ -L$(gurobi_path)/lib -lgurobi_c++ -lgurobi95 -lm 
+a.out: main.cpp $(dependency) Algorithm/Greedy/Greedy.o Algorithm/MyAlgo/MyAlgo.o Algorithm/BaselineDual/BaselineDual.o Algorithm/BaselineAllNode/BaselineAllNode.o Request/Request.o   
+	$(g++) main.cpp $(dependency) Algorithm/Greedy/Greedy.o  Algorithm/MyAlgo/MyAlgo.o  Algorithm/BaselineDual/BaselineDual.o Algorithm/BaselineAllNode/BaselineAllNode.o -I$(gurobi_path)/include/ -L$(gurobi_path)/lib -lgurobi_c++ -lgurobi95 -lm 
 
 
 Network/Node/Node.o: Network/Node/Node.cpp Network/Node/Node.h config.h
@@ -54,6 +54,11 @@ Algorithm/BaselineDual/BaselineDual.o: Algorithm/BaselineDual/BaselineDual.h Alg
 	$(g++) -c --static Algorithm/BaselineDual/BaselineDual.h Algorithm/BaselineDual/BaselineDual.cpp config.h
 	mv BaselineDual.o Algorithm/BaselineDual/BaselineDual.o
 
+Algorithm/BaselineAllNode/BaselineAllNode.o: Algorithm/BaselineAllNode/BaselineAllNode.h Algorithm/BaselineAllNode/BaselineAllNode.cpp config.h
+	$(g++) -c --static Algorithm/BaselineAllNode/BaselineAllNode.h Algorithm/BaselineAllNode/BaselineAllNode.cpp config.h
+	mv BaselineAllNode.o Algorithm/BaselineAllNode/BaselineAllNode.o
+
+
 config.o:	config.h config.cpp
 	g++ -std=c++17 -c -g -O3 config.h config.cpp
 check_node: Node/Node.o Node/Node_test.cpp
@@ -73,6 +78,7 @@ clean:
 	rm -f Algorithm/Greedy/Greedy.h.gch
 	rm -f Algorithm/MyAlgo/MyAlgo.h.gch
 	rm -f Algorithm/BaselineDual/BaselineDual.h.gch
+	rm -f Algorithm/BaselineAllNode/BaselineAllNode.h.gch
 	rm -f config.o config.h.gch
 	find . -type f -name '*.o' -delete
 	find . -type f -name '*.h.gch' -delete

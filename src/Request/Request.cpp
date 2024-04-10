@@ -109,8 +109,10 @@ void Request::swap(){
         double tree_prob = 1;
         throughput ++;
         for(auto &path:tree){
+            //path->print();
             tree_prob *= path->get_prob();
         }
+        //cout <<"Prob : "<<tree_prob<<endl;
         tree_prob_vt.push_back(tree_prob);
     }
 }

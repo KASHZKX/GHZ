@@ -22,7 +22,14 @@ void BaselineDual::dual_initialize(){
     }
 }
 
-vector<vector<int>> BaselineDual::Dijkstra_Tree(vector<int> &terminal){
+double BaselineDual::calculateDual(int u, int v, int req_no, int path_id,int middle){
+	double weight = alpha[u] + alpha[v] + beta[{u, v}];
+	//if(path_id == 0 && (u == requests[req_no].get_node1() || v == requests[req_no].get_node1())) weight += tau[req_no];                                                         //[Need fix!!!!!!!!!!!!!]
+	if(u == middle || v == middle) weight += tau[req_no]/3;
+    return weight;
+}
+
+vector<vector<int>> BaselineDual::Dijkstra_Tree(vector<int> &terminal, int req_no){
     const double INF = numeric_limits<double>::infinity();
     int node_num = graph.get_size();
     double min_weight = INF;
@@ -53,7 +60,7 @@ vector<vector<int>> BaselineDual::Dijkstra_Tree(vector<int> &terminal){
                 for(int v : graph.get_neighbors_id(u)) {
                     if (u == v) continue; 
 
-                    double weight = alpha[u] + beta[{u, v}] + tau[v]; 
+                    double weight = calculateDual(u, v, req_no, j,i);
                     if (dist[v] > dist[u] + weight) { 
                         bool is1_repeater = true, is2_repeater = true;
                         if(u == i) is1_repeater = false;
@@ -192,15 +199,19 @@ void BaselineDual::path_assignment(){
         for(int i = 0; i < (int)requests.size(); i++){
             Request &request = requests[i];
             vector<int> terminal = {request.get_node1(), request.get_node2(), request.get_node3()};
-            vector<vector<int>> tree = Dijkstra_Tree(terminal);
+            vector<vector<int>> tree = Dijkstra_Tree(terminal, i);
             if(tree.size() == 0) continue;
             if(checkResource(tree)){
                 flag = true;
+                // cout << "assign path" << endl;
                 assign_resource(tree, 1, i);
+                updateDual(tree,i);                //[added]
             }
             
         }
     }
+   
+     
 }
 
 void BaselineDual::entangle(){

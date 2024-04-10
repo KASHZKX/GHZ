@@ -30,6 +30,7 @@ void AlgorithmBase::base_next_time_slot(){
     // double total_req_success_ratio = 0;
     // double max_over_ratio = 0;
     double total_earn = 0;
+    int accept_request = 0;
     graph.refresh();
     graph.release();
     for(auto &request: requests){
@@ -41,16 +42,20 @@ void AlgorithmBase::base_next_time_slot(){
     res_vt.clear();
     for(int reqno = 0; reqno < (int)requests.size(); reqno++) {
         double max_prob = 0;
+
         for(auto it:requests[reqno].get_tree_prob_vt()){
             if(it > max_prob){
                 max_prob = it;
             }
         }
+
         if(max_prob != 0){
+            accept_request ++;
             total_earn += max_prob * requests[reqno].get_value();
         }
     }
     res["total_earn"] = total_earn;
+    res["accept_request"] = accept_request;
     // res["path_success_avg"] = total_success_prob / total_path_num;
     // res["path_success_avg_before_ent"] = before_ent_total_success_prob / before_ent_path_num;
     // res["S_D_complete_ratio_difference"] = max_req_success_ratio - min_req_success_ratio;

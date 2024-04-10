@@ -160,6 +160,10 @@ void Path::refresh(){
     swap_status = PATH_UNSWAP;
 }
 void Path::print(){
+    for(auto n:nodes){
+        cout<<n->get_id()<<" ";
+    }
+    cout<<endl;
     if(!DEBUG)  return;
     cerr<<"this is a Path"<<endl;
     for(auto n:nodes){

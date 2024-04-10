@@ -13,7 +13,6 @@
 #include "../../Request/WholeRequest.h"
 #include "../../Network/Graph/Graph.h"
 #include "../../config.h"
-
 using namespace std;
 
 class Label {
@@ -46,7 +45,7 @@ private:
     double delta;
     double M;
     vector<double> tau;                
-    double X(int u, int v, int req_no, int path_id);
+    double X(int u, int v, int req_no, int path_id, int middle);
 public: 
     map<int, int> num_of_path_count;
     map<int, int> path_length_encode;
@@ -67,6 +66,8 @@ public:
     void init_dual();
     double changing_obj();
     void find_violate();
+    vector<int> Dijkstra_ori(int src, int dst, int req_no, int path_id);
+    void separation_oracle_ori(int src,int dst,int req_no, int path_id);
     MyAlgo(string filename, int request_time_limit, int node_time_limit, double swap_prob, double entangle_alpha);
     MyAlgo(string filename, int request_time_limit, int node_time_limit, double swap_prob, double entangle_alpha, double epsilon);
     ~MyAlgo();
