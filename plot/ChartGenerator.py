@@ -4,17 +4,20 @@ import math
 import os
 import matplotlib.pyplot as plt
 import matplotlib.transforms
-import latex
+# import latex
 import matplotlib
 from matplotlib.offsetbox import AnchoredOffsetbox, TextArea, HPacker, VPacker
 
-directory_path = "0728/"
-matplotlib.rcParams['text.usetex'] = True
+import sys
+sys.path.append("../data/ans/")
 
+
+directory_path = "../data/ans/"
+directory_path2 = "../data/ans/"
 class ChartGenerator:
     # data檔名 Y軸名稱 X軸名稱 Y軸要除多少(10的多少次方) Y軸起始座標 Y軸終止座標 Y軸座標間的間隔
     def __init__(self, dataName, Ylabel, Xlabel):
-        filename = directory_path + 'ans/' + dataName               
+        filename = directory_path + dataName
         print("start generate", filename)
 
         if not os.path.exists(filename):
@@ -38,11 +41,11 @@ class ChartGenerator:
         #     "#900321",
         # ]
         color = [
-            "#FF0000",
             "#00FF00",   
             "#0000FF",
             "#000000",
-            "#7E2F8E",
+            "#AA0000",
+            "#FF0000",
         ]
         # matplotlib.rcParams['text.usetex'] = True
 
@@ -67,10 +70,12 @@ class ChartGenerator:
         "ytick.labelsize": 20,
         "axes.labelsize": 20,
         "axes.titlesize": 20,
+        "mathtext.fontset": "custom",
         "font.family": "Times New Roman",
+        "mathtext.default": "default",
         "mathtext.it": "Times New Roman:italic",
+        "mathtext.cal": "Times New Roman:italic",
         # "mathtext.default": "regular",
-        "mathtext.fontset": "custom"
         # "mathtext.fontset": "custom"
         # "figure.autolayout": True
         # "text.usetex": True,
@@ -78,6 +83,8 @@ class ChartGenerator:
         }
         
         matplotlib.rcParams.update(andy_theme)
+        matplotlib.rcParams['pdf.fonttype'] = 42
+        matplotlib.rcParams['ps.fonttype'] = 42
         fig, ax1 = plt.subplots(figsize = (7, 6), dpi = 600)
         # ax1.spines['top'].set_linewidth(1.5)
         # ax1.spines['right'].set_linewidth(1.5)
@@ -109,26 +116,25 @@ class ChartGenerator:
             counter += 1
         numOfAlgo = len(_y) // numOfData
 
-
         y = [[] for _ in range(numOfAlgo)]
         for i in range(numOfData * numOfAlgo):
             y[i % numOfAlgo].append(_y[i])
 
-        print(x)
-        print(y)
+        # print(x)
+        # print(y)
 
         maxData = 0
         minData = math.inf
 
         for i in range(-10, -1, 1):
             if float(x[numOfData - 1]) <= 10 ** i:
-                Xpow = (i - 2)
-
+                Xpow = (i - 3)
+        
         Ydiv = float(10 ** Ypow)
         Xdiv = float(10 ** Xpow)
-        print(Xpow)
-        print(Xdiv)
-        print(x)
+        
+        for i in range(numOfData):
+            x[i] = int(float(x[i]) / Xdiv)
 
         for i in range(numOfAlgo):
             for j in range(numOfData):
@@ -136,22 +142,30 @@ class ChartGenerator:
                 maxData = max(maxData, y[i][j])
                 minData = min(minData, y[i][j])
 
-        #Yend = maxData 
-        Yend = 84
-        Ystart = 20
-        Yinterval = 16
 
+        Yend = math.ceil(maxData)
+        Ystart = 80
+        Yinterval = (Yend - Ystart) / 5
 
-        marker = ['o', 's', 'v', 'x', 'd']
-        for i in range(numOfAlgo):
-            ax1.plot(x_data, y[i], color = color[i], lw = 2.5, linestyle = "-", marker = marker[i], markersize = 15, markerfacecolor = "none", markeredgewidth = 2.5, zorder = -i)
+        if maxData > 1.1:
+            Yinterval = int(math.ceil(Yinterval))
+            Yend = int(Yend)
+        else:
+            Yend = 1
+            Ystart = 0
+            Yinterval = 0.2
+
+        marker = ['o', 's', 'v', 'x',',']
+        for i in range(numOfAlgo-1, -1, -1):
+            ax1.plot(x_data, y[i], color = color[i], lw = 2.5, linestyle = "-", marker = marker[i], markersize = 15, markerfacecolor = "none", markeredgewidth = 2.5, zorder=i)
         # plt.show()
 
         plt.xticks(fontsize = Xticks_fontsize)
         plt.yticks(fontsize = Yticks_fontsize)
         
-        AlgoName = ["Ours", "GREEDY", "Q-CAST", "REPS", "UB"]
-
+        AlgoName = ["Ours","MP-G", "BaselineOur", "MP-C"]
+        AlgoName.append("UB")
+        AlgoName.reverse()
         leg = plt.legend(
             AlgoName,
             loc = 10,
@@ -162,7 +176,7 @@ class ChartGenerator:
             handletextpad = 0.2,
             handlelength = 1,
             columnspacing = 0.2,
-            ncol = 3,
+            ncol = 2,
             facecolor = "None",
         )
 
@@ -173,50 +187,48 @@ class ChartGenerator:
         plt.subplots_adjust(left = 0.3)
         plt.subplots_adjust(right = 0.95)
         plt.subplots_adjust(bottom = 0.25)
-        #np.arange(Ystart, Yend + Yinterval, step = Yinterval)
+
         plt.yticks(np.arange(Ystart, Yend + Yinterval, step = Yinterval), fontsize = Yticks_fontsize)
         plt.xticks(x_data, x)
         plt.ylabel(Ylabel, fontsize = Ylabel_fontsize, labelpad = 35)
         plt.xlabel(Xlabel, fontsize = Xlabel_fontsize, labelpad = 10)
-       
         ax1.yaxis.set_label_coords(-0.3, 0.5)
         ax1.xaxis.set_label_coords(0.45, -0.27)
         # plt.show()
         # plt.tight_layout()
         pdfName = dataName[0:-4]
-        plt.savefig('./0728/pdf/{}.eps'.format(pdfName)) 
-        plt.savefig(directory_path + 'pdf/{}.jpg'.format(pdfName)) 
+        # plt.savefig(directory_path + '{}.eps'.format(pdfName)) 
+        plt.savefig(directory_path2 + '{}.jpg'.format(pdfName)) 
         # Xlabel = Xlabel.replace(' (%)','')
         # Xlabel = Xlabel.replace('# ','')
         # Ylabel = Ylabel.replace('# ','')
         plt.close()
 
     def genMultiName(self, multiple):
-        return str()
         if multiple == 0:
             return str()
         else:
             return "($" + "10" + "^{" + str(multiple) + "}" + "$)"
-
+        
 if __name__ == "__main__":
     # data檔名 Y軸名稱 X軸名稱 Y軸要除多少(10的多少次方) Y軸起始座標 Y軸終止座標 Y軸座標間的間隔
     # ChartGenerator("numOfnodes_waitingTime.txt", "need #round", "#Request of a round", 0, 0, 25, 5)
-    Xlabels = ["\# SD Pairs"]
+    Xlabels = ["num_of_node","new_request_cnt","Entangle"]
     # $\gamma \ (10^{-4})$
     # Average $Q(v)$
     # Resource Ratio
     # Average Demand Limit
     # \# SD Pairs
     # \# Nodes
-    Ylabels =  ["Throughput"]
+    Ylabels =  ["total_earn"]
     # Throughput
     # Max Supply-Demand Ratio
     # Resource Efficiency of Channel
     # Resource Efficiency of Memory
-    print(latex.__path__)
+    # print(latex.__path__)
     for Xlabel in Xlabels:
         for Ylabel in Ylabels:
-            dataFileName = "entangle_alpha_throughputs" + '.ans'
+            dataFileName = Xlabel + '_'+ Ylabel +'.ans'
             ChartGenerator(dataFileName, Ylabel, Xlabel)
 
 

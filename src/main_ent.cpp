@@ -82,7 +82,7 @@ int main(int argc, char *argv[]){
     default_setting["service_time"] = 100;
     
     map<string, vector<double>> change_parameter;
-    change_parameter["entangle_alpha"] = {0, 0.0002, 0.0004, 0.0006, 0.0008};
+    change_parameter["entangle_alpha"] = {0.00000000001, 0.0002, 0.0004, 0.0006, 0.0008};
 
     vector<string> X_names =  { /*"num_of_node","swap_prob",*/"entangle_alpha"/*, "resource_ratio",  "new_request_cnt" ,  "memory_cnt_avg" , "area_alpha"*/}; 
     vector<string> Y_names =  { /*"max_over_ratio",*/"total_earn"};
@@ -142,7 +142,7 @@ int main(int argc, char *argv[]){
             cerr<<"error:\tsystem proccess python error"<<endl;
             exit(1);
         }
-        for(int q = 0; q < new_request_cnt; q++){
+        for(int q = 0; q < new_request_cnt; q++){                                               //同時把所有requests都放到request_list
             bool check_no_repeat;
             do{
                 check_no_repeat=true;
@@ -235,8 +235,7 @@ int main(int argc, char *argv[]){
         }
     }
 
-    for(int change_index = 0;change_index < change_parameter["entangle_alpha"].size();change_index++) { 
-        ofstream ofs;
+    for(int change_index = 0;change_index < change_parameter["entangle_alpha"].size();change_index++) {     //對於不同的參數數值，跑同round的圖與request_list
         time_t now;
         char* dt;
         double entangle_alpha = change_parameter["entangle_alpha"][change_index];
@@ -244,6 +243,7 @@ int main(int argc, char *argv[]){
         dt = ctime(&now);
         #pragma omp parallel for
         for(int T = 0; T < round; T++){
+            ofstream ofs;
             string round_str = to_string(T);
             cout<<"entangle_alpha:"<<entangle_alpha<<" round:"<<round_str<<"-------------------------"<<endl;
             ofs.open(file_path + "log/" + "entangle_alpha" + "_in_" + to_string(entangle_alpha) + "_Round_" + round_str + ".log");
