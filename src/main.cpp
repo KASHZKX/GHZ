@@ -239,21 +239,7 @@ int main(int argc, char *argv[]){
         time_t now;
         char* dt;
         double swap_prob = change_parameter["swap_prob"][change_index];
-        min_swap_prob = swap_prob - 0.05;
-        max_swap_prob = swap_prob + 0.05;
-        #pragma omp parallel for
-        for(int T = 0; T < round; T++){
-            string round_str = to_string(T);
-            string filename = file_path + "input/round_" + round_str + ".input";
-            string command = "python3 alter_swap.py ";
-            string parameter = to_string(min_swap_prob) + " " +  to_string(max_swap_prob);
-            if(system((command + filename + " " + parameter).c_str()) != 0){
-                cerr<<"error:\tsystem proccess python error"<<endl;
-                exit(1);
-            }  
-        }
-      
-        now = time(0);
+        now = time(0);;
         dt = ctime(&now);
         #pragma omp parallel for
         for(int T = 0; T < round; T++){
