@@ -91,7 +91,7 @@ int main(int argc, char *argv[]){
     change_parameter["memory_cnt_avg"] = { 3, 5, 7, 9, 11};
 
     vector<string> X_names =  {"new_request_cnt"}; 
-    vector<string> Y_names =  { /*"max_over_ratio",*/"total_earn"};
+    vector<string> Y_names =  { /*"max_over_ratio",*/"total_earn", "use_memory", "value_per_memory", "drop_req_no"};
     vector<string> algo_names = { "MyAlgo", "Greedy", "BaselineDual", "BaselineAllNode"}; 
 
     // init result
@@ -333,16 +333,7 @@ int main(int argc, char *argv[]){
         map<string, map<string, double>> sum_res;
             for(string algo_name : algo_names){
                 for(int T = 0; T < round; T++){
-                // result[T][algo_name]["waiting_time"] /= result[T][algo_name]["total_request"];
-                // result[T][algo_name]["encode_ratio"] = result[T][algo_name]["encode_cnt"] / (result[T][algo_name]["encode_cnt"] + result[T][algo_name]["unencode_cnt"]);
-                // result[T][algo_name]["succ-finished_ratio"] = result[T][algo_name]["throughputs"] / result[T][algo_name]["finished_throughputs"];
-                // result[T][algo_name]["fail-finished_ratio"] = 1 - result[T][algo_name]["succ-finished_ratio"];
-                // result[T][algo_name]["path_length"] = result[T][algo_name]["path_length"] / result[T][algo_name]["finished_throughputs"];
-                // result[T][algo_name]["divide_cnt"] = result[T][algo_name]["divide_cnt"] / result[T][algo_name]["finished_throughputs"];
-                //  result[T][algo_name]["use_memory_ratio"] = result[T][algo_name]["use_memory"] / result[T][algo_name]["total_memory"];
-                //  result[T][algo_name]["use_channel_ratio"] = result[T][algo_name]["use_channel"] / result[T][algo_name]["total_channel"];
-                //  result[T][algo_name]["throughput_memory_ratio"] = result[T][algo_name]["throughputs"] / result[T][algo_name]["use_memory"];
-                //  result[T][algo_name]["throughput_channel_ratio"] = result[T][algo_name]["throughputs"] /  result[T][algo_name]["use_channel"];
+                    result[T][algo_name]["value_per_memory"] = result[T][algo_name]["total_earn"] / result[T][algo_name]["use_memory"]  ;  
                 }
             }
         for(int T = 0; T < round; T++){
