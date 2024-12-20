@@ -25,31 +25,42 @@ void AlgorithmBase::base_next_time_slot(){
     int drop_req_no = 0;
     graph.refresh();
     graph.release();
-    for(auto &request: requests){
-        request.next_timeslot();
-    }
-
     //好強
     vector<int> finished_reqno;
     res_vt.clear();
     for(int reqno = 0; reqno < (int)requests.size(); reqno++) {
         double max_prob = 0;
-
+        int index = 0;
+        int max_index = -1;
         for(auto it:requests[reqno].get_tree_prob_vt()){
             if(it > max_prob){
                 max_prob = it;
+                max_index = index;
             }
+            index++;
         }
-
+        
         if(max_prob != 0){
+            Path* path_ptr = requests[reqno].get_trees()[max_index][0];
+            Node* node_ptr = path_ptr->get_nodes()[(int)path_ptr->get_nodes().size()-1];
+            
+            //----------
+
+            cout <<"MP:"<<max_prob<<endl;
+            res_vt.push_back(node_ptr->get_fusion_prob());
             total_earn += max_prob * requests[reqno].get_value();
         }
         else{
+            res_vt.push_back(0);
             drop_req_no++;
         }
     }
     res["total_earn"] = total_earn;
     res["drop_req_no"] = drop_req_no;
+
+    for(auto &request: requests){
+        request.next_timeslot();
+    }
     // res["path_success_avg"] = total_success_prob / total_path_num;
     // res["path_success_avg_before_ent"] = before_ent_total_success_prob / before_ent_path_num;
     // res["S_D_complete_ratio_difference"] = max_req_success_ratio - min_req_success_ratio;

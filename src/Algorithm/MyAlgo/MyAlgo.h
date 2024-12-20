@@ -50,8 +50,8 @@ public:
     map<int, int> num_of_path_count;
     map<int, int> path_length_encode;
     map<int, int> path_length_cnt;
-    void separation_oracle(int src, int dst, int req_no, int path_id, vector<vector<vector<int>>> &cur_tree, vector<vector<vector<double>>> &cur_label);
-    vector<int> Dijkstra(int src, int dst, int req, int path_id, vector<pair<double,double>>&dist);
+    void separation_oracle(int src, int dst, int req_no, int path_id, vector<vector<vector<int>>> &cur_tree, vector<vector<vector<double>>> &cur_label, vector<vector<int>> &n_graph);
+    vector<int> Dijkstra(int src, int dst, int req, int path_id, vector<pair<double,double>>&dist, vector<vector<int>> &n_graph);
     void path_assignment();
     void calculate();
     void entangle();
@@ -64,10 +64,11 @@ public:
     void initialize(int mid);
     void init_dual();
     void create_graph(vector<vector<vector<vector<int>>>> &n_graph);
+    vector<vector<int>> parse_tree(vector<int> &tree, int middle, int node_num);
     double changing_obj();
     void find_violate();
-    vector<int> Dijkstra_ori(int src, int dst, int req_no, int path_id);
-    void separation_oracle_ori(int src,int dst,int req_no, int path_id);
+    vector<int> Dijkstra_ori(int src, int dst, int req_no, int path_id, vector<vector<int>> &n_graph);
+    void separation_oracle_ori(int src,int dst,int req_no, int path_id, vector<vector<int>> &n_graph);
     MyAlgo(string filename, int request_time_limit, int node_time_limit, double swap_prob, double entangle_alpha);
     MyAlgo(string filename, int request_time_limit, int node_time_limit, double swap_prob, double entangle_alpha, double epsilon);
     ~MyAlgo();

@@ -13,24 +13,48 @@ using namespace std;
 
 int main(void){
     ifstream ifs;
-    ifs.open("src/4_19/input/round_1.input");
-    int num_node, num_of_link;
-    int x,y,memory;
-    float swap_prob,fusion_prob;
-    ifs >> num_node;
-    vector<pair<double,double>> pos(num_node,{0,0});
-    for(int i = 0; i < num_node; i++){
-        ifs >> pos[i].first >> pos[i].second >> memory >> swap_prob >> fusion_prob;
+    ifs.open("src/test/ans/num_of_node_fusion_vt.ans");
+    if (!ifs) {
+        cerr << "File open error!" << endl;
+        return 1;
     }
+    vector<double> area = {0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0};
+    vector<vector<double>>array;
+    for (int algo = 0; algo < 4; algo++) {
+        int total_num = 0;
+        vector<float> count(11, 0);
+        double value;
+        while (ifs >> value && value != -1) {
+            cout << value<<endl;
+            for (int i = 0; i < area.size(); i++) {
+                if (value <= area[i]) {
+                    count[i] += 1;
+                    break;
+                }
+            }
+            total_num++;
+        }
 
-    ifs >>  num_of_link;
-    double total_dist = 0;
-        for(int i = 0; i < num_of_link; i++){
-        int node1,node2,link,fideilty;
-        ifs >> node1 >> node2 >> link >> fideilty;
-        total_dist += sqrt(pow( pos[node1].first - pos[node2].first ,2) + pow( pos[node1].second - pos[node2].second ,2));
+        for (int i = 0; i < count.size(); i++) {
+            count[i] = count[i] / total_num;
+            //cout<<count[i]<<"-";
+        }
+        //cout<<endl;
+        vector<double>temp;
+        temp.push_back(count[0]);
+        for (int i = 1; i < count.size(); i++) {
+            count[i] += count[i - 1];
+            temp.push_back(count[i]);
+        }
+        array.push_back(temp);
     }
-    ifs.close();
-    cout << total_dist / num_of_link;
+    for(int i = 0; i < 11; i++){
+        cout<<area[i]<<" ";
+        for(int j = 0; j < 4; j++){
+            cout<<array[j][i]*100<<" ";
+        }
+        cout<<endl;
+    }
     
+    ifs.close();
 }

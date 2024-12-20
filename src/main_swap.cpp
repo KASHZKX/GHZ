@@ -1,4 +1,4 @@
-//             #memory version
+//             #swap version
 #include <iostream>
 #include <queue>
 #include <algorithm>
@@ -82,10 +82,10 @@ int main(int argc, char *argv[]){
     default_setting["service_time"] = 100;
     
     map<string, vector<double>> change_parameter;
-    change_parameter["resource_ratio"] = {0.6, 0.8, 1, 1.2, 1.4};
+    change_parameter["swap_prob"] = {0.75,0.8,0.85,0.9,0.95};
 
-    vector<string> X_names =  { "resource_ratio"};            
-    vector<string> Y_names =  { "total_earn" , "use_memory", "value_per_memory", "use_channel", "value_per_channel", "drop_req_no"};
+    vector<string> X_names =  { "swap_prob"};            
+    vector<string> Y_names =  { /*"max_over_ratio",*/"total_earn", "use_memory", "value_per_memory", "use_channel", "value_per_channel", "drop_req_no"};
     vector<string> algo_names = { "MyAlgo", "Greedy", "BaselineDual", "BaselineAllNode" }; 
 
     // init result
@@ -114,8 +114,8 @@ int main(int argc, char *argv[]){
     double max_fidelity = input_parameter["max_fidelity"];
 
     double swap_prob = input_parameter["swap_prob"], entangle_alpha = input_parameter["entangle_alpha"];
-    double min_swap_prob = input_parameter["swap_prob"] - 0.075;
-    double max_swap_prob = input_parameter["swap_prob"] + 0.075;
+    double min_swap_prob = input_parameter["swap_prob"] - 0.05;
+    double max_swap_prob = input_parameter["swap_prob"] + 0.05;
     double fusion_prob = input_parameter["fusion_prob"];
     double min_fusion_prob = input_parameter["fusion_prob"] - 0.5;
     double max_fusion_prob = input_parameter["fusion_prob"] + 0.5;
@@ -235,34 +235,31 @@ int main(int argc, char *argv[]){
         }
     }
 
-    for(int change_index = 0;change_index < change_parameter["resource_ratio"].size();change_index++) {     //對於不同的參數數值，跑同round的圖與request_list
+    for(int change_index = 0;change_index < change_parameter["swap_prob"].size();change_index++) {     //對於不同的參數數值，跑同round的圖與request_list
         time_t now;
         char* dt;
-        double resource_ratio = change_parameter["resource_ratio"][change_index];
-        min_memory_cnt = input_parameter["memory_cnt_avg"] * resource_ratio - 2;
-        max_memory_cnt = input_parameter["memory_cnt_avg"] * resource_ratio + 2;
-        min_channel_cnt = input_parameter["channel_cnt_avg"] * resource_ratio - 2;
-        max_channel_cnt = input_parameter["channel_cnt_avg"] * resource_ratio + 2;
+        double swap_prob = change_parameter["swap_prob"][change_index];
+        min_swap_prob = swap_prob - 0.05;
+        max_swap_prob = swap_prob + 0.05;
         #pragma omp parallel for
         for(int T = 0; T < round; T++){
             string round_str = to_string(T);
             string filename = file_path + "input/round_" + round_str + ".input";
-            string command = "python3 alter_resource.py ";
-            string parameter = to_string(min_memory_cnt) + " " +  to_string(max_memory_cnt) + " " + to_string(min_channel_cnt) + " " + to_string(max_channel_cnt);
+            string command = "python3 alter_swap.py ";
+            string parameter = to_string(min_swap_prob) + " " +  to_string(max_swap_prob);
             if(system((command + filename + " " + parameter).c_str()) != 0){
                 cerr<<"error:\tsystem proccess python error"<<endl;
                 exit(1);
             }  
         }
-      
         now = time(0);
         dt = ctime(&now);
         #pragma omp parallel for
         for(int T = 0; T < round; T++){
             ofstream ofs;
             string round_str = to_string(T);
-            cout<<"resource_ratio:"<<resource_ratio<<" round:"<<round_str<<"-------------------------"<<endl;
-            ofs.open(file_path + "log/" + "resource_ratio" + "_in_" + to_string(resource_ratio) + "_Round_" + round_str + ".log");
+            cout<<"swap_prob:"<<swap_prob<<" round:"<<round_str<<"-------------------------"<<endl;
+            ofs.open(file_path + "log/" + "swap_prob" + "_in_" + to_string(swap_prob) + "_Round_" + round_str + ".log");
             cerr  << "時間 " << dt << endl << endl; 
             ofs  << "時間 " << dt << endl << endl; 
             
@@ -334,9 +331,9 @@ int main(int argc, char *argv[]){
         map<string, map<string, double>> sum_res;
             for(string algo_name : algo_names){
                 for(int T = 0; T < round; T++){
-                    result[T][algo_name]["value_per_memory"] = result[T][algo_name]["total_earn"] / result[T][algo_name]["use_memory"]  ; 
-                    result[T][algo_name]["value_per_channel"] = result[T][algo_name]["total_earn"] / result[T][algo_name]["use_channel"]  ;                 
-                }   
+                    result[T][algo_name]["value_per_memory"] = result[T][algo_name]["total_earn"] / result[T][algo_name]["use_memory"]  ;  
+                    result[T][algo_name]["value_per_channel"] = result[T][algo_name]["total_earn"] / result[T][algo_name]["use_channel"]  ;
+                }
             }
         for(int T = 0; T < round; T++){
             // result[T]["MyAlgo"]["diff_rate"] = result[T]["MyAlgo"]["change_edge_num"] / result[T]["MyAlgo"]["diff_edge_num"];
@@ -351,10 +348,10 @@ int main(int argc, char *argv[]){
         }
         
         for(string Y_name : Y_names) {
-            string filename = "ans/resource_ratio_" + Y_name + ".ans";
+            string filename = "ans/swap_prob_" + Y_name + ".ans";
             ofstream ofs;
             ofs.open(file_path + filename, ios::app);
-            ofs << change_parameter["resource_ratio"][change_index] << ' ';
+            ofs << change_parameter["swap_prob"][change_index] << ' ';
             
             for(string algo_name : algo_names){
                 for(int T = 0; T < round; T++){

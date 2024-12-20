@@ -60,18 +60,18 @@ int main(int argc, char *argv[]){
 
     }
     map<string, double> default_setting;
-    default_setting["num_of_node"] = 30;     //70
+    default_setting["num_of_node"] = 50;     //70
     default_setting["area_alpha"] = 0.1;
     default_setting["memory_cnt_avg"] = 12;
     default_setting["channel_cnt_avg"] = 5;
     default_setting["resource_ratio"] = 1;
 
-    default_setting["swap_prob"] = 0.9;
+    default_setting["swap_prob"] = 0.875;
     default_setting["entangle_alpha"] = 0.0002;
-    default_setting["new_request_cnt"] = 1;  //70
+    default_setting["new_request_cnt"] = 70;  //70
     default_setting["total_time_slot"] = 1;
     default_setting["epsilon"] = 0.2;    
-    default_setting["fusion_prob"] =0.85;
+    default_setting["fusion_prob"] =0.5;
 
     // not used in this paper
     default_setting["node_time_limit"] = 1;
@@ -83,7 +83,7 @@ int main(int argc, char *argv[]){
     
     map<string, vector<double>> change_parameter;
     change_parameter["swap_prob"] = {0.75, 0.8 , 0.85, 0.9 ,0.95};
-    change_parameter["entangle_alpha"] = {0.0001,0.0005,0.001,0.0025,0.005};
+    change_parameter["entangle_alpha"] = {0.0002};
     change_parameter["min_fidelity"] = {0.5, 0.7, 0.75, 0.85, 0.95};
     change_parameter["resource_ratio"] = {0.5, 1, 1.5, 2, 2.5};
     change_parameter["area_alpha"] = {0.02, 0.04, 0.06, 0.08, 0.1}; 
@@ -94,11 +94,7 @@ int main(int argc, char *argv[]){
     change_parameter["memory_cnt_avg"] = { 3, 5, 7, 9, 11};
 
     vector<string> X_names =  { /*"num_of_node","swap_prob",*/"entangle_alpha"/*, "resource_ratio",  "new_request_cnt" ,  "memory_cnt_avg" , "area_alpha"*/}; 
-    vector<string> Y_names =  { /*"max_over_ratio",*/"total_earn","accept_request"
-                             /*,"use_channel_ratio",  "use_memory_ratio", "use_memory", "use_channel", "total_channel", "total_memory" "throughput_memory_ratio", "throughput_channel_ratio",
-                             "S_D_complete_ratio_difference", "path_success_avg" ,
-                             "path_success_avg_before_ent", "new_success_ratio",
-			                 "divide_cnt", "change_edge_num", "diff_edge_num", "diff_rate","edge_difference"*/};
+    vector<string> Y_names =  {"runtime"};
     vector<string> algo_names = { "MyAlgo", "Greedy", "BaselineDual", "BaselineAllNode" }; 
 
     // init result
@@ -110,7 +106,7 @@ int main(int argc, char *argv[]){
     }
     
 
-    int round = 1;
+    int round = 90;
     for(string X_name : X_names) {
         map<string, double> input_parameter = default_setting;
         for(double change_value : change_parameter[X_name]) {         
@@ -132,11 +128,11 @@ int main(int argc, char *argv[]){
             double max_fidelity = input_parameter["max_fidelity"];
 
             double swap_prob = input_parameter["swap_prob"], entangle_alpha = input_parameter["entangle_alpha"];
-            double min_swap_prob = input_parameter["swap_prob"] - 0.1;
-            double max_swap_prob = input_parameter["swap_prob"] + 0.1;
+            double min_swap_prob = input_parameter["swap_prob"] - 0.075;
+            double max_swap_prob = input_parameter["swap_prob"] + 0.075;
             double fusion_prob = input_parameter["fusion_prob"];
-            double min_fusion_prob = input_parameter["fusion_prob"] - 0.1;
-            double max_fusion_prob = input_parameter["fusion_prob"] + 0.1;
+            double min_fusion_prob = input_parameter["fusion_prob"] - 0.5;
+            double max_fusion_prob = input_parameter["fusion_prob"] + 0.5;
 
             int node_time_limit = input_parameter["node_time_limit"];
             int new_request_cnt = input_parameter["new_request_cnt"];
@@ -238,7 +234,7 @@ int main(int argc, char *argv[]){
                 }
                 
 
-                /*
+                
                 for(auto &algo:algorithms){
                     for(string Y_name :Y_names){
                         for(auto it:algo->get_res_vt()){
@@ -246,7 +242,6 @@ int main(int argc, char *argv[]){
                         }
                     }
                 }
-                */
 
                 now = time(0);
                 dt = ctime(&now);
@@ -307,14 +302,11 @@ int main(int argc, char *argv[]){
                 ofs.close();
             }
 
-            /*
-            for(string Y_name : Y_names){
-                
-                string filename = "ans/" + X_name + "_" + Y_name + "_before_ent_path_prob_vt.ans";
+            for(string Y_name : Y_names){  
+                string filename = "ans/" + X_name + "_ent_path_prob_vt.ans";
                 ofstream ofs;
                 ofs.open(file_path + filename, ios::app);
-                ofs << change_value << endl;
-                
+
                 for(string algo_name : algo_names){
                     ofs<<algo_name<<endl;
                     sort(sum_vt[algo_name][Y_name].begin(),sum_vt[algo_name][Y_name].end());
@@ -326,7 +318,6 @@ int main(int argc, char *argv[]){
                 ofs << endl;
                 ofs.close();
             }
-            */
         }
     }
     return 0;

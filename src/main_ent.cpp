@@ -85,7 +85,7 @@ int main(int argc, char *argv[]){
     change_parameter["entangle_alpha"] = {0.00000000001, 0.0002, 0.0004, 0.0006, 0.0008};
 
     vector<string> X_names =  { /*"num_of_node","swap_prob",*/"entangle_alpha"/*, "resource_ratio",  "new_request_cnt" ,  "memory_cnt_avg" , "area_alpha"*/}; 
-    vector<string> Y_names =  { /*"max_over_ratio",*/"total_earn", "use_memory", "value_per_memory", "drop_req_no"};
+    vector<string> Y_names =  { /*"max_over_ratio",*/"total_earn", "use_memory", "value_per_memory", "use_channel", "value_per_channel", "drop_req_no"};
     vector<string> algo_names = { "MyAlgo", "Greedy", "BaselineDual", "BaselineAllNode" }; 
 
     // init result
@@ -318,7 +318,8 @@ int main(int argc, char *argv[]){
         map<string, map<string, double>> sum_res;
             for(string algo_name : algo_names){
                 for(int T = 0; T < round; T++){
-                    result[T][algo_name]["value_per_memory"] = result[T][algo_name]["total_earn"] / result[T][algo_name]["use_memory"]  ;  
+                    result[T][algo_name]["value_per_memory"] = result[T][algo_name]["total_earn"] / result[T][algo_name]["use_memory"]  ;
+                    result[T][algo_name]["value_per_channel"] = result[T][algo_name]["total_earn"] / result[T][algo_name]["use_channel"]  ;    
                 }
             }
         for(int T = 0; T < round; T++){

@@ -91,10 +91,10 @@ int main(int argc, char *argv[]){
     change_parameter["memory_cnt_avg"] = { 3, 5, 7, 9, 11};
 
     vector<string> X_names =  {"new_request_cnt"}; 
-    vector<string> Y_names =  { /*"max_over_ratio",*/"total_earn", "use_memory", "value_per_memory", "drop_req_no"};
+    vector<string> Y_names =  { /*"max_over_ratio",*/"total_earn", "use_memory", "value_per_memory", "use_channel", "value_per_channel", "drop_req_no"};
     vector<string> algo_names = { "MyAlgo", "Greedy", "BaselineDual", "BaselineAllNode"}; 
 
-    // init result
+    // init resul
     for(string Y_name : Y_names){
         string filename = "ans/new_request_cnt_" + Y_name + ".ans";
         fstream file( file_path + filename, ios::out );
@@ -240,7 +240,6 @@ int main(int argc, char *argv[]){
     }
 
     for(int change_index = 0;change_index < change_parameter["new_request_cnt"].size();change_index++) { 
-        ofstream ofs;
         time_t now;
         char* dt;
         int no = change_parameter["new_request_cnt"][change_index];
@@ -248,6 +247,7 @@ int main(int argc, char *argv[]){
         dt = ctime(&now);
         #pragma omp parallel for
         for(int T = 0; T < round; T++){
+            ofstream ofs;
             string round_str = to_string(T);
             cout<<"new_request_cnt:"<<no<<" round:"<<round_str<<"-------------------------"<<endl;
             ofs.open(file_path + "log/" + "new_request_cnt" + "_in_" + to_string(no) + "_Round_" + round_str + ".log");
@@ -334,6 +334,7 @@ int main(int argc, char *argv[]){
             for(string algo_name : algo_names){
                 for(int T = 0; T < round; T++){
                     result[T][algo_name]["value_per_memory"] = result[T][algo_name]["total_earn"] / result[T][algo_name]["use_memory"]  ;  
+                    result[T][algo_name]["value_per_channel"] = result[T][algo_name]["total_earn"] / result[T][algo_name]["use_channel"]  ;
                 }
             }
         for(int T = 0; T < round; T++){
